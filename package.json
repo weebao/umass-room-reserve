@@ -1,0 +1,53 @@
+{
+  "name": "1337code",
+  "version": "1.0.0",
+  "description": "Duel Leetcode",
+  "main": "index.js",
+  "type": "module",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": "",
+  "keywords": [],
+  "author": {
+    "name": "BeatCode",
+    "url": "https://github.com/weebao/beatcode"
+  },
+  "contributors": [
+    {
+      "name": "Bao Dang",
+      "email": "bcdang@umass.edu",
+      "github_username": "weebao"
+    },
+    {
+      "name": "Phuoc Do",
+      "email": "phuocdo@umass.edu",
+      "github_username": "patdmp"
+    },
+    {
+      "name": "Minh Vu",
+      "email": "mtvu@umass.edu",
+      "github_username": "Tristesse02"
+    }
+  ],
+  "scripts": {
+    "dev": "",
+    "test": "",
+    "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s"
+  },
+  "validate-html": "html-validate 'src/**/*.html'",
+  "prettier": "prettier src —write",
+  "devDependencies": {
+    "html-validate": "^8.11.1",
+    "http-server": "^14.1.1",
+    "prettier": "^3.2.5"
+  }
+}
