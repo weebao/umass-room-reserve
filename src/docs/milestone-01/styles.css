@@ -1,0 +1,36 @@
+p {
+    color: purple;
+}
+
+#overview {
+    background-color: aquamarine;
+}
+
+.minh {
+    background-color: azure;
+}
+
+.bao {
+    background-color: azure;
+}
+
+.phuoc {
+    background-color: azure;
+}
+
+.minh:hover {
+    background-color: rgb(216, 173, 181);
+}
+
+.bao:hover {
+    background-color: rgb(176, 173, 216);
+}
+
+.phuoc:hover {
+    background-color: rgb(215, 216, 173);
+}
+
+#team p {
+    font: 1em sans-serif;
+    color: rgb(226, 69, 200);
+}
