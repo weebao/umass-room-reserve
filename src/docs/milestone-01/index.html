@@ -1,70 +1,181 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1337Code</title>
-    <style>
-        footer {
-            position: absolute;
-            bottom: 1px;
-            right: 5px;
-        }
-    </style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UMass Room Reserve</title>
+    <meta
+      name="description"
+      content="A room reservation application for UMass students."
+    />
+    <link rel="icon" href="../../../public/favicon.ico" type="image/x-icon" />
     <!-- CSS Stylesheets -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <!-- JavaScript Files -->
     <script type="module" src="script.js" defer></script>
-</head>
+  </head>
 
-<body>
-    <header id="vision">
-        <h1>1337code (dual Leetcode)</h1>
+  <body>
+    <header id="vision" class="vision">
+      <div class="headings">
+        <h1>UMass Room Reserve</h1>
+        <p>The ultimate website to reserve rooms at UMass</p>
+      </div>
+      <section id="team" class="team">
+        <h2 id="team-heading" class="team-heading">Team member</h2>
+        <div class="team-members">
+          <div class="member-card" id="minh">
+            <img src="./images/minh.jpg" alt="Minh Vu" />
+            <h3>Minh Vu</h3>
+            <p id="content-minh">
+              <strong>Role:</strong> Frontend Developer - successfully passed
+              CS220 by Marius Minea
+            </p>
+            <span style="color: white">Don't click this card...</span>
+          </div>
+          <div class="member-card">
+            <img src="./images/bao.jpg" alt="Bao Dang" />
+            <h3>Bao Dang</h3>
+            <p><strong>Role:</strong> Backend Developer and Designer</p>
+          </div>
+          <div class="member-card">
+            <img src="./images/patrick.jpg" alt="Patrick Do" />
+            <h3>Patrick Do</h3>
+            <p><strong>Role:</strong> Backend Developer</p>
+          </div>
+          <div class="member-card">
+            <img src="./images/justin.jpg" alt="Justin Ly" />
+            <h3>Justin Ly</h3>
+            <p><strong>Role:</strong> Full-stack Developer</p>
+          </div>
+        </div>
+      </section>
     </header>
 
-    <nav>
-        <a href="#vision">Vision</a>
-        <a href="#team">Team</a>
+    <nav class="navbar">
+      <a href="#overview" class="nav-item">Overview</a>
+      <a href="#application-parts" class="nav-item">Application Parts</a>
+      <a href="#data-requirements" class="nav-item">Data Requirements</a>
+      <a href="#wire-frames" class="nav-item">Wireframes</a>
+      <a href="#real-world" class="nav-item">Real-World Connection</a>
+      <a href="#integrative-experience" class="nav-item"
+        >Integrative Experience</a
+      >
     </nav>
 
     <main>
-        <!-- Main content of the document -->
-        <article id="overview">
-            <h2>Overview</h2>
-            <p></p>
-        </article>
+      <!-- Main content of the document -->
+      <section id="overview">
+        <h2>Overview</h2>
+        <p>
+          In this section, with the id “overview,” provide a brief introduction
+          to your project, including its purpose and goals. This section should
+          be 100 words in length, excluding HTML tags.
+        </p>
+        <p>Opening paragraph.</p>
+        <p>$PLACEHOLDER$</p>
+        <p>Conclusion paragraph.</p>
+      </section>
 
-        <section id="team">
-            <h2>Team member</h2>
-            <div class="minh">
-                <h3>Minh Vu</h3>
-                <p id="content-minh">Frontend Developer - successfully pass CS220 by Marius Minea</p>
-            </div>
-            <div class="bao">
-                <h3>Bao Dang</h3>
-                <p>Fullstack Developer - 20 years of experience</p>
-            </div>
-            <div class="phuoc">
-                <h3>Phuoc Nguyen</h3>
-                <p>Backend Developer</p>
-            </div>
-        </section>
+      <section id="data-requirements">
+        <h2>Data Requirements</h2>
+        <p>
+          Under the id “data-requirements,” structure this section to include an
+          introduction, four main paragraphs detailing the top types of data
+          your application will handle, and a conclusion, making up 300 words in
+          total. Title the section with an &lt;h2&gt; tag. Focus on high-level
+          data needs rather than specific database designs or records.
+        </p>
+        <p>Opening paragraph.</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>Conclusion paragraph.</p>
+      </section>
 
-        <aside>
-            <!-- Side content like ads, links to other posts, or author info -->
-        </aside>
+      <section id="wire-frames">
+        <h2>Wireframes</h2>
 
-        <br />
-        <button type="button" id="butt">Don't click...</button>
-        <footer>
-            <p>This looks like a copyright announcement :&lt</p>
-        </footer>
+        <p>
+          Below is the home page that aims to have the users start using our
+          website right away. A search bar and a collection of room cards are
+          immediately accessible, offering details such as location and
+          real-time availability which we find most people would care about when
+          booking a room. There is also a location-based sorting feature
+          provides a practical benefit, dynamically ordering room options
+          according to their distance from the user.
+        </p>
+        <img
+          src="../../../public/images/wireframe-home.png"
+          alt="Wireframe 1"
+        />
+        <p>
+          The sign-in page has a simple and straightforward design. There are
+          features such as "stay logged in" and "forgot password" which can make
+          it more convenient for the users. The registration form focuses on
+          collecting the standard data typically required for on-campus room
+          reservations. We can store the information in the database and use it
+          to autofill future forms, which will save users' time.
+        </p>
+        <img
+          src="../../../public/images/wireframe-register.png"
+          alt="Wireframe 2"
+        />
+        <img
+          src="../../../public/images/wireframe-signin.png"
+          alt="Wireframe 3"
+        />
+        <p>
+          The reservation form is all about making things quick and easy for the
+          users. As soon as the user lands on the page, there will be a big
+          'Reserve' button right at the top so the users don't have to scroll
+          down and click when their information is already filled out. The
+          user's details will be stored in our database, and the form will
+          automatically fill in stuff like name, email address, major, etc.
+          Autofilling is the main feature of this project and hopefully using
+          this, people at UMass, especially those are new, will no longer have
+          to look around multiple websites to reserve the room the want.
+        </p>
+        <img
+          src="../../../public/images/wireframe-reserve.png"
+          alt="Wireframe 4"
+        />
+      </section>
+
+      <section id="real-world">
+        <h2>Real-World Connection</h2>
+        <p>
+          With the id “real-world,” this section, spanning 200 words, should
+          elucidate how your application addresses a tangible real-world issue,
+          supported by an introduction and conclusion. Use real-world examples
+          as inspiration for this narrative, detailing the problem your project
+          aims to resolve.
+        </p>
+        <p>Example paragraph.</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>Conclusion paragraph.</p>
+      </section>
+
+      <section id="integrative-experience">
+        <h2>Integrative Experience</h2>
+        <p>
+          Marked by the id “integrative-experience,” in 200 words, detail how
+          this project ties into the integrative experience requirements of your
+          coursework and personal experiences. Discuss how your project is a
+          culmination of your university education and personal growth, touching
+          upon specific courses, semesters, and life experiences that contribute
+          to the development of this project.
+        </p>
+        <p>Example paragraph.</p>
+      </section>
     </main>
 
     <footer>
-        <!-- Footer content like copyright, links to privacy policy, etc. -->
+      <p>&copy; 2024 Team 49 of CS 326 (SP24). All rights reserved.</p>
     </footer>
-</body>
-
+  </body>
 </html>

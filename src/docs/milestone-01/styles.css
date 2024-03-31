@@ -1,36 +1,188 @@
+:root {
+  --text-color: #151515;
+  --primary-color: #881C1C;
+}
+
+html {
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 3.75rem;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+h2 {
+  color: var(--primary-color);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+h2 > span {
+  color: var(--text-color);
+  text-transform: none;
+  font-weight: 500;
+}
+
 p {
-    color: purple;
+  font-size: 1rem;
+  line-height: 1.875;
 }
 
-#overview {
-    background-color: aquamarine;
+/* ------------------- HEADER ------------------- */
+
+.vision {
+  margin-bottom: 96px;
 }
 
-.minh {
-    background-color: azure;
+.headings {
+  text-align: center;
+  margin-bottom: 48px;
 }
 
-.bao {
-    background-color: azure;
+.headings > h1 {
+  margin-bottom: 0.5rem;
 }
 
-.phuoc {
-    background-color: azure;
+.headings > p {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0;
 }
 
-.minh:hover {
-    background-color: rgb(216, 173, 181);
+.team {
+  margin: auto;
+  width: fit-content;
 }
 
-.bao:hover {
-    background-color: rgb(176, 173, 216);
+.team-heading {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-.phuoc:hover {
-    background-color: rgb(215, 216, 173);
+.team-members {
+  display: flex;
+  gap: 32px;
 }
 
-#team p {
-    font: 1em sans-serif;
-    color: rgb(226, 69, 200);
+.member-card {
+  position: relative;
+  width: 200px;
+  padding: 16px;
+  background-color: transparent;
+  border: solid 1px #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, color 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.member-card > h3 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.member-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  border-top-right-radius: 8px;
+  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+  width: 0;
+  height: 0;
+  z-index: -1;
+}
+
+.member-card:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+.member-card:hover::after {
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------- NAVBAR ------------------- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  padding: 16px 0;
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  background-color: var(--text-color);
+}
+
+.nav-item {
+  position: relative;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-item:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 3px;
+  bottom: -2px;
+  left: 0;
+  background-color: white;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.nav-item:hover:after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* ------------------- MAIN ------------------- */
+main {
+  margin: 64px auto 0 auto;
+  max-width: 800px;
+}
+
+main > section {
+  margin-bottom: 56px;
+} 
+
+main > section > img {
+  margin-top: 12px;
+  margin-bottom: 24px;
+  width: 100%;
+  border: solid 1px #ccc;
+  object-fit: contain;
+}
+  
+/* ------------------- FOOTER ------------------- */
+footer {
+  padding: 4px;
+  text-align: center;
+  background-color: var(--primary-color);
+  color: white;
 }
