@@ -8,7 +8,7 @@
       name="description"
       content="A room reservation application for UMass students."
     />
-    <link rel="icon" href="../../../public/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
     <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="styles.css" />
     <!-- JavaScript Files -->
@@ -25,7 +25,6 @@
         <h2 id="team-heading" class="team-heading">Team member</h2>
         <div class="team-members">
           <div class="member-card" id="minh">
-            <img src="./images/minh.jpg" alt="Minh Vu" />
             <h3>Minh Vu</h3>
             <p id="content-minh">
               <strong>Role:</strong> Frontend Developer - successfully passed
@@ -33,18 +32,16 @@
             </p>
             <span style="color: white">Don't click this card...</span>
           </div>
-          <div class="member-card">
-            <img src="./images/bao.jpg" alt="Bao Dang" />
+          <div class="member-card" id="bao">
+            <!-- <img src="./images/bao.png" alt="Bao Dang" /> -->
             <h3>Bao Dang</h3>
             <p><strong>Role:</strong> Backend Developer and Designer</p>
           </div>
-          <div class="member-card">
-            <img src="./images/patrick.jpg" alt="Patrick Do" />
+          <div class="member-card" id="patrick">
             <h3>Patrick Do</h3>
             <p><strong>Role:</strong> Backend Developer</p>
           </div>
-          <div class="member-card">
-            <img src="./images/justin.jpg" alt="Justin Ly" />
+          <div class="member-card" id="justin">
             <h3>Justin Ly</h3>
             <p><strong>Role:</strong> Full-stack Developer</p>
           </div>
@@ -68,11 +65,31 @@
       <section id="overview">
         <h2>Overview</h2>
         <p>
-          In this section, with the id “overview,” provide a brief introduction
-          to your project, including its purpose and goals. This section should
-          be 100 words in length, excluding HTML tags.
+          With the id “overview,” this section should provide a 150-200 word
+          explanation of the web application your team aims to design and
+          develop. Use an &lt;h2&gt; tag for the section title. Focus on the
+          project's vision, emphasizing the real-world problem it intends to
+          solve and its target audience, rather than delving into interface
+          details.
         </p>
         <p>Opening paragraph.</p>
+        <p>$PLACEHOLDER$</p>
+        <p>Conclusion paragraph.</p>
+      </section>
+
+      <section id="application-parts">
+        <h2>Application Parts</h2>
+        <p>
+          Identified by the id “application-parts,” describe at least three
+          critical components of your application in separate paragraphs under
+          this section, totaling 200-300 words. Title this section with an
+          &lt;h2&gt; tag and ensure each application part discussed represents a
+          primary functionality of your web application. Here is an example of a
+          one component of an application.
+        </p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
+        <p>$PLACEHOLDER$</p>
         <p>$PLACEHOLDER$</p>
         <p>Conclusion paragraph.</p>
       </section>
@@ -96,7 +113,6 @@
 
       <section id="wire-frames">
         <h2>Wireframes</h2>
-
         <p>
           Below is the home page that aims to have the users start using our
           website right away. A search bar and a collection of room cards are
@@ -106,10 +122,7 @@
           provides a practical benefit, dynamically ordering room options
           according to their distance from the user.
         </p>
-        <img
-          src="../../../public/images/wireframe-home.png"
-          alt="Wireframe 1"
-        />
+        <img src="./images/wireframe-home.png" alt="Wireframe 1" />
         <p>
           The sign-in page has a simple and straightforward design. There are
           features such as "stay logged in" and "forgot password" which can make
@@ -118,14 +131,8 @@
           reservations. We can store the information in the database and use it
           to autofill future forms, which will save users' time.
         </p>
-        <img
-          src="../../../public/images/wireframe-register.png"
-          alt="Wireframe 2"
-        />
-        <img
-          src="../../../public/images/wireframe-signin.png"
-          alt="Wireframe 3"
-        />
+        <img src="./images/wireframe-register.png" alt="Wireframe 2" />
+        <img src="./images/wireframe-signin.png" alt="Wireframe 3" />
         <p>
           The reservation form is all about making things quick and easy for the
           users. As soon as the user lands on the page, there will be a big
@@ -137,40 +144,77 @@
           this, people at UMass, especially those are new, will no longer have
           to look around multiple websites to reserve the room the want.
         </p>
-        <img
-          src="../../../public/images/wireframe-reserve.png"
-          alt="Wireframe 4"
-        />
+        <img src="./images/wireframe-reserve.png" alt="Wireframe 4" />
       </section>
 
       <section id="real-world">
         <h2>Real-World Connection</h2>
         <p>
-          With the id “real-world,” this section, spanning 200 words, should
-          elucidate how your application addresses a tangible real-world issue,
-          supported by an introduction and conclusion. Use real-world examples
-          as inspiration for this narrative, detailing the problem your project
-          aims to resolve.
+          Filling the same forms on different websites have been a tedious task
+          for everyone. One typical example of this is booking flights, where
+          users previously had to visit multiple airline websites and fill out
+          the same information repeatedly. Companies such as Expedia or Google
+          Flights addressed this hassle by compiling forms into a single
+          website, which helps save people's time significantly. Another example
+          would be filling out job applications, which follows the same form
+          structure for pretty much all jobs. Simplify helps save applicants'
+          time by letting the students only fill out their information once and
+          automatically fill out the application for them every time they apply.
         </p>
-        <p>Example paragraph.</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>Conclusion paragraph.</p>
+        <p>
+          Similarly, we found navigating different websites to book rooms in
+          UMass and input the same information over and over again frustrating.
+          This problem has been something a lot of our friends have also
+          experienced. We often book rooms to do group study in the UMass and
+          the process of finding the website and fill out the same form every
+          time is just tedious.
+        </p>
+        <p>
+          This is why we decided to build UMass Room Reserve website as a final
+          project. By gathering all the forms together and having the users fill
+          out only once, the website will save time for students and faculty at
+          UMass, much like the flight booking platforms streamlined travel
+          arrangements by offering a single point of access for multiple
+          airlines.
+        </p>
       </section>
 
       <section id="integrative-experience">
         <h2>Integrative Experience</h2>
         <p>
-          Marked by the id “integrative-experience,” in 200 words, detail how
-          this project ties into the integrative experience requirements of your
-          coursework and personal experiences. Discuss how your project is a
-          culmination of your university education and personal growth, touching
-          upon specific courses, semesters, and life experiences that contribute
-          to the development of this project.
+          This project satisfies the IE requirements as it provides an
+          opportunity to directly apply concepts and skills developed throughout
+          my coursework and personal experiences to address a real-world
+          problem. Working on a software project with a team requires good
+          programming practices, which we can use what we learned from CS 220
+          such as functional programming using high-order functions, designing
+          test cases and APIs, handling errors and utilizing the
+          publish/subscriber model for this project. Additionally, we can also
+          use sorting algorithms learned in CS 187 to dynamically order rooms
+          based on distance from the user, making sure that most relevant
+          options are prioritized. The network communication principles
+          introduced in CS 230 form the foundation of our client-server
+          interactions, which is also necessary for designing the communication
+          between front-end and back-end
         </p>
-        <p>Example paragraph.</p>
+        <p>
+          Furthermore, our team aims to deliver an exceptional user experience.
+          Principles which Minh learned in PSYCH 100 will guide choices about
+          information presentation and navigation to optimize usability.
+          Meanwhile, the user-centric design practices emphasized in CS 325
+          which Bao took will inform the interface and overall workflow of the
+          site. Justin's background in data science will be invaluable for
+          designing an effective database structure, and Patrick's expertise in
+          backend development will ensure a stable and responsive platform.
+        </p>
+        <p>
+          This project represents a culmination of our university education and
+          personal growth. Communication skills and critical thinking are
+          required to ensure a smooth development process even if there might be
+          unexpected errors and setbacks. In this project, we will integrate
+          what we learned and apply them to a meaningful and interdisciplinary
+          challenge solving a real-world problem.
+        </p>
       </section>
     </main>
 
