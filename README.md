@@ -5,9 +5,9 @@ CS 326 Final Project
 Members:
 
 - [Bao Dang](https://github.com/weebao)
-- [Phuoc Do](https://github.com/patdmp)
+- [Phuoc Do (Patrick)](https://github.com/patdmp)
 - [Minh Vu](https://github.com/Tristesse02)
-- [Hoang Ly](https://github.com/Unravel2802)
+- [Hoang Ly (Justin)](https://github.com/Unravel2802)
 
 ## Installation
 
