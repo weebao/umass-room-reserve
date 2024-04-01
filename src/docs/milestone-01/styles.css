@@ -77,7 +77,7 @@ p {
 
 .member-card {
   position: relative;
-  width: 200px;
+  width: 300px;
   padding: 16px;
   background-color: transparent;
   border: solid 1px #ccc;
@@ -100,13 +100,40 @@ p {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: var(--primary-color);
   border-radius: 50%;
   border-top-right-radius: 8px;
   transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
   width: 0;
   height: 0;
   z-index: -1;
+}
+
+.member-card#minh::after {
+  background: url(./images/minh.JPG);
+  background-size: cover;
+  background-position: 50% 50%;
+  filter: brightness(50%);
+}
+
+.member-card#bao::after {
+  background: url(./images/bao.PNG);
+  background-size: cover;
+  background-position: 50% 50%;
+  filter: brightness(90%);
+}
+
+.member-card#patrick::after {
+  background: url(./images/patrick.jpeg);
+  background-size: cover;
+  background-position: 50% 50%;
+  filter: brightness(45%);
+}
+
+.member-card#justin::after {
+  background: url(./images/justin.JPG);
+  background-size: cover;
+  background-position: 50% 50%;
+  filter: brightness(50%);
 }
 
 .member-card:hover {
