@@ -96,19 +96,51 @@
 
       <section id="data-requirements">
         <h2>Data Requirements</h2>
-        <p>
-          Under the id “data-requirements,” structure this section to include an
-          introduction, four main paragraphs detailing the top types of data
-          your application will handle, and a conclusion, making up 300 words in
-          total. Title the section with an &lt;h2&gt; tag. Focus on high-level
-          data needs rather than specific database designs or records.
+
+        <p>At the heart of our room reservation system lies the cautious management of critical data types. 
+          Each category of data we collect and process is foundational to delivering a service that is not only efficient and user-friendly but also secure and adaptable to the diverse needs of our user base. 
+          From ensuring the security of user accounts through authentication data to facilitating easy and precise room searches with comprehensive room information, our focus on data integrity is paramount. 
+          Furthermore, we understand the importance of reservation data in maintaining a conflict-free scheduling environment and leverage user preferences and history to offer a tailored booking experience.
         </p>
-        <p>Opening paragraph.</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>Conclusion paragraph.</p>
+        
+        <p>The first type of data we handle is <strong>user authentication data</strong>. 
+          This includes email addresses and hashed passwords. 
+          Authentication data ensures that each user's account is secure and that they can access only the reservations 
+          and functionalities appropriate to their role, whether student, faculty, or administrator.
+          <em>Students</em> can search for and book rooms for study groups or club meetings, view their upcoming reservations, and modify or cancel their own bookings. 
+          <em>Faculty</em> members have the added ability to reserve rooms for classes and academic events, access reservation histories, and override certain booking restrictions based on their needs. 
+          <em>Administrators</em> possess the highest level of access, including managing room availability, approving or denying reservation requests that fall outside normal parameters, and modifying 
+          user roles to maintain the integrity and efficiency of the reservation process. 
+          Different permissions ensure a smooth and efficient operation of the reservation system, tailored to the specific needs and responsibilities of each user group.
+        </p>
+        
+        <p>Next, we manage <strong>room information</strong>. 
+          This includes details about each room available for reservation, such as location, capacity, available dates and times, and technical equipment available (like computers and projectors).
+          This up-to-date room data allows users to effectively search and find spaces that meet their specific requirements.
+          Additionally, users are able to search based on specific attributes like the building in which the room is located 
+          or the closest room location, further simplifying the process of identifying the ideal space for their requirements.
+          We handle this feature by storing the building data and geographical coordinates for each room in our database.
+        </p>
+        
+        <p>Another crucial type of data is <strong>reservation data</strong>. 
+          This includes information about who has booked a room, what room is booked, at what times, and number of people.
+          Reservation data is key to preventing double bookings and ensuring that users can plan their activities without conflicts.</p>
+        
+        <p>We also prioritize <strong>user preferences and history</strong> to facilitate our autofill functionality.
+          This data helps streamline the booking process by predicting and filling in reservation forms with information 
+          based on past user behavior and saved preferences, significantly reducing the time and effort required to make a booking.
+          Initially, our application will autofill reservation forms with previously entered user data. 
+          Looking ahead, we plan to augment this feature with Natural Language Processing (NLP) to further refine and personalize the user experience.
+        </p>
+        
+        <p>In conclusion, our application relies on carefully managing and protecting diverse types of data to provide a user-friendly, efficient, and secure room reservation service. 
+          By focusing on these data essentials, we aim to enhance the academic and extracurricular life on campus.
+        </p>
+      
+        <figure>
+          <img src="./images/db_schema.png" alt="Data Schema" width="700" height="700" style="float:middle">
+          <figcaption><strong>Figure 1.</strong> Planned Data Schema</figcaption>
+        </figure>
       </section>
 
       <section id="wire-frames">
