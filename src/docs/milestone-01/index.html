@@ -79,19 +79,46 @@
 
       <section id="application-parts">
         <h2>Application Parts</h2>
-        <p>
-          Identified by the id “application-parts,” describe at least three
-          critical components of your application in separate paragraphs under
-          this section, totaling 200-300 words. Title this section with an
-          &lt;h2&gt; tag and ensure each application part discussed represents a
-          primary functionality of your web application. Here is an example of a
-          one component of an application.
+
+        <u>User Authentication</u>
+        <p>        
+          A crucial component of the application is the user authentication
+          and authorization system. This ensures that only authorized users 
+          can access the appropriate resources and functionalities within 
+          the application. The schema includes fields such as user_id, email, 
+          password_hash, role, first_name, and last_name, which store user 
+          information and credentials. The application will likely have 
+          mechanisms for user registration, login, password management, and 
+          role-based access control. This component is critical for maintaining 
+          data privacy, security, and providing personalized experiences to 
+          different user groups.
         </p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>Conclusion paragraph.</p>
+
+        <u>Building and Room Management</u>
+        <p>
+          Another essential component is the management of buildings and rooms. 
+          The schema includes tables for building and room, with fields like 
+          name, address, latitude, longitude, room_number, capacity, and 
+          description. This component will handle the creation, updating, and 
+          deletion of buildings and rooms within the application. It may also 
+          encompass functionalities like searching for available rooms based on 
+          specific criteria, displaying room details, and potentially integrating 
+          with mapping services for location-based features.
+        </p>
+
+        <u>Reservation System</u>
+        <p>
+          The reservation system is a crucial component that ties together the 
+          user and room management aspects of the application. The reservation 
+          table in the schema includes fields like reservation_id, user_id, room_id, 
+          start_time, end_time, num_people, and is_using_computer. This component 
+          will allow users to browse available rooms, make reservations for 
+          specific time slots, specify the number of attendees, and indicate 
+          whether they require computer resources. The reservation system may 
+          also include features like managing conflicts, sending reminders, and 
+          providing a user-friendly interface for viewing and modifying existing 
+          reservations.
+        </p>
       </section>
 
       <section id="data-requirements">
