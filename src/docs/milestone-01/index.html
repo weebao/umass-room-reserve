@@ -64,29 +64,20 @@
       <!-- Main content of the document -->
       <section id="overview">
         <h2>Overview</h2>
-        <p>
-          With the id “overview,” this section should provide a 150-200 word
-          explanation of the web application your team aims to design and
-          develop. Use an &lt;h2&gt; tag for the section title. Focus on the
-          project's vision, emphasizing the real-world problem it intends to
-          solve and its target audience, rather than delving into interface
-          details.
-        </p>
-        <p>Opening paragraph.</p>
-        <p>$PLACEHOLDER$</p>
-        <p>Conclusion paragraph.</p>
+        <p>At the University of Massachusetts Amherst, booking rooms for things like music rehearsals, group studies, and private sessions is a hassle right now. It's confusing and frustrating for users. Our web app solves this problem by putting all room bookings in one easy-to-use platform. Now, the UMass community can reserve spaces with no trouble. This centralized system streamlines the booking process and ensures fair access to campus facilities. It addresses the scattered booking issue, greatly benefiting students, faculty, and staff, and paving the way for a more organized and efficient campus.</p>
+        <p>Centralizing room bookings can dramatically improve how campus spaces are used. It cuts down on the time spent managing reservations and reduces conflicts over room allocations. The system makes room availability transparent, so everyone can plan their activities ahead of time more easily. Additional benefits include better utilization of campus resources and more satisfied users overall.</p>
       </section>
 
       <section id="application-parts">
         <h2>Application Parts</h2>
 
-        <u>User Authentication</u>
+        <h4>User Authentication</h4>
         <p>        
           A crucial component of the application is the user authentication
           and authorization system. This ensures that only authorized users 
           can access the appropriate resources and functionalities within 
-          the application. The schema includes fields such as user_id, email, 
-          password_hash, role, first_name, and last_name, which store user 
+          the application. The schema includes fields such as <code>user_id</code>, <code>email</code>, 
+          <code>password_hash</code>, <code>role</code>, <code>first_name</code>, and <code>last_name</code>, which store user 
           information and credentials. The application will likely have 
           mechanisms for user registration, login, password management, and 
           role-based access control. This component is critical for maintaining 
@@ -94,24 +85,24 @@
           different user groups.
         </p>
 
-        <u>Building and Room Management</u>
+        <h4>Building and Room Management</h4>
         <p>
           Another essential component is the management of buildings and rooms. 
           The schema includes tables for building and room, with fields like 
-          name, address, latitude, longitude, room_number, capacity, and 
-          description. This component will handle the creation, updating, and 
+          <code>name</code>, <code>address</code>, <code>latitude</code>, <code>longitude</code>, <code>room_number</code>, <code>capacity</code>, and 
+          <code>description</code>. This component will handle the creation, updating, and 
           deletion of buildings and rooms within the application. It may also 
           encompass functionalities like searching for available rooms based on 
           specific criteria, displaying room details, and potentially integrating 
           with mapping services for location-based features.
         </p>
 
-        <u>Reservation System</u>
+        <h4>Reservation System</h4>
         <p>
           The reservation system is a crucial component that ties together the 
           user and room management aspects of the application. The reservation 
-          table in the schema includes fields like reservation_id, user_id, room_id, 
-          start_time, end_time, num_people, and is_using_computer. This component 
+          table in the schema includes fields like <code>reservation_id</code>, <code>user_id</code>, <code>room_id</code>, 
+          <code>start_time</code>, <code>end_time</code>, <code>num_people</code>, and <code>is_using_computer</code>. This component 
           will allow users to browse available rooms, make reservations for 
           specific time slots, specify the number of attendees, and indicate 
           whether they require computer resources. The reservation system may 
@@ -123,19 +114,51 @@
 
       <section id="data-requirements">
         <h2>Data Requirements</h2>
-        <p>
-          Under the id “data-requirements,” structure this section to include an
-          introduction, four main paragraphs detailing the top types of data
-          your application will handle, and a conclusion, making up 300 words in
-          total. Title the section with an &lt;h2&gt; tag. Focus on high-level
-          data needs rather than specific database designs or records.
+
+        <p>At the heart of our room reservation system lies the cautious management of critical data types. 
+          Each category of data we collect and process is foundational to delivering a service that is not only efficient and user-friendly but also secure and adaptable to the diverse needs of our user base. 
+          From ensuring the security of user accounts through authentication data to facilitating easy and precise room searches with comprehensive room information, our focus on data integrity is paramount. 
+          Furthermore, we understand the importance of reservation data in maintaining a conflict-free scheduling environment and leverage user preferences and history to offer a tailored booking experience.
         </p>
-        <p>Opening paragraph.</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>$PLACEHOLDER$</p>
-        <p>Conclusion paragraph.</p>
+        
+        <p>The first type of data we handle is <strong>user authentication data</strong>. 
+          This includes email addresses and hashed passwords. 
+          Authentication data ensures that each user's account is secure and that they can access only the reservations 
+          and functionalities appropriate to their role, whether student, faculty, or administrator.
+          <em>Students</em> can search for and book rooms for study groups or club meetings, view their upcoming reservations, and modify or cancel their own bookings. 
+          <em>Faculty</em> members have the added ability to reserve rooms for classes and academic events, access reservation histories, and override certain booking restrictions based on their needs. 
+          <em>Administrators</em> possess the highest level of access, including managing room availability, approving or denying reservation requests that fall outside normal parameters, and modifying 
+          user roles to maintain the integrity and efficiency of the reservation process. 
+          Different permissions ensure a smooth and efficient operation of the reservation system, tailored to the specific needs and responsibilities of each user group.
+        </p>
+        
+        <p>Next, we manage <strong>room information</strong>. 
+          This includes details about each room available for reservation, such as location, capacity, available dates and times, and technical equipment available (like computers and projectors).
+          This up-to-date room data allows users to effectively search and find spaces that meet their specific requirements.
+          Additionally, users are able to search based on specific attributes like the building in which the room is located 
+          or the closest room location, further simplifying the process of identifying the ideal space for their requirements.
+          We handle this feature by storing the building data and geographical coordinates for each room in our database.
+        </p>
+        
+        <p>Another crucial type of data is <strong>reservation data</strong>. 
+          This includes information about who has booked a room, what room is booked, at what times, and number of people.
+          Reservation data is key to preventing double bookings and ensuring that users can plan their activities without conflicts.</p>
+        
+        <p>We also prioritize <strong>user preferences and history</strong> to facilitate our autofill functionality.
+          This data helps streamline the booking process by predicting and filling in reservation forms with information 
+          based on past user behavior and saved preferences, significantly reducing the time and effort required to make a booking.
+          Initially, our application will autofill reservation forms with previously entered user data. 
+          Looking ahead, we plan to augment this feature with Natural Language Processing (NLP) to further refine and personalize the user experience.
+        </p>
+        
+        <p>In conclusion, our application relies on carefully managing and protecting diverse types of data to provide a user-friendly, efficient, and secure room reservation service. 
+          By focusing on these data essentials, we aim to enhance the academic and extracurricular life on campus.
+        </p>
+      
+        <figure>
+          <img src="./images/db_schema.png" alt="Data Schema" width="700" height="700" style="float:middle">
+          <figcaption><strong>Figure 1.</strong> Planned Data Schema</figcaption>
+        </figure>
       </section>
 
       <section id="wire-frames">
