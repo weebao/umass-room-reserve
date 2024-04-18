@@ -44,7 +44,7 @@
     }
   ],
   "scripts": {
-    "dev": "",
+    "dev": "http-server src/client -p 6900 -c-1 -o -s",
     "test": "",
     "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s"
   },
