@@ -30,7 +30,9 @@ export class App {
     this.#todolistViewElm = await todoListView.render();
     this.#navigateTo('todolist');
 
-    this.#events.subscribe('navigateTo', view => this.#navigateTo(view));
+    // The way he handle is by divided in to cases (if-else statement)
+    // Just understand that navigateTo is the key and the closure function is the value
+    this.#events.subscribe('navigateTo', view => this.#navigateTo(view)); 
   }
 
   #navigateTo(view) {
