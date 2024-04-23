@@ -8,9 +8,10 @@ export class Login {
   }
 
   async render() {
+    // Create a <div> element to hold the login form
     const loginElm = document.createElement('div');
     loginElm.id = 'login-view';
-
+    
     const titleElm = document.createElement('h1');
     titleElm.innerText = 'Login';
 
