@@ -1,0 +1,22 @@
+.navbar {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar > ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+}
+
+.navbar a {
+  color: var(--black);
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

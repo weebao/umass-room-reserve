@@ -1,14 +1,17 @@
 import { App } from './App.js';
 
-// Mount the application to the root element.
+let path = "/";
 const app = new App();
 await app.render('root');
 
-// Testing Support
-const resetState = () => {
-  localStorage.clear();
-  const app = new App();
-  app.render('root');
-};
+window.addEventListener('popstate', async () => {
+  path = window.location.pathname;
+  await app.navigateTo(path);
+});
 
-document.getElementById('reset-state').addEventListener('click', resetState);
+document.addEventListener('DOMContentLoaded', async () => {
+  path = window.location.pathname;
+  if (path !== "/") {
+    await app.navigateTo(path);
+  }
+});

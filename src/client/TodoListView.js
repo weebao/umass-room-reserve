@@ -156,6 +156,8 @@ class TaskList {
       this.#deleteTask(task.id);
     });
 
+    console.log("wut")
+
     li.appendChild(button);
     return li;
   }
