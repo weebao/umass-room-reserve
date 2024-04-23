@@ -1,6 +1,6 @@
 import { Events } from '../Events.js';
 
-export class Login {
+export class LoginPage {
   #events = null;
 
   constructor() {
@@ -9,7 +9,7 @@ export class Login {
 
   async render() {
     const loginElm = document.createElement('div');
-    loginElm.id = 'login-view';
+    loginElm.id = 'login-page';
 
     const titleElm = document.createElement('h1');
     titleElm.innerText = 'Login';

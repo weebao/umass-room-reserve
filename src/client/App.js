@@ -1,11 +1,19 @@
-import { TodoListView } from './TodoListView.js';
-import { Events } from './Events.js';
-import { NavBar } from './Navbar.js';
+import { Events } from "./Events.js";
+
+import { NavBar } from "./components/Navbar.js";
+
+import { LoginPage } from "./pages/Login.js";
+import { HomePage } from "./pages/Home.js";
+import { NotFoundPage } from "./pages/404.js";
 
 export class App {
-  #todolistViewElm = null;
-  #mainViewElm = null;
   #events = null;
+  #mainViewElm = null;
+  #isLoggedIn = false;
+
+  #loginPage = null;
+  #homePage = null;
+  #notFoundPage = null;
 
   constructor() {
     this.#events = Events.events();
@@ -13,42 +21,54 @@ export class App {
 
   async render(root) {
     const rootElm = document.getElementById(root);
-    rootElm.innerHTML = '';
+    rootElm.innerHTML = "";
 
-    const navbarElm = document.createElement('div');
-    navbarElm.id = 'navbar';
     const navbar = new NavBar();
-    navbarElm.appendChild(await navbar.render());
-
-    this.#mainViewElm = document.createElement('div');
-    this.#mainViewElm.id = 'main-view';
-
+    const navbarElm = await navbar.render();
     rootElm.appendChild(navbarElm);
+
+    this.#mainViewElm = document.createElement("main");
+    this.#mainViewElm.id = "main-view";
+
     rootElm.appendChild(this.#mainViewElm);
 
-    const todoListView = new TodoListView();
-    this.#todolistViewElm = await todoListView.render();
-    this.#navigateTo('todolist');
+    if (this.#isLoggedIn) {
+      this.navigateTo("/home");
+    } else {
+      this.navigateTo("/login");
+    }
 
-    // The way he handle is by divided in to cases (if-else statement)
-    // Just understand that navigateTo is the key and the closure function is the value
-    this.#events.subscribe('navigateTo', view => this.#navigateTo(view)); 
+    this.#events.subscribe(
+      "navigateTo",
+      async (view) => await this.navigateTo(view)
+    );
   }
 
-  #navigateTo(view) {
-    this.#mainViewElm.innerHTML = '';
-    if (view === 'todolist') {
-      this.#mainViewElm.appendChild(this.#todolistViewElm);
-      window.location.hash = view;
-    } else if (view === 'archive') {
-      // TODO: this is where we want to add the archive view
-      const archive = document.createElement('div');
-      archive.innerHTML = '<h1>Archive view (coming soon)</h1>';
-      this.#mainViewElm.appendChild(archive);
-      window.location.hash = view;
-    } else {
-      this.#mainViewElm.appendChild(this.todolist);
-      window.location.hash = 'todolist';
+  async navigateTo(page) {
+    this.#mainViewElm.innerHTML = "";
+    switch (page) {
+      case "/login":
+        if (!this.#loginPage) {
+          const loginPage = new LoginPage();
+          this.#loginPage = await loginPage.render();
+        }
+        this.#mainViewElm.appendChild(this.#loginPage);
+        break;
+      case "/home":
+      case "/":
+        if (!this.#homePage) {
+          const homePage = new HomePage();
+          this.#homePage = await homePage.render();
+        }
+        this.#mainViewElm.appendChild(this.#homePage);
+        break;
+      default:
+        if (!this.#notFoundPage) {
+          const notFoundPage = new NotFoundPage();
+          this.#notFoundPage = await notFoundPage.render();
+        }
+        this.#mainViewElm.appendChild(this.#notFoundPage);
+        break;
     }
   }
 }

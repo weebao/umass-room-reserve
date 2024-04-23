@@ -1,0 +1,10 @@
+:root {
+  --primary-color: #881C1C;
+  --black: #212721;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  padding: 0;
+  color: var(--black);
+}

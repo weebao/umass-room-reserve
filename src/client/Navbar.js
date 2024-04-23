@@ -9,7 +9,7 @@ export class NavBar {
 
   async render() {
     // Create a <div> element to hold the navigation bar
-    const elm = document.createElement('div');
+    const elm = document.createElement('nav');
     elm.id = 'navbar';
 
     // Populate the <div> element with the navigation links

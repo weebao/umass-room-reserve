@@ -1,22 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>To-Do List App</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>UMass Room Reserve</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" href="styles/components/navbar.css" />
     <script type="module" src="index.js"></script>
 
     <!-- ADD SCRIPT FROM SEARCH.JS -->
     <script type="module" src="./components/Search.js"></script>
   </head>
-  <body>
-    <button id="reset-state">Clear State</button>
-    <div class="container" id="root"></div>
-
-    <!-- RESERVE ROOM PROJECT STARTS FROM HEREEEEEEE -->
-  <div id="search-bar">
-    <label for="buidling-name"> Enter Building Name: </label><input type="text" id="building-name"/>
-    <input type="button" value="Search" id="search-button" />
-  </div>
-
+  <body id="root">
+    <!-- <div id="search-bar">
+      <label for="buidling-name"> Enter Building Name: </label
+      ><input type="text" id="building-name" />
+      <input type="button" value="Search" id="search-button" />
+    </div> -->
   </body>
 </html>
