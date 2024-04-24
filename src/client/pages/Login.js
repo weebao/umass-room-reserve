@@ -57,35 +57,7 @@ export class LoginPage {
       </div>
       <button type="submit" id="sign-in">Sign In</button>
     `;
-
-    const rememberMeDiv = document.createElement("div");
-    rememberMeDiv.classList.add("hstack", "space-between");
-
-    const rememberMeLabel = document.createElement("label");
-    rememberMeLabel.htmlFor = "remember-me";
-
-    const rememberMeInput = document.createElement("input");
-    rememberMeInput.type = "checkbox";
-    rememberMeInput.id = "remember-me";
-    rememberMeInput.name = "remember_me";
-
-    rememberMeLabel.appendChild(rememberMeInput);
-    rememberMeLabel.appendChild(document.createTextNode("Remember me"));
-
-    const forgotPasswordAnchor = document.createElement("a");
-    forgotPasswordAnchor.href = "#forgot-password";
-    forgotPasswordAnchor.innerText = "Forgot password?";
-
-    rememberMeDiv.appendChild(rememberMeLabel);
-    rememberMeDiv.appendChild(forgotPasswordAnchor);
-
-    passwordInputGroup.appendChild(passwordGroup);
-    passwordInputGroup.appendChild(rememberMeDiv);
-
-    const signInButton = document.createElement("button");
-    signInButton.type = "submit";
-    signInButton.id = "sign-in";
-    signInButton.innerText = "Sign In";
+    
     // TODO: remove style property and add a class to the anchor tag forgot-password
 
     formElm.addEventListener('submit', event => {
