@@ -1,10 +1,15 @@
 .navbar {
+  position: sticky;
+  top: 0;
+  max-height: var(--navbar-height);
+  background-color: white;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 56px;
   border-bottom: 2px solid #DDDDDD;
+  z-index: 1000;
 }
 
 .navbar > ul {
@@ -34,7 +39,7 @@
   width: 0;
   height: 2px;
   display: block;
-  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  transition: width 0.15s ease 0s, left 0.15s ease 0s;
   background: none repeat scroll 0 0 var(--primary);
 }
 

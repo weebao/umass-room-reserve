@@ -11,7 +11,7 @@ export class HomePage {
   async render() {
     const elm = document.createElement("div");
     elm.id = "home";
-    elm.classList.add("center", "vstack", "home-container");
+    elm.classList.add("vstack", "home-container");
     elm.innerHTML = `
       <div class="header">
         <h1>UMASS ROOM RESERVATION</h1>
