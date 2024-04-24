@@ -10,13 +10,20 @@ export class Search {
   async render() {
     const elm = document.createElement("div");
     elm.id = "search";
+    elm.classList.add("hstack");
+
+    const textField = document.createElement("div");
+    textField.classList.add("m-textfield-group");
     
     const inputElm = document.createElement("input");
     inputElm.id = "building-name";
+    inputElm.placeholder = "Building Name";
+    inputElm.classList.add("m-textfield");
     inputElm.type = "text";
     
     const inputLabel = document.createElement("label");
     inputLabel.htmlFor = "building-name";
+    inputLabel.classList.add("m-textfield-label");
     inputLabel.innerText = "Building Name";
 
     const searchBtn = document.createElement("button");
@@ -27,9 +34,18 @@ export class Search {
       await this.search(query);
     });
 
-    elm.appendChild(inputLabel);
-    elm.appendChild(inputElm);
+    const sortBtn = document.createElement("button");
+    sortBtn.id = "sort-button";
+    sortBtn.innerText = "Sort by distance";
+    sortBtn.addEventListener("click", async () => {
+      await this.sort();
+    });
+
+    textField.appendChild(inputElm);
+    textField.appendChild(inputLabel);
+    elm.appendChild(textField);
     elm.appendChild(searchBtn);
+    elm.appendChild(sortBtn);
 
     return elm;
   }

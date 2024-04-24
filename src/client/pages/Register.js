@@ -8,8 +8,13 @@ export class RegisterPage {
   }
 
   async render() {
+    const container = document.createElement('div');
+    container.id = 'register-container';
+    container.classList.add('center', 'auth-container');
+
     const registerElm = document.createElement('div');
-    registerElm.id = 'register-view';
+    registerElm.id = 'register-page';
+    registerElm.classList.add('vstack', 'auth-card');
 
     const titleElm = document.createElement('h1');
     titleElm.innerText = 'Register';
@@ -21,20 +26,41 @@ export class RegisterPage {
     const formElm = document.createElement('form');
     formElm.id = 'register-form';
     formElm.innerHTML = `
-      <input type="text" id="first-name" name="firstName" placeholder="First name" required>
+      <div class="m-textfield-group">
+        <input type="text" id="first-name" name="firstName" class="m-textfield" placeholder="First name" required>
+        <label for="first-name" class="m-textfield-label">First Name</label>
+      </div>
 
-      <input type="text" id="last-name" name="lastName" placeholder="Last name" required>
+      <div class="m-textfield-group">
+        <input type="text" id="last-name" name="lastName" class="m-textfield" placeholder="Last name" required>
+        <label for="last-name" class="m-textfield-label">Last Name</label>
+      </div>
 
-      <input type="text" id="major" name="major" placeholder="Major/Department" required>
+      <div class="m-textfield-group">
+        <input type="text" id="major" name="major" class="m-textfield" placeholder="Major/Department" required>
+        <label for="major" class="m-textfield-label">Major/Department</label>
+      </div>
 
-      <input type="text" id="role" name="role" placeholder="Role (Undergraduate, Graduate, Staff)" required>
+      <div class="m-textfield-group">
+        <input type="text" id="role" name="role" class="m-textfield" placeholder="Role (Undergraduate, Graduate, Staff)" required>
+        <label for="role" class="m-textfield-label">Role</label>
+      </div>
 
-      <input type="text" id="school-email" name="schoolEmail" placeholder="School Email (@umass.edu)" required>
+      <div class="m-textfield-group">
+        <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" required>
+        <label for="school-email" class="m-textfield-label">School Email</label>
+      </div>
 
-      <input type="password" id="password" name="password" placeholder="Password" required>
+      <div class="m-textfield-group">
+        <input type="password" id="password" name="password" class="m-textfield" placeholder="Password" required>
+        <label for="password" class="m-textfield-label">Password</label>
+      </div>
 
-      <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm Password" required>
-      
+      <div class="m-textfield-group">
+        <input type="password" id="confirm-password" name="confirmPassword" class="m-textfield" placeholder="Confirm Password" required>
+        <label for="confirm-password" class="m-textfield-label">Confirm Password</label>
+      </div>
+
       <button type="submit" id="register-button">Register</button>
     `;
 
@@ -53,10 +79,11 @@ export class RegisterPage {
       }
     });
 
+    container.appendChild(registerElm);
     registerElm.appendChild(titleElm);
     registerElm.appendChild(loginWrapperElm);
     registerElm.appendChild(formElm);
 
-    return registerElm;
+    return container;
   }
 }

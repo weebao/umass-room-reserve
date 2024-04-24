@@ -1,0 +1,11 @@
+.auth-container {
+  background-color: #505759;
+  height: 100%;
+}
+
+.auth-card {
+  max-width: 500px;
+  padding: 40px 48px;
+  border-radius: 4px;
+  background-color: white;
+}

@@ -4,3 +4,14 @@
   justify-content: center;
   align-items: center;
 }
+
+.hstack {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.vstack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
