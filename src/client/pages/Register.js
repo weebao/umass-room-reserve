@@ -1,6 +1,6 @@
 import { Events } from '../Events.js';
 
-export class Register {
+export class RegisterPage {
   #events = null;
 
   constructor() {
