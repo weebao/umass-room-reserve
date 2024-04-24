@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   const isEqual = (method, path) => req.method === method && req.url === path;
 
   const isMatch = (method, path) =>
-    req.method === method && req.url.endsWith(path);
+    req.method === method && req.url.includes(path);
 
   const hasSuffix = (suffix) =>
     req.method === "GET" && req.url.endsWith(suffix);
@@ -28,7 +28,7 @@ const server = http.createServer((req, res) => {
   // Set CORS headers for cross-origin allowance
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
-    
+
   if (isBackend()) {
     // Handling back-end requests
     res.setHeader("Content-Type", "application/json");
@@ -37,8 +37,10 @@ const server = http.createServer((req, res) => {
       const filteredBuildings = buildings.filter((building) =>
         building.name.toLowerCase().includes(searchQuery)
       );
-      res.writeHead(200);
-      res.end(JSON.stringify(filteredBuildings));
+      setTimeout(() => {
+        res.writeHead(200);
+        res.end(JSON.stringify(filteredBuildings));
+      }, 500);
     } else {
       res.writeHead(404);
       res.end(JSON.stringify({ message: "Route not found" }));
@@ -50,12 +52,26 @@ const server = http.createServer((req, res) => {
         html: "text/html",
         css: "text/css",
         js: "text/javascript",
+        png: "image/png",
+        jpg: "image/jpeg",
+        svg: "image/svg+xml",
+        ico: "image/x-icon",
       })[getSuffix(urlpath)] || "text/plain";
 
     // Read the file from the src/client folder and send it back to the client
     const sendStaticFile = async (urlpath = request.url) => {
       try {
-        const data = await fsp.readFile("src" + urlpath, "utf8");
+        let data;
+        if (
+          hasSuffix(".png") ||
+          hasSuffix(".jpg") ||
+          hasSuffix(".svg") ||
+          hasSuffix(".ico")
+        ) {
+          data = await fsp.readFile("src" + urlpath);
+        } else {
+          data = await fsp.readFile("src" + urlpath, "utf8");
+        }
         res.writeHead(200, { "Content-Type": getContentType(urlpath) });
         res.write(data);
         res.end();
@@ -70,8 +86,12 @@ const server = http.createServer((req, res) => {
 
     // Return file if the request is for a static file
     if (
-      (isMatch("GET", "") || isMatch("GET", "/")) &&
-      (hasSuffix(".html") || hasSuffix(".css") || hasSuffix(".js"))
+      ((isMatch("GET", "") || isMatch("GET", "/")) &&
+        (hasSuffix(".html") || hasSuffix(".css") || hasSuffix(".js"))) ||
+      hasSuffix(".png") ||
+      hasSuffix(".jpg") ||
+      hasSuffix(".svg") ||
+      hasSuffix(".ico")
     ) {
       sendStaticFile("/client" + req.url);
       return;

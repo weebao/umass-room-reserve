@@ -1,22 +1,62 @@
 .navbar {
+  position: sticky;
+  top: 0;
+  max-height: var(--navbar-height);
+  background-color: white;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 12px 56px;
+  border-bottom: 2px solid #DDDDDD;
+  z-index: 1000;
 }
 
 .navbar > ul {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   list-style: none;
 }
 
 .navbar a {
+  position: relative;
   color: var(--black);
+  font-weight: 700;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .navbar a:hover {
-  text-decoration: underline;
+  color: var(--primary);
   cursor: pointer;
+}
+
+.navbar a:not(#home):after {    
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  display: block;
+  transition: width 0.15s ease 0s, left 0.15s ease 0s;
+  background: none repeat scroll 0 0 var(--primary);
+}
+
+.navbar a:not(#home):hover:after { 
+  width: 100%; 
+  left: 0; 
+}
+
+.navbar a:not(#home):active::after {
+  width: 50%;
+  left: 25%;
+}
+
+.navbar a#home {
+  width: 300px;
+  height: auto;
+  aspect-ratio: 10 / 1;
+  background: url(../../assets/logo-large.svg) no-repeat;
+  background-size: contain;
 }
