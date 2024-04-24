@@ -1,4 +1,5 @@
 import { Events } from "../Events.js";
+import { getBuildingByQuery } from "../services/rooms.js";
 
 export class Search {
   #events = null;
@@ -12,39 +13,42 @@ export class Search {
     elm.id = "search";
     elm.classList.add("hstack");
 
-    const textField = document.createElement("div");
-    textField.classList.add("m-textfield-group");
-    
-    const inputElm = document.createElement("input");
-    inputElm.id = "building-name";
-    inputElm.placeholder = "Building Name";
-    inputElm.classList.add("m-textfield");
-    inputElm.type = "text";
-    
-    const inputLabel = document.createElement("label");
-    inputLabel.htmlFor = "building-name";
-    inputLabel.classList.add("m-textfield-label");
-    inputLabel.innerText = "Building Name";
+    const searchBarElm = document.createElement("div");
+    searchBarElm.id = "search-bar";
+    searchBarElm.innerHTML = `
+      <img src="/assets/search-icon.svg" id="search-bar-icon" alt="Search Icon" />
+    `;
 
-    const searchBtn = document.createElement("button");
-    searchBtn.id = "search-button";
-    searchBtn.innerText = "Search";
-    searchBtn.addEventListener("click", async () => {
-      const query = inputElm.value;
-      await this.search(query);
+    const inputElm = document.createElement("input");
+    inputElm.id = "search-input";
+    inputElm.placeholder = "Search by building, location, etc.";
+    inputElm.classList.add("textfield");
+    inputElm.type = "text";
+
+    // Only fetch results when the user stops inputting for 1 second
+    let timeoutId;
+    inputElm.addEventListener("input", (event) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(async () => {
+        await this.search(event.target.value);
+      }, 1000);
     });
 
     const sortBtn = document.createElement("button");
     sortBtn.id = "sort-button";
-    sortBtn.innerText = "Sort by distance";
+    sortBtn.innerHTML = `
+      <img src="/assets/location-icon.svg" id="location-icon" alt="Location Icon" />
+      <span>Sort by distance</span>
+    `
     sortBtn.addEventListener("click", async () => {
       await this.sort();
     });
 
-    textField.appendChild(inputElm);
-    textField.appendChild(inputLabel);
-    elm.appendChild(textField);
-    elm.appendChild(searchBtn);
+    searchBarElm.appendChild(inputElm);
+    elm.appendChild(searchBarElm);
+    // textField.appendChild(inputLabel);
+    // elm.appendChild(textField);
+    // elm.appendChild(searchBtn);
     elm.appendChild(sortBtn);
 
     return elm;

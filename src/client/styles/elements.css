@@ -1,3 +1,21 @@
+.textfield {
+  font-family: inherit;
+  outline: 0;
+  width: 100%;
+  padding: 12px;
+  border: solid 2px #9b9b9b;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--black);
+  background: transparent;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.textfield:focus {
+  border-color: var(--primary);
+}
+
 /* Material UI Text Field */
 .m-textfield-group {
   position: relative;
