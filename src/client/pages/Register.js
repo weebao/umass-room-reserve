@@ -9,11 +9,11 @@ export class RegisterPage {
 
   async render() {
     const container = document.createElement("div");
-    container.id = "register-container";
+    container.id = "register-page";
     container.classList.add("center", "auth-container");
 
     const registerElm = document.createElement("div");
-    registerElm.id = "register-page";
+    registerElm.id = "register-card";
     registerElm.classList.add("vstack", "auth-card");
 
     const headerElm = document.createElement("div");
