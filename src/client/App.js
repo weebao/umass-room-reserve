@@ -4,23 +4,25 @@ import { isLoggedIn } from "./modules/session.js";
 
 import Navbar from "./components/Navbar.js";
 
-// Lazy load the pages
+// Lazy load the pages for faster initial load
 const importLoginPage = async () =>
   (await import("./pages/Login.js")).LoginPage;
 const importHomePage = async () => (await import("./pages/Home.js")).HomePage;
 const importRegisterPage = async () =>
   (await import("./pages/Register.js")).RegisterPage;
+const importProfilePage = async () =>
+  (await import("./pages/Profile.js")).ProfilePage;
 const importNotFoundPage = async () =>
   (await import("./pages/404.js")).NotFoundPage;
 
 export class App {
   #events = null;
   #mainViewElm = null;
-  #isLoggedIn = false; // should not define here, get from loggedIn class or server instead
 
   #loginPage = null;
   #homePage = null;
   #registerPage = null;
+  #profilePage = null;
   #notFoundPage = null;
 
   constructor() {
@@ -48,8 +50,6 @@ export class App {
     this.#mainViewElm.id = "main-view";
 
     rootElm.appendChild(this.#mainViewElm);
-
-    this.#isLoggedIn = await isLoggedIn();
   }
 
   /**
@@ -64,6 +64,7 @@ export class App {
       return;
     }
     this.#mainViewElm.innerHTML = "";
+    const loggedIn = await isLoggedIn();
     switch (page) {
       case "":
       case "/":
@@ -77,7 +78,7 @@ export class App {
         page = "/home";
         break;
       case "/login":
-        if (this.#isLoggedIn) {
+        if (loggedIn) {
           await this.#navigateTo("/home");
           return;
         }
@@ -89,7 +90,7 @@ export class App {
         this.#mainViewElm.appendChild(this.#loginPage);
         break;
       case "/register":
-        if (this.#isLoggedIn) {
+        if (loggedIn) {
           await this.#navigateTo("/home");
           return;
         }
@@ -99,6 +100,18 @@ export class App {
           this.#registerPage = await registerPageObj.render();
         }
         this.#mainViewElm.appendChild(this.#registerPage);
+        break;
+      case "/profile":
+        if (!loggedIn) {
+          await this.#navigateTo("/login");
+          return;
+        }
+        if (!this.#profilePage) {
+          const ProfilePage = await importProfilePage();
+          const profilePageObj = new ProfilePage();
+          this.#profilePage = await profilePageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#profilePage);
         break;
       default:
         if (!this.#notFoundPage) {

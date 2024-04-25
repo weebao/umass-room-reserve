@@ -1,45 +1,47 @@
-import { Events } from '../Events.js';
+import { Events } from "../Events.js";
+
+import { loginUser } from "../services/auth.js";
+import { saveSession } from "../modules/session.js";
 
 export class LoginPage {
   #events = null;
-  #user = null;
+
   constructor() {
     this.#events = Events.events();
-    this.#user = { "laufey": "123456" }
   }
 
   async render() {
-    const container = document.createElement('div');
-    container.id = 'login-container';
-    container.classList.add('center', 'auth-container');
+    const container = document.createElement("div");
+    container.id = "login-container";
+    container.classList.add("center", "auth-container");
 
     // Create container for login form
-    const loginElm = document.createElement('div');
-    loginElm.id = 'login-page';
-    loginElm.classList.add('vstack', 'auth-card');
+    const loginElm = document.createElement("div");
+    loginElm.id = "login-page";
+    loginElm.classList.add("vstack", "auth-card");
 
     // Header
-    const headerElm = document.createElement('div');
-    headerElm.classList.add('auth-card-header');
+    const headerElm = document.createElement("div");
+    headerElm.classList.add("auth-card-header");
 
-    const titleElm = document.createElement('h1');
-    titleElm.innerText = 'Login';
+    const titleElm = document.createElement("h1");
+    titleElm.innerText = "Login";
 
-    const registerWrapperelm = document.createElement('div');
-    registerWrapperelm.id = 'register-wrapper';
+    const registerWrapperelm = document.createElement("div");
+    registerWrapperelm.id = "register-wrapper";
     registerWrapperelm.innerHTML = `New here? `;
 
-    const registerLinkElm = document.createElement('span');
-    registerLinkElm.id = 'register-link';
-    registerLinkElm.classList.add('auth-link');
-    registerLinkElm.innerText = 'Create a new account';
-    registerLinkElm.addEventListener('click', () => {
-      this.#events.publish('navigateTo', '/register');
+    const registerLinkElm = document.createElement("span");
+    registerLinkElm.id = "register-link";
+    registerLinkElm.classList.add("auth-link");
+    registerLinkElm.innerText = "Create a new account";
+    registerLinkElm.addEventListener("click", () => {
+      this.#events.publish("navigateTo", "/register");
     });
     registerWrapperelm.appendChild(registerLinkElm);
 
-    const formElm = document.createElement('form');
-    formElm.id = 'login-form';
+    const formElm = document.createElement("form");
+    formElm.id = "login-form";
     formElm.innerHTML = `
         <div class="m-textfield-group auth-input">
           <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" title="email@umass.edu" pattern="[^@\s]+@umass\.edu" required>
@@ -63,12 +65,12 @@ export class LoginPage {
       `;
 
     // TODO: remove style property and add a class to the anchor tag forgot-password
-    const schoolEmail = formElm.querySelector('#school-email');
-    const password = formElm.querySelector('#password');
+    const schoolEmail = formElm.querySelector("#school-email");
+    const password = formElm.querySelector("#password");
 
     const inputArr = [schoolEmail, password];
-    const loginButton = formElm.querySelector('#login-button');
-    loginButton.addEventListener('click', () => {
+    const loginButton = formElm.querySelector("#login-button");
+    loginButton.addEventListener("click", () => {
       inputArr.forEach((inputElm) => {
         if (inputElm.validity.valid) {
           inputElm.classList.remove("m-textfield-error");
@@ -78,10 +80,9 @@ export class LoginPage {
       });
     });
 
-
-    formElm.addEventListener('submit', event => {
+    formElm.addEventListener("submit", (event) => {
       event.preventDefault();
-      [schoolEmail, password].forEach((inputElm) => {
+      inputArr.forEach((inputElm) => {
         if (inputElm.validity.valid) {
           inputElm.classList.remove("m-textfield-error");
         } else {
@@ -89,24 +90,50 @@ export class LoginPage {
         }
       });
 
-      if (schoolEmail.value in this.#user && this.#user[schoolEmail.value] === password.value) {
-        formElm.querySelector('#password-forgot-noti').style.display = 'none';
-
-        [schoolEmail, password].forEach((inputElm) => {
-          inputElm.classList.remove("m-textfield-error");
-        });
-
-        this.#events.publish('navigateTo', '/home');
-      } else {
-        formElm.querySelector('#password-forgot-noti').style.display = 'block';
-
-        [schoolEmail, password].forEach((inputElm) => {
+      try {
+        const email = schoolEmail.value;
+        const password = password.value;
+        // const user = loginUser(email, password);
+        if (email && password) {
+          formElm.querySelector("#password-forgot-noti").style.display = "none";
+          inputArr.forEach((inputElm) => {
+            inputElm.classList.remove("m-textfield-error");
+          });
+          saveSession({ email, password });
+          this.#events.publish("rerenderNav");
+          this.#events.publish("navigateTo", "/home");
+        } else {
+          formElm.querySelector("#password-forgot-noti").style.display =
+            "block";
+          inputArr.forEach((inputElm) => {
+            inputElm.classList.add("m-textfield-error");
+          });
+        }
+      } catch {
+        formElm.querySelector("#password-forgot-noti").style.display = "block";
+        inputArr.forEach((inputElm) => {
           inputElm.classList.add("m-textfield-error");
         });
       }
+
+      // if (schoolEmail.value in this.#user && this.#user[schoolEmail.value] === password.value) {
+      //   formElm.querySelector('#password-forgot-noti').style.display = 'none';
+
+      //   inputArr.forEach((inputElm) => {
+      //     inputElm.classList.remove("m-textfield-error");
+      //   });
+
+      //   this.#events.publish('navigateTo', '/home');
+      // } else {
+      //   formElm.querySelector('#password-forgot-noti').style.display = 'block';
+
+      //   inputArr.forEach((inputElm) => {
+      //     inputElm.classList.add("m-textfield-error");
+      //   });
+      // }
     });
 
-    formElm.querySelector('#password-forgot-noti').style.display = 'none';
+    formElm.querySelector("#password-forgot-noti").style.display = "none";
 
     container.appendChild(loginElm);
     headerElm.appendChild(titleElm);
@@ -117,59 +144,3 @@ export class LoginPage {
     return container;
   }
 }
-
-// mock data for user authentication
-const users = [
-  {
-      user_id: 1,
-      email: 'lionelmessi@gmail.com',
-      password: 'iamgoat',
-      first_name: 'Lionel',
-      last_name: 'Messi',
-  },
-  {
-      user_id: 2,
-      email: 'cristianoronaldo@gmail.com',
-      password: 'messiisbetterthanme',
-      first_name: 'Cristiano',
-      last_name: 'Ronaldo',
-  }
-]
-
-// /**
-// * Attaches a click event listener to the login button on the page. Once the page content is fully loaded,
-// * this script checks if the login button exists. If it does, it sets up a listener that triggers the login
-// * process when the button is clicked. The login process involves capturing the user's email and password
-// * from input fields and passing these values to the `loginUser` function.
-// *
-// * @listens document#DOMContentLoaded - Waits for the content of the document to be fully loaded before attaching event handlers.
-// */
-// document.addEventListener('DOMContentLoaded', () => {
-//   const loginButton = document.getElementById('login-button');
-//   if (loginButton) {
-//       loginButton.addEventListener('click', () => {
-//           const email = document.getElementById('email').value;
-//           const password = document.getElementById('password').value;
-//           loginUser(email, password);
-//       });
-//   }
-// });
-
-// /**
-// * Simulates a login by checking user credentials and storing session data.
-// * @param {string} email - User's email.
-// * @param {string} password - User's password.
-// */
-// function loginUser(email, password) {
-//   const user = users.find(u => u.email === email && u.password === password);
-//   if (user) {
-//       console.log('Login successful:', user);
-//       // Remove sensitive data before saving to local storage
-//       const { password, ...sessionData } = user;
-//       saveSession(sessionData);
-//       return true;
-//   } else {
-//       console.log('Login failed: Incorrect email or password.');
-//       return false;
-//   }
-// }

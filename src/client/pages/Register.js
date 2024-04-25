@@ -1,5 +1,7 @@
 import { Events } from "../Events.js";
 
+import { saveSession } from '../modules/session.js';
+
 export class RegisterPage {
   #events = null;
 
@@ -108,19 +110,18 @@ export class RegisterPage {
       event.preventDefault();
       const firstName = firstNameInput.value;
       const lastName = lastNameInput.value;
-      const schoolEmail = schoolEmailInput.value;
+      const major = majorInput.value;
+      const role = roleInput.value;
+      const email = schoolEmailInput.value;
       const password = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
 
       if (password === confirmPassword) {
         passwordMatchMessage.innerText = "";
         confirmPasswordInput.classList.remove("m-textfield-error");
-        this.#events.publish("register", {
-          firstName,
-          lastName,
-          schoolEmail,
-          password,
-        });
+        saveSession({ firstName, lastName, major, role, email, password });
+        this.#events.publish("rerenderNav");
+        this.#events.publish("navigateTo", "/home");
       } else {
         confirmPasswordInput.classList.add("m-textfield-error");
         passwordMatchMessage.innerText = "Passwords do not match";
