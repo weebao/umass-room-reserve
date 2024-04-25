@@ -79,15 +79,21 @@ export class LoginPage {
       if (schoolEmail.value in this.#user && this.#user[schoolEmail.value] === password.value) {
         formElm.querySelector('#password-forgot-noti').style.display = 'none';
 
+        [schoolEmail, password].forEach((inputElm) => {
+          inputElm.classList.remove("m-textfield-error");
+        });
+
         this.#events.publish('navigateTo', '/home');
       } else {
         formElm.querySelector('#password-forgot-noti').style.display = 'block';
+
+        [schoolEmail, password].forEach((inputElm) => {
+          inputElm.classList.add("m-textfield-error");
+        });
       }
     });
 
     formElm.querySelector('#password-forgot-noti').style.display = 'none';
-    schoolEmail.classList.remove("m-textfield-error");
-    password.classList.remove("m-textfield-error");
 
     container.appendChild(loginElm);
     headerElm.appendChild(titleElm);
