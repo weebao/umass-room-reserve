@@ -42,8 +42,8 @@ export class LoginPage {
     formElm.id = 'login-form';
     formElm.innerHTML = `
         <div class="m-textfield-group auth-input">
-          <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" required>
-          <label for="school-email" class="m-textfield-label">School Email</label>
+          <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" title="email@umass.edu" pattern="[^@\s]+@umass\.edu" required>
+          <label for="school-email" class="m-textfield-label">School Email (@umass.edu)</label>
         </div>
         <div class="auth-input">
           <div class="m-textfield-group">
@@ -52,8 +52,8 @@ export class LoginPage {
           </div>
           <div id="password-forgot-noti">Uh oh you forgot your identity 🤣</div>
           <div id="password-forgot-wrapper" class="hstack space-between">
-            <label for="remember-me">
-              <input type="checkbox" id="remember-me" name="remember_me"> 
+            <label for="remember-me" class="checkbox">
+              <input type="checkbox" id="remember-me" name="remember_me" checked> 
               Remember me
             </label>
             <span class="auth-link" href="#forgot-password">Forgot password?</span>

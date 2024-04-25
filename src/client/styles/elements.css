@@ -1,3 +1,9 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .textfield {
   font-family: inherit;
   outline: 0;

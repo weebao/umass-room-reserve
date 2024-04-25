@@ -5,10 +5,13 @@ import { isLoggedIn } from "./modules/session.js";
 import Navbar from "./components/Navbar.js";
 
 // Lazy load the pages
-const importLoginPage = async () => (await import("./pages/Login.js")).LoginPage;
+const importLoginPage = async () =>
+  (await import("./pages/Login.js")).LoginPage;
 const importHomePage = async () => (await import("./pages/Home.js")).HomePage;
-const importRegisterPage = async () => (await import("./pages/Register.js")).RegisterPage;
-const importNotFoundPage = async () => (await import("./pages/404.js")).NotFoundPage;
+const importRegisterPage = async () =>
+  (await import("./pages/Register.js")).RegisterPage;
+const importNotFoundPage = async () =>
+  (await import("./pages/404.js")).NotFoundPage;
 
 export class App {
   #events = null;
@@ -30,6 +33,10 @@ export class App {
    * @returns {Promise<void>} A promise that resolves when the rendering is complete.
    */
   async render(root) {
+    this.#events.subscribe("navigateTo", async (page) => {
+      await this.#navigateTo(page);
+    });
+
     const rootElm = document.getElementById(root);
     rootElm.innerHTML = "";
 
@@ -39,15 +46,10 @@ export class App {
 
     this.#mainViewElm = document.createElement("main");
     this.#mainViewElm.id = "main-view";
-    
+
     rootElm.appendChild(this.#mainViewElm);
 
     this.#isLoggedIn = await isLoggedIn();
-
-    this.#events.subscribe(
-      "navigateTo",
-      async (page) => {await this.#navigateTo(page)}
-    );
   }
 
   /**
@@ -57,7 +59,7 @@ export class App {
    * @returns {Promise<void>} - A promise that resolves when the navigation is complete.
    */
   async #navigateTo(page) {
-    console.log(page)
+    // console.log(page);
     if (!page || typeof page !== "string") {
       return;
     }
@@ -66,46 +68,46 @@ export class App {
       case "":
       case "/":
       case "/home":
-      if (!this.#homePage) {
-        const HomePage = await importHomePage();
-        const homePageObj = new HomePage();
-        this.#homePage = await homePageObj.render();
-      }
-      this.#mainViewElm.appendChild(this.#homePage);
-      page = "/home";
-      break;
+        if (!this.#homePage) {
+          const HomePage = await importHomePage();
+          const homePageObj = new HomePage();
+          this.#homePage = await homePageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#homePage);
+        page = "/home";
+        break;
       case "/login":
-      if (this.#isLoggedIn) {
-        await this.#navigateTo("/home");
-        return;
-      }
-      if (!this.#loginPage) {
-        const LoginPage = await importLoginPage();
-        const loginPageObj = new LoginPage();
-        this.#loginPage = await loginPageObj.render();
-      }
-      this.#mainViewElm.appendChild(this.#loginPage);
-      break;
+        if (this.#isLoggedIn) {
+          await this.#navigateTo("/home");
+          return;
+        }
+        if (!this.#loginPage) {
+          const LoginPage = await importLoginPage();
+          const loginPageObj = new LoginPage();
+          this.#loginPage = await loginPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#loginPage);
+        break;
       case "/register":
-      if (this.#isLoggedIn) {
-        await this.#navigateTo("/home");
-        return;
-      }
-      if (!this.#registerPage) {
-        const RegisterPage = await importRegisterPage();
-        const registerPageObj = new RegisterPage();
-        this.#registerPage = await registerPageObj.render();
-      }
-      this.#mainViewElm.appendChild(this.#registerPage);
-      break;
+        if (this.#isLoggedIn) {
+          await this.#navigateTo("/home");
+          return;
+        }
+        if (!this.#registerPage) {
+          const RegisterPage = await importRegisterPage();
+          const registerPageObj = new RegisterPage();
+          this.#registerPage = await registerPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#registerPage);
+        break;
       default:
-      if (!this.#notFoundPage) {
-        const NotFoundPage = await importNotFoundPage();
-        const notFoundPageObj = new NotFoundPage();
-        this.#notFoundPage = await notFoundPageObj.render();
-      }
-      this.#mainViewElm.appendChild(this.#notFoundPage);
-      return;
+        if (!this.#notFoundPage) {
+          const NotFoundPage = await importNotFoundPage();
+          const notFoundPageObj = new NotFoundPage();
+          this.#notFoundPage = await notFoundPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#notFoundPage);
+        return;
     }
     window.history.pushState({}, page, window.location.origin + page);
   }
