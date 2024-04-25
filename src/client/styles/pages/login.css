@@ -93,7 +93,7 @@ body {
 } */
 #password-forgot-wrapper {
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 
 #password-forgot-noti {
@@ -110,15 +110,3 @@ body {
     font-weight: 600;
     color: var(--primary);
 }
-
-#sign-in {
-    background-color: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 0;
-    font-size: 15px;
-    cursor: pointer;
-    height: 40px;
-    width: 100%;
-} 

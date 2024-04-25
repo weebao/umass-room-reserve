@@ -59,7 +59,7 @@ export class LoginPage {
             <span class="auth-link" href="#forgot-password">Forgot password?</span>
           </div>
         </div>
-        <button type="submit" id="sign-in">Sign In</button>
+        <button type="submit" class="auth-submit-button">Sign In</button>
       `;
 
     // TODO: remove style property and add a class to the anchor tag forgot-password
