@@ -16,6 +16,18 @@ git clone https://github.com/weebao/umass-room-reserve.git
 npm install
 ```
 
+## Running the app
+
+Below would be the optimal way to run:
+```bash
+npm start
+```
+
+Since Milestone 2's criteria requires the website to be run on `http-server`, you can run the command below to run the app. Make sure not to reload the page since this is a SPA which manipulates the URL so the page will not be able to load another page since they don't exist.
+```bash
+npm run milestone-02
+```
+
 ## Contribution rules
 
 - Every commit/feature must be associated with an issue.
