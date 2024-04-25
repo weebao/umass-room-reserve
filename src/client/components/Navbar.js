@@ -33,7 +33,6 @@ export default class Navbar {
 
         // Get the page name from the href attribute
         const page = link.getAttribute("href");
-        console.log(page);
 
         // Call the navigateTo function with the view name
         await this.#events.publish("navigateTo", page);

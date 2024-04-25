@@ -1,3 +1,7 @@
+import PouchDB from 'pouchdb';
+// const PouchDB = require('pouchdb');
+const db = new PouchDB('session_db');
+
 const HASHKEY = "timrichardsisthegoat";
 
 /**

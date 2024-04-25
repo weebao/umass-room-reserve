@@ -1,5 +1,7 @@
 import { Events } from "./Events.js";
 
+import { }
+
 import Navbar from "./components/Navbar.js";
 
 // Lazy load the pages
@@ -20,6 +22,7 @@ export class App {
 
   constructor() {
     this.#events = Events.events();
+    this.#isLogged
   }
 
   /**
@@ -53,7 +56,6 @@ export class App {
    * @returns {Promise<void>} - A promise that resolves when the navigation is complete.
    */
   async #navigateTo(page) {
-    // console.log(page)
     if (!page || typeof page !== "string") {
       return;
     }
