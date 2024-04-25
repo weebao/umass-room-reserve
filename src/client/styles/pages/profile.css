@@ -8,11 +8,26 @@
 }
 
 #profile-page > #user-profile {
-  padding: 24px 100px;
+  max-width: 500px;
+  padding: 48px 100px 24px 100px;
 }
 
 #user-info {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+#user-info > button {
+  align-self: start;
+}
+
+#user-name-group {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+}
+
+#user-name-group > div {
+  width: 100%;
 }

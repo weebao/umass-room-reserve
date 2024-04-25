@@ -1,7 +1,7 @@
 import { Events } from "../Events.js";
 
 import { loginUser } from "../services/auth.js";
-import { saveSession } from "../modules/session.js";
+import { createSession } from "../modules/session.js";
 
 export class LoginPage {
   #events = null;
@@ -99,7 +99,7 @@ export class LoginPage {
           inputArr.forEach((inputElm) => {
             inputElm.classList.remove("m-textfield-error");
           });
-          saveSession({ email, password });
+          createSession({ email, password });
           this.#events.publish("rerenderNav");
           this.#events.publish("navigateTo", "/home");
         } else {

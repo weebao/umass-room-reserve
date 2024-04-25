@@ -1,6 +1,6 @@
 import { Events } from "../Events.js";
 
-import { saveSession } from '../modules/session.js';
+import { createSession } from '../modules/session.js';
 
 export class RegisterPage {
   #events = null;
@@ -119,7 +119,7 @@ export class RegisterPage {
       if (password === confirmPassword) {
         passwordMatchMessage.innerText = "";
         confirmPasswordInput.classList.remove("m-textfield-error");
-        saveSession({ firstName, lastName, major, role, email, password });
+        createSession({ firstName, lastName, major, role, email, password });
         this.#events.publish("rerenderNav");
         this.#events.publish("navigateTo", "/home");
       } else {

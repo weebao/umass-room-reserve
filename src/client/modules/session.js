@@ -10,7 +10,7 @@ const ENCRYPTION_KEY = "timrichardsisthegoat";
  * @param {Object} sessionData - The session data to be saved.
  * @returns {Promise<void>} - A promise that resolves when the session data is successfully saved.
  */
-export async function saveSession(sessionData) {
+export async function createSession(sessionData) {
   for (const key in sessionData) {
     sessionData[key] = encrypt(sessionData[key]);
   }
@@ -38,6 +38,23 @@ export async function getSession() {
   } catch (err) {
     return null;
   }
+}
+
+/**
+ * Modifies the user session with updated data.
+ * @param {Object} sessionData - The updated data to be applied to the user session.
+ * @returns {Promise<void>} - A promise that resolves when the user session is successfully modified.
+ */
+export async function modifySession(sessionData) {
+  const session = await db.get("userSession");
+  for (const key in sessionData) {
+    sessionData[key] = encrypt(sessionData[key]);
+  }
+  await db.put({
+    _id: "userSession",
+    _rev: session._rev,
+    ...sessionData,
+  });
 }
 
 /**

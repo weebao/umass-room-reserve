@@ -1,6 +1,6 @@
 import { Events } from "../Events.js";
 
-import { getSession, saveSession } from "../modules/session.js";
+import { getSession, modifySession } from "../modules/session.js";
 
 export class ProfilePage {
   #events = null;
@@ -40,16 +40,17 @@ export class ProfilePage {
             <label for="email" class="textfield-label">Email</label>
             <input type="text" id="email" class="textfield" name="email">
           </div>
+          <button id="update-profile" class="custom-button">Update Profile</button>
         </div>
         <div id="change-password">
-          <h4>Change password</h4>
+          <h5>Change password</h5>
           <div id="password">
             <input type="password" id="current-password" name="current-password" class="textfield" placeholder="Current password">
             <input type="password" id="new-password" name="new-password" class="textfield" placeholder="New password">
             <input type="password" id="confirm-password" name="confirm-password" class="textfield" placeholder="Confirm new password">
           </div>
+          <button id="update-password" class="custom-button">Update Password</button>
         </div>
-        <button id="update-profile">Update Profile</button>
       </div>
       `;
 
@@ -80,7 +81,7 @@ export class ProfilePage {
         email: emailInput.value,
       };
 
-      await saveSession(updatedUserData);
+      await modifySession(updatedUserData);
     });
 
     return elm;
