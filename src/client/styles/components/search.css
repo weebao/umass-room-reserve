@@ -1,0 +1,46 @@
+#search-bar {
+  position: relative;
+  min-width: 500px;
+  margin-right: 4px;
+}
+
+#search-bar-icon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 24px;
+  height: 24px;
+}
+
+#search-input {
+  padding-inline-start: 42px;
+}
+
+#sort-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--primary);
+  font-size: 1rem;
+  color: white;
+  border: none;
+  transition: all 0.15s;
+}
+
+#sort-button:hover {
+  background-color: var(--primary-hover);
+  cursor: pointer;
+}
+
+#sort-button:active {
+  transform: scale(0.95);
+}
+
+#location-icon {
+  color: white;
+  width: 24px;
+  height: 24px;
+}

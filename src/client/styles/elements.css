@@ -1,0 +1,89 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.textfield {
+  font-family: inherit;
+  outline: 0;
+  width: 100%;
+  padding: 12px;
+  border: solid 2px #9b9b9b;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--black);
+  background: transparent;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.textfield:focus {
+  border-color: var(--primary);
+}
+
+/* Material UI Text Field */
+.m-textfield-group {
+  position: relative;
+  width: 100%;
+}
+
+.m-textfield {
+  font-family: inherit;
+  outline: 0;
+  width: 100%;
+  padding: 12px;
+  border: solid 2px #9b9b9b;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--black);
+  background: transparent;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.m-textfield::placeholder {
+  color: transparent;
+}
+
+.m-textfield:placeholder-shown ~ .m-textfield-label {
+  font-size: 1rem;
+  cursor: text;
+  user-select: none;
+  -webkit-user-select: none;
+  top: 0.875rem;
+}
+
+label.m-textfield-label,
+.m-textfield:focus ~ .m-textfield-label {
+  position: absolute;
+  top: -0.5rem;
+  left: calc(12px - 0.125rem);
+  display: block;
+  padding: 0px 2px;
+  transition: 0.2s;
+  font-size: 0.75rem;
+  color: #9b9b9b;
+  background: white;
+}
+
+.m-textfield:focus ~ .m-textfield-label {
+  color: var(--primary);
+}
+
+.m-textfield:focus {
+  border-color: var(--primary);
+}
+
+.m-textfield.m-textfield-error {
+  border-color: var(--error);
+}
+
+.m-textfield.m-textfield-error ~ p {
+  color: var(--error);
+  margin-top: 0.1rem;
+}
+
+.m-textfield.m-textfield-error ~ .m-textfield-label {
+  color: var(--error);
+}

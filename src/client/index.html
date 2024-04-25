@@ -1,52 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>To-Do List App</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>UMass Room Reserve</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles/global.css" type="text/css"/>
+    <link rel="stylesheet" href="styles/layout.css" type="text/css" />
+    <link rel="stylesheet" href="styles/elements.css" type="text/css" />
+
+    <link rel="stylesheet" href="styles/components/navbar.css" type="text/css" />
+    <link rel="stylesheet" href="styles/components/search.css" type="text/css" />
+    
+    <link rel="stylesheet" href="styles/pages/home.css" type="text/css" />
+    <link rel="stylesheet" href="styles/pages/auth.css" type="text/css" />
+    <link rel="stylesheet" href="styles/pages/login.css" type="text/css" />
+
+    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon" />
+
+    <!-- JS -->
+    <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
     <script type="module" src="index.js"></script>
-
-    <!-- ADD SCRIPT FROM SEARCH.JS -->
-    <script type="module" src="./components/Search.js"></script>
-    <style>
-      .result-card {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        padding: 16px;
-        background-color: transparent;
-        border: solid 1px #ccc;
-        border-radius: 8px;
-        overflow: hidden;
-        transition: transform 0.3s ease, color 0.3s ease;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-      }
-    </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
-
-    <script type="module" src="./pages/Login.js"></script>
-
   </head>
-  <body>
-    <button id="reset-state">Clear State</button>
-    <div class="container" id="root"></div>
-
-    <!-- RESERVE ROOM PROJECT STARTS FROM HEREEEEEEE -->
-  <div id="search-bar">
-    <label for="buidling-name"> Enter Building Name: </label><input type="text" id="building-name"/>
-    <input type="button" value="Search" id="search-button" />
-  </div>
-
-  <div id="login">
-    <label for="email">Email: </label><input type="text" id="email"/>
-    <label for="password">Password: </label><input type="text" id="password"/>
-    <input type="button" value="Log In" id="login-button" />
-  </div>
-
-  <div id="results-container"></div>
-
-  </body>
+  <body id="root"></body>
 </html>

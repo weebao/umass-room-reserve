@@ -1,53 +1,68 @@
+import { Events } from "../Events.js";
+import { getBuildingByQuery } from "../services/rooms.js";
 
-document.addEventListener('DOMContentLoaded', function() {
-    const searchBttn = document.getElementById('search-button');
-    const searchInput = document.getElementById('building-name');
-    const resultsContainer = document.getElementById('results-container');
-    const imageFolder = '../server/building_images'; // Change this to the correct folder directory
-  
-    searchBttn.addEventListener('click', async function(){
-        const searchQuery = searchInput.value.toLowerCase();
-        try {
-            const response = await fetch(`http://localhost:3260/getBuilding?name=${searchQuery}`);
-            const buildings = await response.json(); 
-            displayResults(buildings);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            resultsContainer.innerHTML = '<p>Error loading results.</p>';
-        }
+export class Search {
+  #events = null;
+
+  constructor() {
+    this.#events = Events.events();
+  }
+
+  async render() {
+    const elm = document.createElement("div");
+    elm.id = "search";
+    elm.classList.add("hstack");
+
+    const searchBarElm = document.createElement("div");
+    searchBarElm.id = "search-bar";
+    searchBarElm.innerHTML = `
+      <img src="/assets/search-icon.svg" id="search-bar-icon" alt="Search Icon" />
+    `;
+
+    const inputElm = document.createElement("input");
+    inputElm.id = "search-input";
+    inputElm.placeholder = "Search by building, location, etc.";
+    inputElm.classList.add("textfield");
+    inputElm.type = "text";
+
+    // Only fetch results when the user stops inputting for 1 second
+    let timeoutId;
+    inputElm.addEventListener("input", (event) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(async () => {
+        await this.search(event.target.value);
+      }, 1000);
     });
 
-    /**
-     * Displays search results in the form of cards in a specified container on the web page. Each card represents
-     * a building, showing its name and featuring an image as the background. This function clears any previous content
-     * in the results container before adding new results, ensuring the display is updated correctly with only the
-     * latest search results.
-     *
-     * @param {Object[]} buildings - An array of building objects where each object contains information about a building.
-     * @param {string} buildings[].name - The name of the building to display on the card.
-     * @param {string} buildings[].img_name - The filename of the image for the building, used to construct the image URL.
-     * 
-     * @global
-     * @uses resultsContainer - A predefined global variable that refers to the DOM element where results should be displayed.
-     * @uses imageFolder - A predefined global variable that contains the path to the folder where building images are stored.
-     */
-    function displayResults(buildings) {
-        resultsContainer.innerHTML = '';
-        buildings.forEach(building => {
-            const card = document.createElement('div');
-            card.className = 'result-card'; // Add a class for styling
+    const sortBtn = document.createElement("button");
+    sortBtn.id = "sort-button";
+    sortBtn.innerHTML = `
+      <img src="/assets/location-icon.svg" id="location-icon" alt="Location Icon" />
+      <span>Sort by distance</span>
+    `
+    sortBtn.addEventListener("click", async () => {
+      await this.sort();
+    });
 
-            //Display buidling name
-            const buildingName = document.createElement('h3');
-            buildingName.textContent = building.name;
+    searchBarElm.appendChild(inputElm);
+    elm.appendChild(searchBarElm);
+    // textField.appendChild(inputLabel);
+    // elm.appendChild(textField);
+    // elm.appendChild(searchBtn);
+    elm.appendChild(sortBtn);
 
-            //Add image of the buidling as background
-            const img_url =  imageFolder + '/' + building.img_name;
-            card.style.backgroundImage = `url('${img_url}')`;
-            card.style.filter = `brightness(50%)`;
+    return elm;
+  }
 
-            card.appendChild(buildingName);
-            resultsContainer.appendChild(card);
-        });
+  async search(query) {
+    try {
+      const response = await fetch(
+        `http://localhost:3260/api/getBuilding?name=${query}`
+      );
+      const data = await response.json();
+      console.log("Search Results: ", data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-});
+  }
+}

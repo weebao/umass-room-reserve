@@ -1,52 +1,114 @@
-import { TodoListView } from './TodoListView.js';
-import { Events } from './Events.js';
-import { NavBar } from './Navbar.js';
+import { Events } from "./Events.js";
+
+import { isLoggedIn } from "./modules/session.js";
+
+import Navbar from "./components/Navbar.js";
+
+// Lazy load the pages
+const importLoginPage = async () =>
+  (await import("./pages/Login.js")).LoginPage;
+const importHomePage = async () => (await import("./pages/Home.js")).HomePage;
+const importRegisterPage = async () =>
+  (await import("./pages/Register.js")).RegisterPage;
+const importNotFoundPage = async () =>
+  (await import("./pages/404.js")).NotFoundPage;
 
 export class App {
-  #todolistViewElm = null;
-  #mainViewElm = null;
   #events = null;
+  #mainViewElm = null;
+  #isLoggedIn = false; // should not define here, get from loggedIn class or server instead
+
+  #loginPage = null;
+  #homePage = null;
+  #registerPage = null;
+  #notFoundPage = null;
 
   constructor() {
     this.#events = Events.events();
   }
 
+  /**
+   * Renders the application on the specified root element.
+   * @param {string} root - The ID of the root element where the application will be rendered.
+   * @returns {Promise<void>} A promise that resolves when the rendering is complete.
+   */
   async render(root) {
+    this.#events.subscribe("navigateTo", async (page) => {
+      await this.#navigateTo(page);
+    });
+
     const rootElm = document.getElementById(root);
-    rootElm.innerHTML = '';
+    rootElm.innerHTML = "";
 
-    const navbarElm = document.createElement('div');
-    navbarElm.id = 'navbar';
-    const navbar = new NavBar();
-    navbarElm.appendChild(await navbar.render());
-
-    this.#mainViewElm = document.createElement('div');
-    this.#mainViewElm.id = 'main-view';
-
+    const navbar = new Navbar();
+    const navbarElm = await navbar.render();
     rootElm.appendChild(navbarElm);
+
+    this.#mainViewElm = document.createElement("main");
+    this.#mainViewElm.id = "main-view";
+
     rootElm.appendChild(this.#mainViewElm);
 
-    const todoListView = new TodoListView();
-    this.#todolistViewElm = await todoListView.render();
-    this.#navigateTo('todolist');
-
-    this.#events.subscribe('navigateTo', view => this.#navigateTo(view));
+    this.#isLoggedIn = await isLoggedIn();
   }
 
-  #navigateTo(view) {
-    this.#mainViewElm.innerHTML = '';
-    if (view === 'todolist') {
-      this.#mainViewElm.appendChild(this.#todolistViewElm);
-      window.location.hash = view;
-    } else if (view === 'archive') {
-      // TODO: this is where we want to add the archive view
-      const archive = document.createElement('div');
-      archive.innerHTML = '<h1>Archive view (coming soon)</h1>';
-      this.#mainViewElm.appendChild(archive);
-      window.location.hash = view;
-    } else {
-      this.#mainViewElm.appendChild(this.todolist);
-      window.location.hash = 'todolist';
+  /**
+   * Navigates to the specified page.
+   *
+   * @param {string} page - The page to navigate to.
+   * @returns {Promise<void>} - A promise that resolves when the navigation is complete.
+   */
+  async #navigateTo(page) {
+    // console.log(page);
+    if (!page || typeof page !== "string") {
+      return;
     }
+    this.#mainViewElm.innerHTML = "";
+    switch (page) {
+      case "":
+      case "/":
+      case "/home":
+        if (!this.#homePage) {
+          const HomePage = await importHomePage();
+          const homePageObj = new HomePage();
+          this.#homePage = await homePageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#homePage);
+        page = "/home";
+        break;
+      case "/login":
+        if (this.#isLoggedIn) {
+          await this.#navigateTo("/home");
+          return;
+        }
+        if (!this.#loginPage) {
+          const LoginPage = await importLoginPage();
+          const loginPageObj = new LoginPage();
+          this.#loginPage = await loginPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#loginPage);
+        break;
+      case "/register":
+        if (this.#isLoggedIn) {
+          await this.#navigateTo("/home");
+          return;
+        }
+        if (!this.#registerPage) {
+          const RegisterPage = await importRegisterPage();
+          const registerPageObj = new RegisterPage();
+          this.#registerPage = await registerPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#registerPage);
+        break;
+      default:
+        if (!this.#notFoundPage) {
+          const NotFoundPage = await importNotFoundPage();
+          const notFoundPageObj = new NotFoundPage();
+          this.#notFoundPage = await notFoundPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#notFoundPage);
+        return;
+    }
+    window.history.pushState({}, page, window.location.origin + page);
   }
 }
