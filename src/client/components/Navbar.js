@@ -16,29 +16,20 @@ export default class Navbar {
 
     // Populate the <div> element with the navigation links
     elm.innerHTML = `
-    <a href="/home" id="home"></a>
-    ${
-      (await isLoggedIn())
-        ? `
-          <ul id="menu">
-            <li><a href="/profile" id="profile">Profile</a></li>
-            <li><a href="/logout" id="logout">Logout</a></li>
-          </ul>
-        `
-        : `
-        <ul id="menu">
+      <a href="/home" id="home"></a>
+      <ul id="menu">
+        ${await isLoggedIn() ? `
+          <li><a href="/profile" id="profile">Profile</a></li>
+          <li><a href="/logout" id="logout">Logout</a></li>
+        ` : `
           <li><a href="/login" id="login">Login</a></li>
           <li><a href="/register" id="register">Register</a></li>
-        </ul>
-        `
-    }
-  `;
+        `}
+      </ul>
+    `;
 
     // Get all the anchor tags within the <div> element
     const links = elm.querySelectorAll("a");
-
-    // Subscribe a function for rerendering nav
-    this.#events.subscribe("rerenderNav", this.#rerender);
 
     // Add event listeners to each anchor tag
     links.forEach((link) => {
@@ -52,7 +43,8 @@ export default class Navbar {
         // Clear session and rerender when log out
         if (page === "/logout") {
           await clearSession();
-          await this.#rerender();
+          await this.#events.publish("rerenderNav");
+          await this.#events.publish("navigateTo", "/home");
           return;
         }
 
@@ -64,15 +56,4 @@ export default class Navbar {
     // Return the populated navigation bar element
     return elm;
   }
-
-  #rerender = async () => {
-    const menuElm = document.getElementById("menu");
-    menuElm.innerHTML = await isLoggedIn() ? `
-      <li><a href="/profile" id="profile">Profile</a></li>
-      <li><a href="/logout" id="logout">Logout</a></li>
-    ` : `
-      <li><a href="/login" id="login">Login</a></li>
-      <li><a href="/register" id="register">Register</a></li>
-    `;
-  };
 }

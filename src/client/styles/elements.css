@@ -1,5 +1,4 @@
 .custom-button {
-  margin-top: 24px;
   padding: 14px 24px;
   border-radius: 8px;
   background-color: var(--primary);
@@ -47,6 +46,14 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
+}
+
+.textfield.textfield-error {
+  border-color: var(--error);
+}
+
+.textfield.textfield-error ~ p {
+  color: var(--error);
 }
 
 /* Material UI Text Field */

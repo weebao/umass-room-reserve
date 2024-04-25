@@ -22,9 +22,10 @@ export class App {
   #loginPage = null;
   #homePage = null;
   #registerPage = null;
-  #profilePage = null;
   #notFoundPage = null;
-
+  
+  #profilePageObj = null;
+  
   constructor() {
     this.#events = Events.events();
   }
@@ -43,8 +44,13 @@ export class App {
     rootElm.innerHTML = "";
 
     const navbar = new Navbar();
-    const navbarElm = await navbar.render();
+    let navbarElm = await navbar.render();
     rootElm.appendChild(navbarElm);
+    this.#events.subscribe("rerenderNav", async () => { 
+      const newNavbarElm = await navbar.render();
+      rootElm.replaceChild(newNavbarElm, navbarElm);
+      navbarElm = newNavbarElm;
+    });
 
     this.#mainViewElm = document.createElement("main");
     this.#mainViewElm.id = "main-view";
@@ -106,12 +112,12 @@ export class App {
           await this.#navigateTo("/login");
           return;
         }
-        if (!this.#profilePage) {
+        if (!this.#profilePageObj) {
           const ProfilePage = await importProfilePage();
           const profilePageObj = new ProfilePage();
-          this.#profilePage = await profilePageObj.render();
+          this.#profilePageObj = profilePageObj;
         }
-        this.#mainViewElm.appendChild(this.#profilePage);
+        this.#mainViewElm.appendChild(await this.#profilePageObj.render());
         break;
       default:
         if (!this.#notFoundPage) {

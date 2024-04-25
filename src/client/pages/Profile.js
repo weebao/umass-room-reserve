@@ -48,6 +48,7 @@ export class ProfilePage {
             <input type="password" id="current-password" name="current-password" class="textfield" placeholder="Current password">
             <input type="password" id="new-password" name="new-password" class="textfield" placeholder="New password">
             <input type="password" id="confirm-password" name="confirm-password" class="textfield" placeholder="Confirm new password">
+            <p id="password-tooltip"></p>
           </div>
           <button id="update-password" class="custom-button">Update Password</button>
         </div>
@@ -61,15 +62,12 @@ export class ProfilePage {
     const majorInput = elm.querySelector("#major");
     const roleInput = elm.querySelector("#role");
     const emailInput = elm.querySelector("#email");
-
     
     firstNameInput.value = userData.firstName ?? "";
     lastNameInput.value = userData.lastName ?? "";
     majorInput.value = userData.major ?? "";
     roleInput.value = userData.role ?? "";
     emailInput.value = userData.email ?? "";
-    emailInput.setAttribute("value", userData.email ?? "")
-    console.log(roleInput)
     
     const updateProfile = elm.querySelector("#update-profile");
     updateProfile.addEventListener("click", async () => {
@@ -82,6 +80,33 @@ export class ProfilePage {
       };
 
       await modifySession(updatedUserData);
+    });
+
+    const currentPasswordInput = elm.querySelector("#current-password");
+    const newPasswordInput = elm.querySelector("#new-password");
+    const confirmPasswordInput = elm.querySelector("#confirm-password");
+    const updatePassword = elm.querySelector("#update-password");
+    const passwordTooltip = elm.querySelector("#password-tooltip");
+
+    updatePassword.addEventListener("click", async () => {
+      if (currentPasswordInput.value !== userData.password) {
+        currentPasswordInput.classList.add("textfield-error");
+        passwordTooltip.innerText = "Incorrect password";
+        return;
+      }
+      currentPasswordInput.classList.remove("textfield-error");
+      if (newPasswordInput.value === confirmPasswordInput.value) {
+        confirmPasswordInput.classList.remove("textfield-error");
+        const updatedUserData = {
+          ...userData,
+          password: newPasswordInput.value,
+        };
+        await modifySession(updatedUserData);
+        passwordTooltip.innerText = "Password updated successfully";
+      } else {
+        confirmPasswordInput.classList.add("textfield-error");
+        passwordTooltip.innerText = "Passwords do not match";
+      }
     });
 
     return elm;

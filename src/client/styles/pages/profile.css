@@ -12,14 +12,17 @@
   padding: 48px 100px 24px 100px;
 }
 
-#user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+#profile-page button {
+  align-self: flex-start;
+  margin-top: 12px;
 }
 
-#user-info > button {
-  align-self: start;
+#user-info {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 48px;
 }
 
 #user-name-group {
@@ -30,4 +33,14 @@
 
 #user-name-group > div {
   width: 100%;
+}
+
+#change-password > h5{
+  margin-bottom: 0.75rem;
+}
+
+#change-password > #password {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
