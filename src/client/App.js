@@ -11,7 +11,7 @@ const importNotFoundPage = async () => (await import("./pages/404.js")).NotFound
 export class App {
   #events = null;
   #mainViewElm = null;
-  #isLoggedIn = false;
+  #isLoggedIn = false; // should not define here, get from loggedIn class or server instead
 
   #loginPage = null;
   #homePage = null;
@@ -37,7 +37,7 @@ export class App {
 
     this.#mainViewElm = document.createElement("main");
     this.#mainViewElm.id = "main-view";
-
+    
     rootElm.appendChild(this.#mainViewElm);
 
     this.#events.subscribe(

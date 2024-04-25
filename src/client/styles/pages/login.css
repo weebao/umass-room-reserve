@@ -1,0 +1,124 @@
+/* body {
+    font-family: "Open Sans", sans-serif;
+}
+
+#login-page {
+    background-color: #505759;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+#register-wrapper {
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.link {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+    text-decoration: none;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 3px;
+}
+
+#invalid-message {
+    color: #dc3545;
+    margin-bottom: 10px;
+    margin-top: 2px;
+}
+
+.text-field {
+    font-family: "Open Sans", sans-serif;
+    border: 1.7px solid #00000096;
+    border-radius: 8px;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.text-field:focus {
+    outline: none;
+    border-radius: 8px;
+    border-color: var(--primary-color)
+}
+
+#login-form {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    min-height: 30vh;
+    width: 50vw;
+    border-radius: 15px;
+    overflow: auto;
+}
+
+#remember-me-wrapper {
+    color: var(--black);
+    font-weight: 500;
+}
+
+#forgot-password-wrapper {
+    color: #333;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#forgot-password-wrapper a {
+    display: inline-block;
+}
+
+
+body {
+    background-color: pink;
+}
+
+/* #login-container {
+    background-color: pink;
+} */
+#password-forgot-wrapper {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#password-forgot-noti {
+    margin-top: 5px;
+    color: var(--error)
+}
+
+#login-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#forgot-password {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+#sign-in {
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 15px;
+    cursor: pointer;
+    height: 40px;
+    width: 100%;
+} 
