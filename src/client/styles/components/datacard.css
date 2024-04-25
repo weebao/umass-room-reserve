@@ -43,9 +43,9 @@
     height: 175.5px;
 }
 
-.desc-container {
+.description-container {
     margin-top:24px;
-    padding: 24px;
+    padding: 0px;
 }
 
 .desc-body {
