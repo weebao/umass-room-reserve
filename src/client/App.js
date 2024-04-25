@@ -1,6 +1,6 @@
 import { Events } from "./Events.js";
 
-import { }
+import { isLoggedIn } from "./modules/session.js";
 
 import Navbar from "./components/Navbar.js";
 
@@ -13,7 +13,7 @@ const importNotFoundPage = async () => (await import("./pages/404.js")).NotFound
 export class App {
   #events = null;
   #mainViewElm = null;
-  #isLoggedIn = false;
+  #isLoggedIn = false; // should not define here, get from loggedIn class or server instead
 
   #loginPage = null;
   #homePage = null;
@@ -22,7 +22,6 @@ export class App {
 
   constructor() {
     this.#events = Events.events();
-    this.#isLogged
   }
 
   /**
@@ -40,12 +39,14 @@ export class App {
 
     this.#mainViewElm = document.createElement("main");
     this.#mainViewElm.id = "main-view";
-
+    
     rootElm.appendChild(this.#mainViewElm);
+
+    this.#isLoggedIn = await isLoggedIn();
 
     this.#events.subscribe(
       "navigateTo",
-      async (page) => await this.#navigateTo(page)
+      async (page) => {await this.#navigateTo(page)}
     );
   }
 
@@ -56,11 +57,13 @@ export class App {
    * @returns {Promise<void>} - A promise that resolves when the navigation is complete.
    */
   async #navigateTo(page) {
+    console.log(page)
     if (!page || typeof page !== "string") {
       return;
     }
     this.#mainViewElm.innerHTML = "";
     switch (page) {
+      case "":
       case "/":
       case "/home":
       if (!this.#homePage) {

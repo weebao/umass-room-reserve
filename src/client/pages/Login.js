@@ -2,9 +2,10 @@ import { Events } from '../Events.js';
 
 export class LoginPage {
   #events = null;
-
+  #user = null;
   constructor() {
     this.#events = Events.events();
+    this.#user = { "laufey": "123456" }
   }
 
   async render() {
@@ -12,10 +13,12 @@ export class LoginPage {
     container.id = 'login-container';
     container.classList.add('center', 'auth-container');
 
+    // Create container for login form
     const loginElm = document.createElement('div');
     loginElm.id = 'login-page';
     loginElm.classList.add('vstack', 'auth-card');
 
+    // Header
     const headerElm = document.createElement('div');
     headerElm.classList.add('auth-card-header');
 
@@ -38,34 +41,72 @@ export class LoginPage {
     const formElm = document.createElement('form');
     formElm.id = 'login-form';
     formElm.innerHTML = `
-      <div class="m-textfield-group auth-input">
-        <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" required>
-        <label for="school-email" class="m-textfield-label">School Email</label>
-      </div>
-      <div class="auth-input">
-        <div class="m-textfield-group">
-          <input type="password" id="password" name="password" class="m-textfield" placeholder="Password" required>
-          <label for="password" class="m-textfield-label">Password</label>
+        <div class="m-textfield-group auth-input">
+          <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" required>
+          <label for="school-email" class="m-textfield-label">School Email</label>
         </div>
-        <div class="hstack space-between">
-          <label for="remember-me">
-            <input type="checkbox" id="remember-me" name="remember_me"> 
-            Remember me
-          </label>
-          <a href="#forgot-password" >Forgot password?</a>
+        <div class="auth-input">
+          <div class="m-textfield-group">
+            <input type="password" id="password" name="password" class="m-textfield" placeholder="Password" required>
+            <label for="password" class="m-textfield-label">Password</label>
+          </div>
+          <div id="password-forgot-noti">Uh oh you forgot your identity 🤣</div>
+          <div id="password-forgot-wrapper" class="hstack space-between">
+            <label for="remember-me">
+              <input type="checkbox" id="remember-me" name="remember_me"> 
+              Remember me
+            </label>
+            <span class="auth-link" href="#forgot-password">Forgot password?</span>
+          </div>
         </div>
-      </div>
-      <button type="submit" id="sign-in">Sign In</button>
-    `;
-    
+        <button type="submit" id="login-button" class="auth-submit-button">Sign In</button>
+      `;
+
     // TODO: remove style property and add a class to the anchor tag forgot-password
+    const schoolEmail = formElm.querySelector('#school-email');
+    const password = formElm.querySelector('#password');
+
+    const inputArr = [schoolEmail, password];
+    const loginButton = formElm.querySelector('#login-button');
+    loginButton.addEventListener('click', () => {
+      inputArr.forEach((inputElm) => {
+        if (inputElm.validity.valid) {
+          inputElm.classList.remove("m-textfield-error");
+        } else {
+          inputElm.classList.add("m-textfield-error");
+        }
+      });
+    });
+
 
     formElm.addEventListener('submit', event => {
       event.preventDefault();
-      const schoolEmail = formElm.querySelector('#school-email').value;
-      const password = formElm.querySelector('#password').value;
-      this.#events.publish('login', { username, password }); // TODO: really have to understand where to subscribe this event
+      [schoolEmail, password].forEach((inputElm) => {
+        if (inputElm.validity.valid) {
+          inputElm.classList.remove("m-textfield-error");
+        } else {
+          inputElm.classList.add("m-textfield-error");
+        }
+      });
+
+      if (schoolEmail.value in this.#user && this.#user[schoolEmail.value] === password.value) {
+        formElm.querySelector('#password-forgot-noti').style.display = 'none';
+
+        [schoolEmail, password].forEach((inputElm) => {
+          inputElm.classList.remove("m-textfield-error");
+        });
+
+        this.#events.publish('navigateTo', '/home');
+      } else {
+        formElm.querySelector('#password-forgot-noti').style.display = 'block';
+
+        [schoolEmail, password].forEach((inputElm) => {
+          inputElm.classList.add("m-textfield-error");
+        });
+      }
     });
+
+    formElm.querySelector('#password-forgot-noti').style.display = 'none';
 
     container.appendChild(loginElm);
     headerElm.appendChild(titleElm);

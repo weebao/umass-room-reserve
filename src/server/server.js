@@ -2,7 +2,7 @@ import * as http from "http";
 import * as url from "url";
 import * as fsp from "fs/promises";
 
-import { buildings } from "./mockdata.js";
+import buildings from "./mockdata.js";
 
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
