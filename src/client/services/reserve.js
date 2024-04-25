@@ -1,6 +1,6 @@
 import { URL } from "./url.js";
 
-export const reserveRoom = async (room, formData) => {
+export async function reserveRoom(room, formData) {
   try {
     const response = await fetch(`${URL}/reserve?id=${room}`, {
       method: "POST",
