@@ -18,7 +18,7 @@ npm install
 
 ## Running the app
 
-Below would be the optimal way to run:
+Below would be the optimal way to run the app. We decided to run the client and server on the same port so that we can redirect all routes to `index.html`:
 ```bash
 npm start
 ```
