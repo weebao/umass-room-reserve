@@ -17,7 +17,7 @@ export class ProfilePage {
         <h1>Profile</h1>
       </div>
       <div id="user-profile">
-        <div id="user-info">
+        <form id="user-info">
           <div id="user-name-group">
             <div>
               <label for="first-name" class="textfield-label">First Name</label>
@@ -38,10 +38,10 @@ export class ProfilePage {
           </div>
           <div>
             <label for="email" class="textfield-label">Email</label>
-            <input type="text" id="email" class="textfield" name="email">
+            <input type="text" id="email" class="textfield" name="email" autocomplete="username" disabled>
           </div>
-          <button id="update-profile" class="custom-button">Update Profile</button>
-        </div>
+          <button type="submit" id="update-profile" class="custom-button">Update Profile</button>
+        </form>
         <div id="change-password">
           <h5>Change password</h5>
           <div id="password">
@@ -79,7 +79,17 @@ export class ProfilePage {
         email: emailInput.value,
       };
 
+      updateProfile.innerText = "Updated successfully";
+      setTimeout(() => {
+        updateProfile.innerText = "Update Profile";
+      }, 1000);
+
       await modifySession(updatedUserData);
+    });
+
+    const form = elm.querySelector("#user-info");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
     });
 
     const currentPasswordInput = elm.querySelector("#current-password");

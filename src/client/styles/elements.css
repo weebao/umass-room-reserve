@@ -42,6 +42,11 @@
   border-color: var(--primary);
 }
 
+.textfield:disabled {
+  color: var(--gray);
+  border-color: var(--gray);
+}
+
 .textfield-label {
   display: block;
   margin-bottom: 8px;
