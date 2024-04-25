@@ -54,15 +54,35 @@ export class Search {
     return elm;
   }
 
-  async search(query) {
+  async search(){
+    const searchQuery = searchInput.value.toLowerCase();
     try {
-      const response = await fetch(
-        `http://localhost:3260/api/getBuilding?name=${query}`
-      );
-      const data = await response.json();
-      console.log("Search Results: ", data);
+        const response = await fetch(`http://localhost:3260/getBuilding?name=${searchQuery}`);
+        const buildings = await response.json(); 
+        displayResults(buildings);
     } catch (error) {
-      console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
+        resultsContainer.innerHTML = '<p>Error loading results.</p>';
+    }
+
+    function displayResults(buildings) {
+      resultsContainer.innerHTML = '';
+      buildings.forEach(building => {
+          const card = document.createElement('div');
+          card.className = 'result-card'; // Add a class for styling
+
+          //Display buidling name
+          const buildingName = document.createElement('h3');
+          buildingName.textContent = building.name;
+
+          //Add image of the buidling as background
+          const img_url =  imageFolder + '/' + building.img_name;
+          card.style.backgroundImage = `url('${img_url}')`;
+          card.style.filter = `brightness(50%)`;
+
+          card.appendChild(buildingName);
+          resultsContainer.appendChild(card);
+      });
     }
   }
 }
