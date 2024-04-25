@@ -17,6 +17,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    /**
+     * Displays search results in the form of cards in a specified container on the web page. Each card represents
+     * a building, showing its name and featuring an image as the background. This function clears any previous content
+     * in the results container before adding new results, ensuring the display is updated correctly with only the
+     * latest search results.
+     *
+     * @param {Object[]} buildings - An array of building objects where each object contains information about a building.
+     * @param {string} buildings[].name - The name of the building to display on the card.
+     * @param {string} buildings[].img_name - The filename of the image for the building, used to construct the image URL.
+     * 
+     * @global
+     * @uses resultsContainer - A predefined global variable that refers to the DOM element where results should be displayed.
+     * @uses imageFolder - A predefined global variable that contains the path to the folder where building images are stored.
+     */
     function displayResults(buildings) {
         resultsContainer.innerHTML = '';
         buildings.forEach(building => {
