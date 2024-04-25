@@ -1,7 +1,7 @@
 {
-  "name": "1337code",
+  "name": "umass-room-reserve",
   "version": "1.0.0",
-  "description": "Duel Leetcode",
+  "description": "Handle reservations for all rooms in UMass",
   "main": "index.js",
   "type": "module",
   "license": "AGPL-version-3.0",
@@ -44,9 +44,10 @@
     }
   ],
   "scripts": {
-    "dev": "http-server src/client -p 6900 -c-1 -o -s",
+    "start": "node src/server/server.js",
     "test": "",
-    "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s"
+    "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s",
+    "milestone-02": "http-server src/client -p 3000 -c-1 -o -s"
   },
   "validate-html": "html-validate 'src/**/*.html'",
   "devDependencies": {
