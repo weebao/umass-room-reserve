@@ -1,4 +1,4 @@
-export const buildings = 
+const buildings = 
 [
     { 
         building_id: 1, 
@@ -33,7 +33,7 @@ export const buildings =
     },
 ];
 
-export const rooms = 
+const rooms = 
 [
     {
         room_id: 1,
@@ -97,7 +97,7 @@ export const rooms =
     },
 ]
 
-export const users = [
+const users = [
     {
         user_id: 1,
         email: 'lionelmessi@gmail.com',
@@ -113,3 +113,5 @@ export const users = [
         last_name: 'Ronaldo',
     }
 ]
+
+export default { buildings, rooms, users};
