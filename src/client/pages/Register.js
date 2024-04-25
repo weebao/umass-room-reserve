@@ -1,5 +1,7 @@
 import { Events } from "../Events.js";
 
+import { createSession } from '../modules/session.js';
+
 export class RegisterPage {
   #events = null;
 
@@ -94,36 +96,41 @@ export class RegisterPage {
       confirmPasswordInput,
     ];
 
+    // Add event listener to register button
     registerButton.addEventListener("click", (event) => {
+      // Validate input fields
       inputArr.forEach((inputElm) => {
-        if (inputElm.validity.valid) {
-          inputElm.classList.remove("m-textfield-error");
-        } else {
-          inputElm.classList.add("m-textfield-error");
-        }
+      if (inputElm.validity.valid) {
+        inputElm.classList.remove("m-textfield-error");
+      } else {
+        inputElm.classList.add("m-textfield-error");
+      }
       });
     });
 
+    // Add event listener to form submit
     formElm.addEventListener("submit", (event) => {
       event.preventDefault();
+      // Get input values
       const firstName = firstNameInput.value;
       const lastName = lastNameInput.value;
-      const schoolEmail = schoolEmailInput.value;
+      const major = majorInput.value;
+      const role = roleInput.value;
+      const email = schoolEmailInput.value;
       const password = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
 
+      // Check if passwords match
       if (password === confirmPassword) {
-        passwordMatchMessage.innerText = "";
-        confirmPasswordInput.classList.remove("m-textfield-error");
-        this.#events.publish("register", {
-          firstName,
-          lastName,
-          schoolEmail,
-          password,
-        });
+      passwordMatchMessage.innerText = "";
+      confirmPasswordInput.classList.remove("m-textfield-error");
+      // Create session and navigate to home page
+      createSession({ firstName, lastName, major, role, email, password });
+      this.#events.publish("rerenderNav");
+      this.#events.publish("navigateTo", "/home");
       } else {
-        confirmPasswordInput.classList.add("m-textfield-error");
-        passwordMatchMessage.innerText = "Passwords do not match";
+      confirmPasswordInput.classList.add("m-textfield-error");
+      passwordMatchMessage.innerText = "Passwords do not match";
       }
     });
 

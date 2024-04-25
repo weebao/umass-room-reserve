@@ -8,6 +8,6 @@ export class DataCard {
   }
 
   async render(data) {
-    
+    const cardElm = document.createElement("div");
   }
 }

@@ -10,7 +10,7 @@ const ENCRYPTION_KEY = "timrichardsisthegoat";
  * @param {Object} sessionData - The session data to be saved.
  * @returns {Promise<void>} - A promise that resolves when the session data is successfully saved.
  */
-export async function saveSession(sessionData) {
+export async function createSession(sessionData) {
   for (const key in sessionData) {
     sessionData[key] = encrypt(sessionData[key]);
   }
@@ -29,6 +29,9 @@ export async function getSession() {
   try {
     const session = await db.get("userSession");
     for (const key in session) {
+      if (key === "_id" || key === "_rev") {
+        continue;
+      }
       session[key] = decrypt(session[key]);
     }
     return session;
@@ -38,17 +41,31 @@ export async function getSession() {
 }
 
 /**
+ * Modifies the user session with updated data.
+ * @param {Object} sessionData - The updated data to be applied to the user session.
+ * @returns {Promise<void>} - A promise that resolves when the user session is successfully modified.
+ */
+export async function modifySession(sessionData) {
+  const session = await db.get("userSession");
+  for (const key in sessionData) {
+    sessionData[key] = encrypt(sessionData[key]);
+  }
+  await db.put({
+    _id: "userSession",
+    _rev: session._rev,
+    ...sessionData,
+  });
+}
+
+/**
  * Clears the session data.
  * @async
  * @function clearSession
  * @throws {Error} If there is an error clearing the session data.
  */
 export async function clearSession() {
-  try {
-    await db.remove(session);
-  } catch (err) {
-    console.error("Error clearing session data:", err);
-  }
+  const session = await db.get("userSession");
+  await db.remove("userSession", session._rev);
 }
 
 /**
@@ -75,13 +92,13 @@ export async function isLoggedIn() {
 const encrypt = (text, key=ENCRYPTION_KEY) => {
   const textToChars = (text) => text.split("").map((c) => c.charCodeAt(0));
   const byteHex = (n) => ("0" + Number(n).toString(16)).substr(-2);
-  const applySaltToChar = (code) =>
-    textToChars(salt).reduce((a, b) => a ^ b, code);
+  const applyKeyToChar = (code) =>
+    textToChars(key).reduce((a, b) => a ^ b, code);
 
   return text
     .split("")
     .map(textToChars)
-    .map(applySaltToChar)
+    .map(applyKeyToChar)
     .map(byteHex)
     .join("");
 };
@@ -94,12 +111,12 @@ const encrypt = (text, key=ENCRYPTION_KEY) => {
  */
 const decrypt = (encoded, key=ENCRYPTION_KEY) => {
   const textToChars = (text) => text.split("").map((c) => c.charCodeAt(0));
-  const applySaltToChar = (code) =>
-    textToChars(salt).reduce((a, b) => a ^ b, code);
+  const applyKeyToChar = (code) =>
+    textToChars(key).reduce((a, b) => a ^ b, code);
   return encoded
     .match(/.{1,2}/g)
     .map((hex) => parseInt(hex, 16))
-    .map(applySaltToChar)
+    .map(applyKeyToChar)
     .map((charCode) => String.fromCharCode(charCode))
     .join("");
 };

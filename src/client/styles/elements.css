@@ -1,3 +1,23 @@
+.custom-button {
+  padding: 14px 24px;
+  border-radius: 8px;
+  background-color: var(--primary);
+  font-size: 1rem;
+  color: white;
+  font-weight: 600;
+  border: none;
+  transition: all 0.15s;
+}
+
+.custom-button:hover {
+  background-color: var(--primary-hover);
+  cursor: pointer;
+}
+
+.custom-button:active {
+  transform: scale(0.95);
+}
+
 .checkbox {
   display: flex;
   align-items: center;
@@ -20,6 +40,20 @@
 
 .textfield:focus {
   border-color: var(--primary);
+}
+
+.textfield-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.textfield.textfield-error {
+  border-color: var(--error);
+}
+
+.textfield.textfield-error ~ p {
+  color: var(--error);
 }
 
 /* Material UI Text Field */
