@@ -17,3 +17,13 @@
 .space-between {
   justify-content: space-between;
 }
+
+.grid-container { /*GPT to fix this*/
+  display: grid;
+  width: 100%; /* assuming you want the grid to take the full width of the parent */
+  grid-template-columns: repeat(3, 360px);
+  grid-template-rows: minmax(340.5px, auto);
+  gap: 28px; /* updated property name, it's the standard now */
+  justify-content: center;
+  box-sizing: border-box; /* this makes sure the padding and border are included in the width */
+}
