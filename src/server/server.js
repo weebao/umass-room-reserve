@@ -56,17 +56,20 @@ const server = http.createServer((req, res) => {
         js: "text/javascript",
         png: "image/png",
         jpg: "image/jpeg",
+        jpeg: "image/jpeg",
         svg: "image/svg+xml",
         ico: "image/x-icon",
       })[getSuffix(urlpath)] || "text/plain";
 
     // Read the file from the src/client folder and send it back to the client
     const sendStaticFile = async (urlpath = request.url) => {
+      urlpath = decodeURIComponent(urlpath);
       try {
         let data;
         if (
           hasSuffix(".png") ||
           hasSuffix(".jpg") ||
+          hasSuffix(".jpeg") ||
           hasSuffix(".svg") ||
           hasSuffix(".ico")
         ) {
@@ -92,6 +95,7 @@ const server = http.createServer((req, res) => {
         (hasSuffix(".html") || hasSuffix(".css") || hasSuffix(".js"))) ||
       hasSuffix(".png") ||
       hasSuffix(".jpg") ||
+      hasSuffix(".jpeg") ||
       hasSuffix(".svg") ||
       hasSuffix(".ico")
     ) {
