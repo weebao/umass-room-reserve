@@ -1,5 +1,6 @@
 import { Events } from "../Events.js";
-import { getBuildingByQuery } from "../services/rooms.js";
+// import { getBuildingByQuery } from "../services/rooms.js";
+import { buildings, rooms } from "../mock/mockdata.js";
 
 export class Search {
   #events = null;
@@ -41,7 +42,7 @@ export class Search {
       <span>Sort by distance</span>
     `
     sortBtn.addEventListener("click", async () => {
-      await this.sort();
+      await this.search(inputElm.value); // @weebao please fix this
     });
 
     searchBarElm.appendChild(inputElm);
@@ -56,13 +57,25 @@ export class Search {
 
   async search(query) {
     try {
-      const response = await fetch(
-        `http://localhost:3260/api/getBuilding?name=${query}`
-      );
-      const data = await response.json();
-      console.log("Search Results: ", data);
+      // const response = await fetch(
+      //   `http://localhost:3260/api/getBuilding?name=${query}`
+      // );
+      // const data = await response.json();
+      const bld = buildings.filter((building) => {
+        return building.name.toLowerCase().includes(query.toLowerCase());
+      });
+
+      const rm = rooms.filter((room) => {
+        return bld.some(e => {
+          return e.building_id === room.building_id;
+        });
+      });
+
+      // First sort by building, and get only rooms that match the remain building id
+      return { "buildings": bld, "rooms": rm }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
+
 }
