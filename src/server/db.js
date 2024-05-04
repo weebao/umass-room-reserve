@@ -1,39 +1,80 @@
 import PouchDB from 'pouchdb';
-
-const db = new PouchDB('umass_reserve_rooms');
+import mockdata from "./mockdata.js";
+const { buildings, rooms, users } = mockdata;
 
 /**
- * Retrieves user data from the database.
- * @param {string} userId - The ID of the user to retrieve data for.
- * @returns {Promise<Object>} The user's data or a default structure if not found.
+ * Initializes a PouchDB database with specified collections if they do not
+ * exist.
+ *
+ * This function creates a new PouchDB instance with the given database name. It
+ * attempts to retrieve collections for 'buidlings', 'rooms' and 'users'. If these
+ * collections do not exist, it creates them with mockdata.
+ *
+ * @param {string} dbname - The name of the database to initialize.
  */
-async function getUserData(userId) {
+const initdb = async(dbname) => {
+  // Initialize the database if it doesn't exist
+  const db = new PouchDB(dbname);
+
+  // Get the buidlings collection. If it doesn't exist, create it.
   try {
-    return await db.get(userId);
-  } catch (err) {
-    if (err.name === 'not_found') {
-      // If no data is found, return a default structure with empty data
-      return { _id: userId, data: {} };
-    } else {
-      console.error('Error retrieving user data:', err);
-      throw err;
+    const buildings = await db.get("buildings");
+  } catch (e) {
+    db.put({ _id: "buildings", buildings: buildings });
+  }
+
+  // Get the rooms collection. If it doesn't exist, create it.
+  try {
+    const rooms = await db.get("rooms");
+  } catch (e) {
+    db.put({ _id: "rooms", rooms: rooms });
+  }
+
+  // Get the users collection. If it doesn't exist, create it.
+  try {
+    const users = await db.get("users");
+  } catch (e) {
+    db.put({ _id: "users", users: users });
+  }
+
+  // Close the database connection
+  db.close();
+}
+
+const Database = (dbname) => {
+  // Initialize the database
+  initdb(dbname);
+
+  /**
+   * Helper function to create a new PouchDB instance.
+   * @returns {PouchDB} A new PouchDB instance connected to the specified
+   * database.
+   */
+  const getDB = () => new PouchDB(dbname);
+
+  const obj = {
+    getBuilding: async (name) => {
+      try {
+        const db = getDB();
+        const data = await db.get("buildings");
+        const filteredBuildings = data.buildings.filter((building) =>
+          building.name.toLowerCase().includes(name.toLowerCase()));
+        db.close();
+        return {
+          status: "success",
+          data: filteredBuildings
+        };
+      } catch(e){
+        return {
+          status: "error",
+          message: "Failed to get building",
+          error: e.message,
+        };
+      }
     }
-  }
-}
+  };
 
-/**
- * Saves or updates user data in the database.
- * @param {Object} userData - The user data to save. Must include _id and may include _rev for updates.
- * @returns {Promise<Object>} The updated user data with the new revision number.
- */
-async function saveUserData(userData) {
-  try {
-    const response = await db.put(userData);
-    return { ...userData, _rev: response.rev };
-  } catch (err) {
-    console.error('Error saving user data:', err);
-    throw err;
-  }
-}
+  return obj;
+};
 
-export { getUserData, saveUserData };
+export default Database;
