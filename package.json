@@ -48,7 +48,7 @@
     "test": "",
     "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s",
     "milestone-02": "http-server src/client -p 3000 -c-1 -o -s",
-    "milestone-03": "http-server src/client -p 3000 -c-1 -o -s & node src/server/server.js"
+    "milestone-03": "node src/server/server.js"
   },
   "validate-html": "html-validate 'src/**/*.html'",
   "devDependencies": {
@@ -60,6 +60,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "morgan": "^1.10.0",
+    "open": "^10.1.0",
     "pouchdb": "^8.0.1"
   }
 }
