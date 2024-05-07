@@ -47,12 +47,19 @@
     "start": "node src/server/server.js",
     "test": "",
     "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s",
-    "milestone-02": "http-server src/client -p 3000 -c-1 -o -s"
+    "milestone-02": "http-server src/client -p 3000 -c-1 -o -s",
+    "milestone-03": "http-server src/client -p 3000 -c-1 -o -s & node src/server/server.js"
   },
   "validate-html": "html-validate 'src/**/*.html'",
   "devDependencies": {
     "html-validate": "^8.11.1",
     "http-server": "^14.1.1",
     "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "pouchdb": "^8.0.1"
   }
 }
