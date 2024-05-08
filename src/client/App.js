@@ -15,6 +15,10 @@ const importProfilePage = async () =>
 const importNotFoundPage = async () =>
   (await import("./pages/404.js")).NotFoundPage;
 
+// TODO: Adding Booking importation:
+const importBookingPage = async () =>
+  (await import("./pages/Booking.js")).BookingPage;
+
 export class App {
   #events = null;
   #mainViewElm = null;
@@ -23,6 +27,7 @@ export class App {
   #homePage = null;
   #registerPage = null;
   #notFoundPage = null;
+  #bookingPage = null;
   
   #profilePageObj = null;
   
@@ -118,6 +123,21 @@ export class App {
           this.#profilePageObj = profilePageObj;
         }
         this.#mainViewElm.appendChild(await this.#profilePageObj.render());
+        break;
+      // TODO: adding the case for the booking page
+      case "/book":
+        // handle the case if user is not logged in
+        if (!loggedIn) {
+          await this.#navigateTo("/login");
+          return;
+        }
+        // handle the case if user is logged in
+        if (!this.#bookingPage) {
+          const BookingPage = await importBookingPage();
+          const bookingPageObj = new BookingPage();
+          this.#bookingPage = await bookingPageObj.render();
+        }
+        this.#mainViewElm.appendChild(this.#bookingPage);
         break;
       default:
         if (!this.#notFoundPage) {

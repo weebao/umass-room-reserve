@@ -49,3 +49,22 @@
 .desc-location {
   margin-bottom: 0.25rem;
 }
+
+.desc-container > img {
+  background-color: white;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  margin-bottom: 5px;
+}
+
+.desc-container {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+#availability-icon {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}

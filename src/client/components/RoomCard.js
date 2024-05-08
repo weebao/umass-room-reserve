@@ -27,20 +27,43 @@ export class RoomCard {
     const descBody = document.createElement("div");
     descBody.classList.add("desc-body");
 
-    const descLocation = document.createElement("p");
+    
+    const descLocation = document.createElement("span");
     descLocation.classList.add("desc-location");
     descLocation.textContent = `${data.building_name}`;
 
-    const descAvailability = document.createElement("p");
+    const locaion_icon = document.createElement("img");
+    locaion_icon.src = "/assets/location-solid-icon.svg";
+    locaion_icon.alt = "Location Icon";
+    locaion_icon.classList.add("icon-svg")
+    
+    const descLocationContainer = document.createElement("div");
+    descLocationContainer.classList.add("desc-container");
+    descLocationContainer.appendChild(locaion_icon);
+    descLocationContainer.appendChild(descLocation);
+
+    const availability_icon = document.createElement("img");
+    availability_icon.src = "/assets/tick-icon.svg";
+    availability_icon.alt = "Availability Icon";
+    availability_icon.classList.add("icon-svg")
+    availability_icon.id = "availability-icon";
+
+
+    const descAvailability = document.createElement("span");
     descAvailability.classList.add("desc-availability");
     descAvailability.textContent = Math.random() > 0.5 ? "Available" : "2 rooms available from 2PM";
+    
+    const descAvailabilityContainer = document.createElement("div");
+    descAvailabilityContainer.classList.add("desc-container");
+    descAvailabilityContainer.appendChild(availability_icon);
+    descAvailabilityContainer.appendChild(descAvailability);
 
     cardElm.appendChild(descImg);
     cardElm.appendChild(descriptionContainer);
     descriptionContainer.appendChild(descHeader);
     descriptionContainer.appendChild(descBody);
-    descBody.appendChild(descLocation);
-    descBody.appendChild(descAvailability);
+    descBody.appendChild(descLocationContainer);
+    descBody.appendChild(descAvailabilityContainer);
     // const gridContainer = document.createElement("div");
     // gridContainer.id = "grid-container";
     // gridContainer.classList.add("grid-container");

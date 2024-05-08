@@ -1,0 +1,47 @@
+/* .booking-form img {
+	border-radius: 3px;
+	width: 312px;
+	height: 175.5px;
+} */
+
+.metadata-wrapper>img {
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+	margin-bottom: 5px;
+}
+
+#header-container {
+	background-color: #ddddddd7;
+	box-sizing: border-box;
+	width: 100vw;
+	display: flex;
+	justify-content: space-between;
+	padding: 50px 100px;
+	align-items: center;
+}
+
+#header {
+	font-size: 38px;
+	font-weight: 600;
+	margin-bottom: 20px;
+}
+
+.metadata-wrapper {
+	display: flex;
+	align-items: center;
+	margin-top: 0.25rem;
+}
+
+.description-metadata {
+	font-size: 14px;
+	padding-bottom: 2px; /*quick fix*/
+}
+
+#reserve-button {
+	font-size: 14px;
+	font-weight: 400;
+	color: white;
+	cursor: pointer;
+	width: 186px;
+}
