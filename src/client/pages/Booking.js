@@ -9,7 +9,6 @@ export class BookingPage {
         this.#events = Events.events();
         this.#today = new Date().toISOString().split('T')[0];
         this.#data = data;
-        console.log("minhdz", this.#data)
     }
 
     async render() {
@@ -238,9 +237,22 @@ export class BookingPage {
         inputDate.addEventListener('change', function () {
             if (inputDate.value) {
                 selectTimeFrom.disabled = false;
-                selectTimeTo.disabled = false;
             } else {
                 selectTimeFrom.disabled = true;
+                selectTimeTo.disabled = true;
+                selectTimeFrom.value = '';
+                selectTimeTo.value = '';
+                selectTimeFrom.type = 'text';
+                selectTimeTo.type = 'text';
+                selectTimeFrom.placeholder = 'From';
+                selectTimeTo.placeholder = 'To';
+            }
+        });
+
+        selectTimeFrom.addEventListener('change', function () {
+            if (selectTimeFrom.value) {
+                selectTimeTo.disabled = false;
+            } else {
                 selectTimeTo.disabled = true;
             }
         });
