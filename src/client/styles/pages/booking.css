@@ -3,6 +3,20 @@
 	width: 312px;
 	height: 175.5px;
 } */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	/* Hides the spinner */
+	margin: 0;
+	/* Optional: Removes any margin if present */
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+	/* Hides the spinner for Firefox */
+	appearance: none;
+	/* Hides the spinner for other browsers */
+}
 
 .metadata-wrapper>img {
 	width: 20px;
@@ -31,17 +45,111 @@
 	display: flex;
 	align-items: center;
 	margin-top: 0.25rem;
+	justify-content: start;
 }
 
 .description-metadata {
 	font-size: 14px;
-	padding-bottom: 2px; /*quick fix*/
+	padding-bottom: 2px;
+	/*quick fix*/
 }
 
-#reserve-button {
-	font-size: 14px;
+.custom-button {
+	font-size: 12px;
 	font-weight: 400;
 	color: white;
 	cursor: pointer;
-	width: 186px;
+	width: 180px;
+	height: 47px;
+}
+
+#form-inputs-container {
+	display: flex;
+	flex-direction: column;
+	margin-top: 54px;
+	margin-left: 104px;
+	max-width: 700px;
+	align-items: left;
+}
+
+.input-wrapper {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 32px;
+}
+
+.input-wrapper label {
+	font-size: 14px;
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+    border: 1px solid #dddddd;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 14px;
+    width: 50%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for border and shadow */
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus {
+    border-color: var(--primary-hover); /* Change border color on focus */
+    box-shadow: 0 0 8px var(--primary-hover); /* Soft glow effect */
+	outline: none;
+}
+
+.time-slot:before {
+	content: 'Time:';
+	margin-right: .6em;
+	color: #9d9d9d;
+	justify-content: center;
+}
+
+.time-slot {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Adding transition for placeholder text color and background */
+}
+
+#from-time {
+	width: 100%;
+}
+
+#to-time {
+	width: 100%;
+}
+
+.time-slot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Equally divides the space into two for 'from' and 'to' */
+    gap: 12px; /* Adds space between the two input fields */
+	justify-content: space-between;
+	width: 50%;
+}
+
+.time-slot-grid input[type="text"] {
+    width: 100%; /* Override any other width settings to fill the grid column */
+    padding: 12px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Includes padding and border in the width */
+    /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
+}
+
+.time-slot-grid input[type="time"]:focus {
+	display: flex;
+	flex-direction: row;
+	border-color: var(--primary-hover);
+	box-shadow: 0 0 8px var(--primary-hover);
+	outline: none;
+	width: 100%;
+}
+
+#save-info-text {
+	margin-bottom: 32px;
+	font-style: italic;
+	font-size: 16px;
 }

@@ -2,13 +2,15 @@ import { Events } from '../Events.js';
 
 export class BookingPage {
     #events = null;
+    #today = null;
 
     constructor() {
         this.#events = Events.events();
+        this.#today = new Date().toISOString().split('T')[0];
     }
 
     async render() {
-        const bookingElm = document.createElement('div');
+        const bookingElm = document.createElement('form');
         // bookingElm.id = 'booking-form'; // can make it to be more unique by adding user id
         bookingElm.classList.add('booking-form');
 
@@ -34,7 +36,7 @@ export class BookingPage {
         const locationInfoElm = document.createElement('div');
         locationInfoElm.classList.add('description-metadata');
         locationInfoElm.innerText = 'W.E.B. Du Bois Library' // TODO: Must be dynamic and retrieved from user card
-        
+
         // Container for location icon and location info
         const locationContainer = document.createElement('div');
         locationContainer.id = 'location-container';
@@ -76,44 +78,197 @@ export class BookingPage {
         headerContainer.appendChild(metadataContainer)
         headerContainer.appendChild(reserveButtonWrapper)
 
-        const formElm = document.createElement('form');
-        formElm.id = 'booking-form';
-        formElm.innerHTML = `
-            <label for="number-people">Number of people</label>
-            <input type="number" id="number-people" name="numberPeople" required>
-            
-            <label for="desktop-computer">Will you be using the desktop computer?</label>
-            <select id="desktop-computer" name="desktopComputer">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
-            
-            <label for="time-slot">Time slot</label>
-            <select id="time-from" name="timeFrom" required>
-                <!-- Options should be dynamically generated based on availability -->
-            </select>
-            <select id="time-to" name="timeTo" required>
-                <!-- Options should be dynamically generated based on availability -->
-            </select>
-            
-            <button type="submit" id="reserve-button">Reserve</button>
-        `;
+        // form inputs declaration
+        const formInputsContainer = document.createElement('div');
+        formInputsContainer.id = 'form-inputs-container';
+        formInputsContainer.classList.add('form-inputs-container');
 
-        formElm.addEventListener('submit', event => {
-            event.preventDefault();
-            const numberPeople = formElm.querySelector('#number-people').value;
-            const desktopComputer = formElm.querySelector('#desktop-computer').value;
-            const timeFrom = formElm.querySelector('#time-from').value;
-            const timeTo = formElm.querySelector('#time-to').value;
+        // Number of people input declaration
+        const numberPeopleWrapper = document.createElement('div');
+        numberPeopleWrapper.classList.add('input-wrapper');
 
-            this.#events.publish('book-room', { numberPeople, desktopComputer, timeFrom, timeTo });
+        const labelNumberPeople = document.createElement('label');
+        labelNumberPeople.for = 'number-people';
+        labelNumberPeople.innerText = 'Number of people';
+
+        const inputNumberPeople = document.createElement('input');
+        inputNumberPeople.type = 'number';
+        inputNumberPeople.id = 'number-people';
+        inputNumberPeople.name = 'numberPeople';
+
+        // Appending number of people input to its wrapper
+        numberPeopleWrapper.appendChild(labelNumberPeople);
+        numberPeopleWrapper.appendChild(inputNumberPeople);
+
+        // Optional Question: Will you be using the desktop computer?
+        const optionalQuestionWrapper = document.createElement('div');
+        optionalQuestionWrapper.classList.add('input-wrapper');
+
+        const labelDesktopComputer = document.createElement('label');
+        labelDesktopComputer.for = 'desktop-computer';
+        labelDesktopComputer.innerText = 'Will you be using the desktop computer?'; // Must be dynamic to ask question regarding place that book-er considering
+
+        const selectDesktopComputer = document.createElement('select');
+        selectDesktopComputer.id = 'desktop-computer';
+        selectDesktopComputer.name = 'desktopComputer';
+
+        const optionDefault = document.createElement('option');
+        optionDefault.value = '';
+        optionDefault.innerText = 'Select an option';
+
+        const optionYes = document.createElement('option');
+        optionYes.value = 'yes';
+        optionYes.innerText = 'Yes';
+
+        const optionNo = document.createElement('option');
+        optionNo.value = 'no';
+        optionNo.innerText = 'No';
+
+        // Appending options to select element
+        selectDesktopComputer.appendChild(optionDefault);
+        selectDesktopComputer.appendChild(optionYes);
+        selectDesktopComputer.appendChild(optionNo);
+
+        // Appending label and select element to its wrapper
+        optionalQuestionWrapper.appendChild(labelDesktopComputer);
+        optionalQuestionWrapper.appendChild(selectDesktopComputer);
+
+        const dateWrapper = document.createElement('div');
+        dateWrapper.classList.add('input-wrapper');
+
+        const labelDate = document.createElement('label');
+        labelDate.for = 'date';
+        labelDate.innerText = 'Date';
+
+        const inputDate = document.createElement('input');
+        inputDate.type = 'date';
+        inputDate.id = 'date';
+        inputDate.name = 'date';
+        inputDate.min = this.#today;
+
+        // Appending date input to its wrapper
+        dateWrapper.appendChild(labelDate);
+        dateWrapper.appendChild(inputDate);
+
+        // Time slot input declaration
+        const timeSlotWrapper = document.createElement('div');
+        timeSlotWrapper.classList.add('input-wrapper');
+
+        const labelTimeSlot = document.createElement('label');
+        labelTimeSlot.for = 'time-slot';
+        labelTimeSlot.innerText = 'Time slot';
+
+        const selectTimeFrom = document.createElement('input');
+        selectTimeFrom.type = 'text'
+        selectTimeFrom.id = 'time-from';
+        selectTimeFrom.name = 'timeFrom';
+        selectTimeFrom.classList.add('time-slot');
+        selectTimeFrom.placeholder = 'From';
+        selectTimeFrom.disabled = true;
+        selectTimeFrom.onfocus = (event) => {
+            event.target.type = 'time';
+        }
+        selectTimeFrom.addEventListener('blur', (event) => {
+            if (event.target.value === '') {
+                event.target.type = 'text';
+                event.target.placeholder = 'From';
+            }
+        });
+        selectTimeFrom.min = this.#today;
+
+        // Options should be dynamically generated based on availability
+        const selectTimeTo = document.createElement('input');
+        selectTimeTo.type = 'text'
+        selectTimeTo.id = 'time-to';
+        selectTimeTo.name = 'timeTo';
+        selectTimeTo.classList.add('time-slot');
+        selectTimeTo.min = this.#today;
+        selectTimeTo.placeholder = 'To';
+        selectTimeTo.disabled = true;
+        selectTimeTo.onfocus = (event) => {
+            if (event.target.type == 'text') {
+                event.target.type = 'time';
+            }
+        }
+        selectTimeTo.addEventListener('blur', (event) => {
+            if (event.target.value === '') {
+                event.target.type = 'text';
+                event.target.placeholder = 'To';
+            }
         });
 
-        const saveInfoElm = document.createElement('p');
+        const timeInputWrapper = document.createElement('div');
+        timeInputWrapper.classList.add('time-slot-grid');
+
+        timeInputWrapper.appendChild(selectTimeFrom);
+        timeInputWrapper.appendChild(selectTimeTo);
+
+        // Appending label and select elements to its wrapper
+        timeSlotWrapper.appendChild(labelTimeSlot);
+        timeSlotWrapper.appendChild(timeInputWrapper);
+
+        // Add event listener to update 'time to' minimum date
+        selectTimeFrom.addEventListener('change', function () {
+            selectTimeTo.min = selectTimeFrom.value;
+        });
+
+        // Add event listener to update 'time from' maximum date
+        selectTimeTo.addEventListener('change', function () {
+            selectTimeFrom.max = selectTimeTo.value;
+        });
+
+        inputDate.addEventListener('change', function () {
+            if (inputDate.value) {
+                selectTimeFrom.disabled = false;
+                selectTimeTo.disabled = false;
+            } else {
+                selectTimeFrom.disabled = true;
+                selectTimeTo.disabled = true;
+            }
+        });
+
+        const saveInfoElm = document.createElement('div');
+        saveInfoElm.id = 'save-info-text';
         saveInfoElm.innerText = '*We will save the inputs above so you do not have to re-enter them each time you book';
 
-        bookingElm.appendChild(formElm);
-        bookingElm.appendChild(saveInfoElm);
+        const reserveButtonWrapperEnd = document.createElement('div');
+        const reserveButtonElmEnd = document.createElement('button');
+        reserveButtonElmEnd.id = 'reserve-button-end';
+        reserveButtonElmEnd.innerText = 'Reserve';
+        reserveButtonElmEnd.type = 'submit';
+        reserveButtonElmEnd.classList.add('custom-button');
+        reserveButtonWrapperEnd.appendChild(reserveButtonElmEnd);
+        // Appending all form inputs to form inputs container
+
+        formInputsContainer.appendChild(numberPeopleWrapper);
+        formInputsContainer.appendChild(optionalQuestionWrapper);
+        formInputsContainer.appendChild(dateWrapper);
+        formInputsContainer.appendChild(timeSlotWrapper);
+        formInputsContainer.appendChild(saveInfoElm);
+        formInputsContainer.appendChild(reserveButtonWrapperEnd);
+
+        // Appending form inputs container to booking element
+        bookingElm.appendChild(formInputsContainer);
+
+        bookingElm.appendChild(formInputsContainer);
+
+        // Tonight TODOs:
+        /**
+         * The background can change to images instead so that it looks cooler
+         * Set up url from card to this sites 
+         * Do the submit event listener
+         * Fetch data from card to this site (maybe from backend instead!)
+         */
+        // Event listener for form submission
+        bookingElm.addEventListener('submit', event => {
+            event.preventDefault();
+            const numberPeople = bookingElm.querySelector('#number-people').value;
+            const desktopComputer = bookingElm.querySelector('#desktop-computer').value;
+            const timeFrom = bookingElm.querySelector('#time-from').value;
+            const timeTo = bookingElm.querySelector('#time-to').value;
+
+            // this.#events.publish('book-room', { numberPeople, desktopComputer, timeFrom, timeTo });
+        });
 
         return bookingElm;
     }
