@@ -74,6 +74,7 @@ export class Search {
       acc[building.building_id] = { name: building.name, img_name: building.img_name };
       return acc;
     }, {});
+    // console.log(buildings, rooms)
     container.innerHTML = "";
     const roomCard = new RoomCard();
     rooms.forEach(async (room) => {

@@ -28,9 +28,9 @@ export class App {
   #registerPage = null;
   #notFoundPage = null;
   #bookingPage = null;
-  
+
   #profilePageObj = null;
-  
+
   constructor() {
     this.#events = Events.events();
   }
@@ -51,7 +51,7 @@ export class App {
     const navbar = new Navbar();
     let navbarElm = await navbar.render();
     rootElm.appendChild(navbarElm);
-    this.#events.subscribe("rerenderNav", async () => { 
+    this.#events.subscribe("rerenderNav", async () => {
       const newNavbarElm = await navbar.render();
       rootElm.replaceChild(newNavbarElm, navbarElm);
       navbarElm = newNavbarElm;
@@ -76,6 +76,30 @@ export class App {
     }
     this.#mainViewElm.innerHTML = "";
     const loggedIn = await isLoggedIn();
+
+    // The case of book since it has its own parameter so it cannot use along switch case
+    if (page.startsWith("/book")) {
+      if (!loggedIn) {
+        await this.#navigateTo("/login");
+        return;
+      }
+      const BookingPage = await importBookingPage();
+
+      // Extract query parameters
+      const urlSearchParams = new URLSearchParams(page.split("?")[1]);
+
+      // Convert query parameters to object
+      const queryParams = {};
+      for (const [key, value] of urlSearchParams) {
+        queryParams[key] = value;
+      }
+
+      this.#bookingPage = await new BookingPage(queryParams).render();
+      this.#mainViewElm.appendChild(this.#bookingPage);
+      window.history.pushState({}, page, window.location.origin + page);
+      return;
+    }
+
     switch (page) {
       case "":
       case "/":
@@ -123,21 +147,6 @@ export class App {
           this.#profilePageObj = profilePageObj;
         }
         this.#mainViewElm.appendChild(await this.#profilePageObj.render());
-        break;
-      // TODO: adding the case for the booking page
-      case "/book":
-        // handle the case if user is not logged in
-        if (!loggedIn) {
-          await this.#navigateTo("/login");
-          return;
-        }
-        // handle the case if user is logged in
-        if (!this.#bookingPage) {
-          const BookingPage = await importBookingPage();
-          const bookingPageObj = new BookingPage();
-          this.#bookingPage = await bookingPageObj.render();
-        }
-        this.#mainViewElm.appendChild(this.#bookingPage);
         break;
       default:
         if (!this.#notFoundPage) {

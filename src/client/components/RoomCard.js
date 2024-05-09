@@ -64,6 +64,10 @@ export class RoomCard {
     descriptionContainer.appendChild(descBody);
     descBody.appendChild(descLocationContainer);
     descBody.appendChild(descAvailabilityContainer);
+
+    cardElm.addEventListener("click", async () => {
+      this.#events.publish("navigateTo", `/book?room_id=${encodeURIComponent(data.room_id)}&building_id=${encodeURIComponent(data.building_id)}&room_type=${encodeURIComponent(data.room_type)}&building_name=${encodeURIComponent(data.building_name)}&img_name=${encodeURIComponent(data.img_name)}&availability=${encodeURIComponent(descAvailability.textContent)}&room_label=${encodeURIComponent(data.room_label)}`);
+    });
     // const gridContainer = document.createElement("div");
     // gridContainer.id = "grid-container";
     // gridContainer.classList.add("grid-container");

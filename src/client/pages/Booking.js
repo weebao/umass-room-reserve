@@ -3,10 +3,13 @@ import { Events } from '../Events.js';
 export class BookingPage {
     #events = null;
     #today = null;
+    #data = null;
 
-    constructor() {
+    constructor(data) {
         this.#events = Events.events();
         this.#today = new Date().toISOString().split('T')[0];
+        this.#data = data;
+        console.log("minhdz", this.#data)
     }
 
     async render() {
@@ -17,12 +20,25 @@ export class BookingPage {
         const headerContainer = document.createElement('div');
         headerContainer.id = 'header-container';
 
+        const imageBackground = document.createElement('img');
+        imageBackground.id = 'background-image';
+        imageBackground.src = `/assets/building_images/${this.#data.img_name}`;
+        imageBackground.alt = 'Building image';
+        imageBackground.classList.add('background-image');
+        headerContainer.addEventListener('mouseenter', () => {
+            imageBackground.style.opacity = 0.6;
+        });
+
+        headerContainer.addEventListener('mouseleave', () => {
+            imageBackground.style.opacity = 0.27;
+        });
+
         // Appending header container to booking element
         bookingElm.appendChild(headerContainer);
 
         const headerElm = document.createElement('div');
         headerElm.id = 'header';
-        headerElm.innerText = 'Study Room'; // TODO: Must be dynamic and retrieved from user card
+        headerElm.innerText = `${this.#data.room_type}-${this.#data.room_label}`; // TODO: Must be dynamic and retrieved from user card
 
         const metadataContainer = document.createElement('div');
         metadataContainer.id = 'metadata-container';
@@ -35,7 +51,7 @@ export class BookingPage {
 
         const locationInfoElm = document.createElement('div');
         locationInfoElm.classList.add('description-metadata');
-        locationInfoElm.innerText = 'W.E.B. Du Bois Library' // TODO: Must be dynamic and retrieved from user card
+        locationInfoElm.innerText = `${this.#data.building_name}` // TODO: Must be dynamic and retrieved from user card
 
         // Container for location icon and location info
         const locationContainer = document.createElement('div');
@@ -45,6 +61,7 @@ export class BookingPage {
         locationContainer.appendChild(locationInfoElm);
 
         // Definition for availability icon and availability info that will stay inside availabilityContainer
+        // Availability icon should also different based on availability
         const availabilityIconElm = document.createElement('img');
         availabilityIconElm.src = '/assets/tick-icon.svg'; // TODO: must be dynamic, based on what is really available
         availabilityIconElm.alt = 'Availability icon';
@@ -75,6 +92,7 @@ export class BookingPage {
         reserveButtonWrapper.appendChild(reserveButtonElm);
 
         // Appending necessary children to header container
+        headerContainer.appendChild(imageBackground)
         headerContainer.appendChild(metadataContainer)
         headerContainer.appendChild(reserveButtonWrapper)
 

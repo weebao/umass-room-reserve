@@ -26,4 +26,5 @@
   gap: 28px; /* updated property name, it's the standard now */
   justify-content: center;
   box-sizing: border-box; /* this makes sure the padding and border are included in the width */
+  padding-bottom: 80px;
 }
