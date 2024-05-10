@@ -78,7 +78,7 @@ export class App {
     const loggedIn = await isLoggedIn();
 
     // The case of book since it has its own parameter so it cannot use along switch case
-    if (page.startsWith("/book")) {
+    if (page.startsWith("/booking")) {
       if (!loggedIn) {
         await this.#navigateTo("/login");
         return;
