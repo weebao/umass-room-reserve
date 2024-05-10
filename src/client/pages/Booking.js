@@ -25,11 +25,15 @@ export class BookingPage {
         imageBackground.alt = 'Building image';
         imageBackground.classList.add('background-image');
         headerContainer.addEventListener('mouseenter', () => {
-            imageBackground.style.opacity = 0.6;
+            imageBackground.style.opacity = 0.75;
+            metadataContainer.style.opacity = 0.75;
+            reserveButtonElm.style.opacity = 0.75;
         });
 
         headerContainer.addEventListener('mouseleave', () => {
-            imageBackground.style.opacity = 0.27;
+            imageBackground.style.opacity = 0.25;
+            metadataContainer.style.opacity = 1;
+            reserveButtonElm.style.opacity = 1;
         });
 
         // Appending header container to booking element
@@ -37,7 +41,7 @@ export class BookingPage {
 
         const headerElm = document.createElement('div');
         headerElm.id = 'header';
-        headerElm.innerText = `${this.#data.room_type}-${this.#data.room_label}`; // TODO: Must be dynamic and retrieved from user card
+        headerElm.innerText = `${this.#data.room_type} - ${this.#data.room_label}`; // TODO: Must be dynamic and retrieved from user card
 
         const metadataContainer = document.createElement('div');
         metadataContainer.id = 'metadata-container';
@@ -89,6 +93,14 @@ export class BookingPage {
         reserveButtonElm.type = 'submit';
         reserveButtonElm.classList.add('custom-button');
         reserveButtonWrapper.appendChild(reserveButtonElm);
+
+        reserveButtonElm.addEventListener('mouseenter', () => {
+            reserveButtonElm.style.opacity = 1;
+        });
+
+        reserveButtonElm.addEventListener('mouseleave', () => {
+            reserveButtonElm.style.opacity = 0.25;
+        });
 
         // Appending necessary children to header container
         headerContainer.appendChild(imageBackground)
