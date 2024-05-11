@@ -64,10 +64,31 @@ const Database = (dbname) => {
           status: "success",
           data: filteredBuildings
         };
-      } catch(e){
+      } catch(e) {
         return {
           status: "error",
           message: "Failed to get building",
+          error: e.message,
+        };
+      }
+    },
+    getUser: async (email) => {
+      try{
+        const db = getDB();
+        const data = await db.get("users");
+        const user = data.users.find(user => user.email.toLowerCase() === email.toLowerCase());
+        db.close();
+        return user ? {
+          status: "success",
+          data: user
+        } : {
+          status: "error",
+          message: "User not found",
+        };
+      } catch(e) {
+        return {
+          status: "error",
+          message: "Failed to get user",
           error: e.message,
         };
       }
@@ -77,4 +98,7 @@ const Database = (dbname) => {
   return obj;
 };
 
-export default Database;
+//Create new database instance
+const database = Database("umass_reserve_rooms");
+
+export default database;
