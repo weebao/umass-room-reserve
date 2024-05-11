@@ -7,12 +7,14 @@ let path = "/";
 const app = new App();
 
 document.addEventListener('DOMContentLoaded', async () => {
-  path = window.location.pathname;
+  const url = new URL(window.location.href);
+  path = url.pathname + url.search;
   await app.render('root');
   await events.publish('navigateTo', path);
 });
 
 window.addEventListener('popstate', async () => {
-  path = window.location.pathname;
+  const url = new URL(window.location.href);
+  path = url.pathname + url.search;
   await events.publish('navigateTo', path);
 });

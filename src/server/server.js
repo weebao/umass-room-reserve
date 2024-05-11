@@ -53,6 +53,13 @@ app.get("/api/login", async (req, res) => {
   }
 });
 
+app
+  .route("/booking")
+  .get((req, res, next) => {
+    const option = req.query; // get the query parameters
+    checkAvailability(res, option);
+  }).all(MethodNotAllowedHandler)
+
 // Serve index.html for all other routes to support SPA routing
 app.get("*", (req, res) => {
   res.sendFile(path.resolve("src/client/index.html"));
