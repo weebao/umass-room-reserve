@@ -15,6 +15,10 @@ const importProfilePage = async () =>
 const importNotFoundPage = async () =>
   (await import("./pages/404.js")).NotFoundPage;
 
+// TODO: Adding Booking importation:
+const importBookingPage = async () =>
+  (await import("./pages/Booking.js")).BookingPage;
+
 export class App {
   #events = null;
   #mainViewElm = null;
@@ -23,9 +27,10 @@ export class App {
   #homePage = null;
   #registerPage = null;
   #notFoundPage = null;
-  
+  #bookingPage = null;
+
   #profilePageObj = null;
-  
+
   constructor() {
     this.#events = Events.events();
   }
@@ -46,7 +51,7 @@ export class App {
     const navbar = new Navbar();
     let navbarElm = await navbar.render();
     rootElm.appendChild(navbarElm);
-    this.#events.subscribe("rerenderNav", async () => { 
+    this.#events.subscribe("rerenderNav", async () => {
       const newNavbarElm = await navbar.render();
       rootElm.replaceChild(newNavbarElm, navbarElm);
       navbarElm = newNavbarElm;
@@ -71,6 +76,30 @@ export class App {
     }
     this.#mainViewElm.innerHTML = "";
     const loggedIn = await isLoggedIn();
+
+    // The case of book since it has its own parameter so it cannot use along switch case
+    if (page.startsWith("/booking")) {
+      if (!loggedIn) {
+        await this.#navigateTo("/login");
+        return;
+      }
+      const BookingPage = await importBookingPage();
+
+      // Extract query parameters
+      const urlSearchParams = new URLSearchParams(page.split("?")[1]);
+
+      // Convert query parameters to object
+      const queryParams = {};
+      for (const [key, value] of urlSearchParams) {
+        queryParams[key] = value;
+      }
+
+      this.#bookingPage = await new BookingPage(queryParams).render();
+      this.#mainViewElm.appendChild(this.#bookingPage);
+      window.history.pushState({}, page, window.location.origin + page);
+      return;
+    }
+
     switch (page) {
       case "":
       case "/":

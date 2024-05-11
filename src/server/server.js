@@ -5,7 +5,7 @@ import cors from "cors";
 import path from "path";
 import open from "open";
 
-//Create new database instance
+// Create new database instance
 const database = Database("umass_reserve_rooms");
 
 const app = express();
@@ -39,6 +39,13 @@ app
     res.json(result.data);
   })
   .all(MethodNotAllowedHandler);
+
+app
+  .route("/booking")
+  .get((req, res, next) => {
+    const option = req.query; // get the query parameters
+    checkAvailability(res, option);
+  }).all(MethodNotAllowedHandler)
 
 // Serve index.html for all other routes to support SPA routing
 app.get("*", (req, res) => {
