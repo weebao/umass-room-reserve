@@ -1,11 +1,19 @@
-import { authenticate } from "../middleware/auth.js";
+import database from "../db.js";
+import { encrypt } from "../utils/crypt.js";
 
+/**
+ * Handles user login.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves when the login process is complete.
+ */
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const userData = await database.getUser(email);
     if (userData.status === "success") {
-      const encryptedPassword = password;
+      const encryptedPassword = encrypt(password);
       if (userData.data.password === encryptedPassword) {
         res.status(200).json({
           status: "success",
@@ -29,6 +37,12 @@ export const login = async (req, res) => {
   }
 };
 
+/**
+ * Registers a new user.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves when the registration is complete.
+ */
 export const register = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -39,7 +53,15 @@ export const register = async (req, res) => {
         message: "User already exists",
       });
     } else {
-      const result = await database.createUser(email, password);
+      // TODO: Check if all fields are available
+      const encryptedPassword = encrypt(password);
+      const userData = { ...req.body, password: encryptedPassword };
+      const result = await database.createUser(userData);
+      console.log(result)
+      if (result.status === "error") {
+        res.status(500).json(result);
+        return;
+      }
       res.status(201).json(result);
     }
   } catch (error) {
@@ -49,4 +71,4 @@ export const register = async (req, res) => {
       error: error.message,
     });
   }
-}
+};
