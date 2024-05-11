@@ -53,6 +53,7 @@ const Database = (dbname) => {
   const getDB = () => new PouchDB(dbname);
 
   const obj = {
+    /* ---- BUILDING ---- */
     getBuilding: async (name) => {
       try {
         const db = getDB();
@@ -72,6 +73,8 @@ const Database = (dbname) => {
         };
       }
     },
+    /* ---- ROOM ---- */
+    /* ---- USER ---- */
     getUser: async (email) => {
       try{
         const db = getDB();
@@ -92,6 +95,9 @@ const Database = (dbname) => {
           error: e.message,
         };
       }
+    },
+    createUser: async (email) => {
+      //TODO
     }
   };
 

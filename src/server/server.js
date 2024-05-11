@@ -4,8 +4,8 @@ import cors from "cors";
 import path from "path";
 import open from "open";
 
-const userRoutes = require("./routes/user.routes.js");
-const buildingRoutes = require("./routes/building.routes.js");
+import userRoutes from "./routes/user.routes.js";
+import buildingRoutes from "./routes/building.routes.js";
 
 const app = express();
 app.use(logger("dev"));
@@ -21,7 +21,7 @@ app.use(
 );
 
 // Serve static files from the 'src/client' directory
-app.use(express.static("src/client/index.html"));
+app.use(express.static("src/client"));
 
 // Routes
 app.use("/api/user", userRoutes);
