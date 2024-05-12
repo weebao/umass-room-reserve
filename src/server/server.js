@@ -3,8 +3,10 @@ import logger from "morgan";
 import cors from "cors";
 import path from "path";
 import open from "open";
-import database from "./db.js";
-import  encrypt from "./utils/crypt.js";
+
+import userRoutes from "./routes/user.routes.js";
+import buildingRoutes from "./routes/building.routes.js";
+import roomRoutes from "./routes/room.routes.js";
 
 const app = express();
 app.use(logger("dev"));
@@ -12,61 +14,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Use CORS middleware (configure as needed)
-app.use(
-  cors({
-    origin: "*", // Allow all origins
-    methods: ["GET", "OPTIONS"], // Allowed methods
-  })
-);
+const apiCorsOptions = {
+  origin: "*", // Adjust as needed
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Typically allowed methods for APIs
+};
+app.use(cors(apiCorsOptions));
 
 // Serve static files from the 'src/client' directory
-app.use(express.static("src/client/index.html"));
+app.use(express.static("src/client"));
 
-// get building
-app.get("/api/getBuilding", async (req, res) => {
-  const options = req.query;
-  const result = await database.getBuilding(options.name);
-  try {
-    res.status(200).json(result);
-  } catch(error) {
-    res.status(500).json({ status: "error", message: "Internal server error", error: error.message });
-  }
-});
-
-// login
-app.get("/api/login", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const userData = await database.getUser(email);
-    if (userData.status === "success") {
-      const encryptedPassword = password;
-      if (userData.data.password === encryptedPassword) {
-        res.status(200).json({ status: "success", message: "Login successful", data: { email: userData.email } });
-      } else {
-        res.status(401).json({ status: "error", message: "Invalid credentials" });
-      }
-    } else {
-      res.status(404).json(userData);
-    }
-  } catch(error) {
-    res.status(500).json({ status: "error", message: "Internal server error", error: error.message });
-  }
-});
-
-app
-  .route("/booking")
-  .get((req, res, next) => {
-    const option = req.query; // get the query parameters
-    checkAvailability(res, option);
-  }).all(MethodNotAllowedHandler)
+// Routes
+app.use("/api/user", userRoutes);
+app.use("/api/building", buildingRoutes);
+app.use("/api/room", roomRoutes);
 
 // Serve index.html for all other routes to support SPA routing
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve("src/client/index.html"));
+  if (!req.path.startsWith('/api')) { // Ensure that API calls do not get HTML responses
+    res.sendFile(path.resolve('src/client/index.html'));
+  } else {
+    res.status(404).send({ error: 'API endpoint not found' });
+  }
 });
 
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  // open(`http://localhost:${PORT}`);
+  // open(`http://localhost:${PORT}`); // Use this to automatically open the browser
 });

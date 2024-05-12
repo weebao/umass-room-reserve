@@ -2,7 +2,7 @@ import * as http from "http";
 import * as url from "url";
 import * as fsp from "fs/promises";
 
-import mockdata from "./mockdata.js";
+import mockdata from "./lib/mockdata.js";
 
 const { buildings, rooms, users } = mockdata;
 

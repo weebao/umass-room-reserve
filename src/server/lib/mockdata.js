@@ -98,14 +98,14 @@ const users = [
   {
     user_id: 1,
     email: "lionelmessi@gmail.com",
-    password: "iamgoat",
+    password: "737b776e727f7d757b6e", // real password: iamthegoat
     first_name: "Lionel",
     last_name: "Messi",
   },
   {
     user_id: 2,
     email: "cristianoronaldo@gmail.com",
-    password: "messiisbetterthanme",
+    password: "777f6969737369787f6e6e7f686e727b74777f", // real password: messiisbetterthanme
     first_name: "Cristiano",
     last_name: "Ronaldo",
   },
