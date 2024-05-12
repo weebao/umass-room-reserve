@@ -30,7 +30,7 @@ import {
   roomIdToBuilding,
   roomIdToType,
   roomNameToId,
-  shortToFullName
+  shortToFullName,
 } from "../lib/idDict.js";
 import { Headers } from "../lib/apiData.js";
 
@@ -102,12 +102,12 @@ export const getRoom = async (id) => {
     img: "https://s3.amazonaws.com/libapps/accounts/77786/images/groupstudyroomsmall.jpg",
     checksums: [],
   };
-  
+
   const result = await fetch(URL + path, {
     method: "POST",
     headers: {
       ...Headers,
-      Referer: `https://libcal.library.umass.edu/space/${id}`
+      Referer: `https://libcal.library.umass.edu/space/${id}`,
     },
     body: objectToFormData({
       lid: roomIdToBuilding[id],
@@ -144,9 +144,9 @@ export const getRoom = async (id) => {
     room.checksums.push(checksum);
   }
 
-  room.availableTimes.sort()
+  room.availableTimes.sort();
   return room;
-}
+};
 
 /**
  * Retrieves the available rooms based on the specified date, start time, and end time.
@@ -265,6 +265,34 @@ export const isAvailable = async (date, startTime, endTime, roomId) => {
  * @param {string} roomId - The ID of the room to be booked.
  * @param {Object} formData - Additional form data for the booking.
  * @returns {Promise<BookingResult>} A promise that resolves when the room is successfully booked.
+ * Use path: "spaces/availability/booking/add" - POST
+   * FormData: {
+      add[eid]: 107642
+      add[gid]: 28495
+      add[lid]: 11076
+      add[start]: 2024-05-12 11:00
+      add[checksum]: 189f4c5b27b3943d84d764ffcf927e6d
+      lid: 11076
+      gid: 28495
+      start: 2024-05-12
+      end: 2024-05-13
+    }
+   * Save the checksum for the response
+   * Use path: "ajax/space/book" - POST
+   * FormData: {
+      session: 51343052
+      fname: first name
+      lname: last name
+      email: email@umass.edu
+      q12479: "Undergraduate" | "Graduate" | "Other" -> student role
+      q12481: "3-5" | "More than 5" -> how many people
+      q12482: "Yes" | "No" | "Maybe" -> will use computer?
+      q12477: CS -> major
+      bookings: [{"id":1,"eid":<ROOM ID>,"seat_id":0,"gid":<ROOM TYPE ID>,"lid":<BUILDING ID>,"start":"2024-05-12 11:00","end":"2024-05-12 12:00","checksum":"<THE NEW CHECKSUM JUST GOT FROM ABOVE"}]
+      returnUrl: /space/<ROOM ID>
+      method: 12
+    }
+   * And then you save the book_id for cancelling later
  */
 export const bookRoom = async (date, startTime, endTime, roomId, formData) => {
   // TODO
