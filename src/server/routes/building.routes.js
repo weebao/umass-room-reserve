@@ -1,14 +1,16 @@
 import express from "express";
+import * as controller from "../controllers/building.controller.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const options = req.query;
-  const result = await database.getBuilding(options.name);
-  try {
-    res.status(200).json(result);
-  } catch(error) {
-    res.status(500).json({ status: "error", message: "Internal server error", error: error.message });
+router.get("/", controller.getBuilding);
+
+// Catch all other HTTP methods not allowed for existing routes
+router.all('*', (req, res, next) => {
+  if (res.headersSent) {
+    next(); // If a response has already been sent, pass to the next middleware
+  } else {
+    res.status(405).send({ error: 'Method Not Allowed' });
   }
 });
 
