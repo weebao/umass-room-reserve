@@ -1,6 +1,6 @@
 import { Events } from "../Events.js";
-
 import { createSession } from '../modules/session.js';
+import { registerUser } from "../services/auth.js";
 
 export class RegisterPage {
   #events = null;
@@ -109,7 +109,7 @@ export class RegisterPage {
     });
 
     // Add event listener to form submit
-    formElm.addEventListener("submit", (event) => {
+    formElm.addEventListener("submit", async (event) => {
       event.preventDefault();
       // Get input values
       const firstName = firstNameInput.value;
@@ -122,16 +122,39 @@ export class RegisterPage {
 
       // Check if passwords match
       if (password === confirmPassword) {
-      passwordMatchMessage.innerText = "";
-      confirmPasswordInput.classList.remove("m-textfield-error");
-      // Create session and navigate to home page
-      createSession({ firstName, lastName, major, role, email, password });
-      this.#events.publish("rerenderNav");
-      this.#events.publish("navigateTo", "/home");
+        passwordMatchMessage.innerText = "";
+        confirmPasswordInput.classList.remove("m-textfield-error");
       } else {
-      confirmPasswordInput.classList.add("m-textfield-error");
-      passwordMatchMessage.innerText = "Passwords do not match";
+        confirmPasswordInput.classList.add("m-textfield-error");
+        passwordMatchMessage.innerText = "Passwords do not match";
       }
+
+    try {
+      // Assume registerUser is a function that handles the API request for registration
+      const registerResult = await registerUser({
+        firstName,
+        lastName,
+        major,
+        role,
+        email,
+        password
+      });
+
+      console.log(registerResult)
+      
+      if (registerResult.status === "success") {
+        // Create session and navigate to home page
+        await createSession({ firstName, lastName, major, role, email });
+        this.#events.publish("rerenderNav");
+        this.#events.publish("navigateTo", "/home");
+        alert("Registered successfully! You are now logged in")
+      } else {
+        // Handle registration error (display message or log error)
+        alert(registerResult.message);
+      }
+    } catch (error) {
+      console.error("Registration failed:", error.message);
+    }
     });
 
     container.appendChild(registerElm);

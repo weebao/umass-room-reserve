@@ -1,5 +1,4 @@
 import { Events } from "../Events.js";
-
 import { loginUser } from "../services/auth.js";
 import { createSession } from "../modules/session.js";
 
@@ -84,7 +83,7 @@ export class LoginPage {
     });
 
     // Add event listener to the form submission
-    formElm.addEventListener("submit", (event) => {
+    formElm.addEventListener("submit", async (event) => {
       event.preventDefault();
       // Validate each input element
       inputArr.forEach((inputElm) => {
@@ -96,17 +95,24 @@ export class LoginPage {
       });
       
       try {
-      const email = schoolEmailInput.value;
-      const password = passwordInput.value;
-      // const user = loginUser(email, password);
-      if (email && password) {
-        formElm.querySelector("#password-forgot-noti").style.display = "none";
-        inputArr.forEach((inputElm) => {
-        inputElm.classList.remove("m-textfield-error");
+        const email = schoolEmailInput.value;
+        const password = passwordInput.value;
+        // const user = loginUser(email, password);
+        if (email && password) {
+          formElm.querySelector("#password-forgot-noti").style.display = "none";
+          inputArr.forEach((inputElm) => {
+          inputElm.classList.remove("m-textfield-error");
         });
-        createSession({ email, password });
-        this.#events.publish("rerenderNav");
-        this.#events.publish("navigateTo", "/home");
+
+        const response = await loginUser(email, password);
+
+        if (response.status === "success") {
+          await createSession(response.data);
+          this.#events.publish("rerenderNav");
+          this.#events.publish("navigateTo", "/home");
+        } else {
+          alert(response.message || "Failed to login");
+        }
       } else {
         formElm.querySelector("#password-forgot-noti").style.display =
         "block";

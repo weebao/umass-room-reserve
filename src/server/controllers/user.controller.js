@@ -18,7 +18,7 @@ export const login = async (req, res) => {
         res.status(200).json({
           status: "success",
           message: "Login successful",
-          data: { email: userData.email },
+          data: userData.data,
         });
       } else {
         res
@@ -44,7 +44,7 @@ export const login = async (req, res) => {
  * @returns {Promise<void>} - A promise that resolves when the registration is complete.
  */
 export const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName, role , major} = req.body
   try {
     const userData = await database.getUser(email);
     if (userData.status === "success") {
@@ -62,7 +62,11 @@ export const register = async (req, res) => {
         res.status(500).json(result);
         return;
       }
-      res.status(201).json(result);
+      res.status(201).json({
+        status: "success",
+        message: "Registration successful",
+        data: { email, firstName, lastName, role , major}
+      });
     }
   } catch (error) {
     res.status(500).json({

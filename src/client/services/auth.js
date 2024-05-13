@@ -1,7 +1,7 @@
 import { URL } from "./url.js";
 
 export async function loginUser(email, password) {
-  const response = await fetch(`${URL}/login`, {
+  const response = await fetch('/api/user/login', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export async function loginUser(email, password) {
 
 
 export async function registerUser(userData) {
-  const response = await fetch(`${URL}/register`, {
+  const response = await fetch('/api/user/register', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
