@@ -72,13 +72,9 @@ input[type="number"] {
 	/*quick fix*/
 }
 
-.custom-button {
-	font-size: 12px;
-	font-weight: 400;
-	color: white;
-	cursor: pointer;
-	width: 180px;
-	height: 47px;
+#reserve-button, #reserve-button-end {
+  padding-left: 64px;
+  padding-right: 64px;
 }
 
 #form-inputs-container {

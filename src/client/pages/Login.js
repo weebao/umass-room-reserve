@@ -51,7 +51,7 @@ export class LoginPage {
           <input type="password" id="password" name="password" class="m-textfield" placeholder="Password" required>
           <label for="password" class="m-textfield-label">Password</label>
         </div>
-        <div id="password-forgot-noti">Uh oh you forgot your identity 🤣</div>
+        <div id="invalid-noti">Uh oh you forgot your identity 🤣</div>
         <div id="password-forgot-wrapper" class="hstack space-between">
           <label for="remember-me" class="checkbox">
             <input type="checkbox" id="remember-me" name="remember_me" checked> 
@@ -74,62 +74,64 @@ export class LoginPage {
     loginButton.addEventListener("click", () => {
       // Validate each input element
       inputArr.forEach((inputElm) => {
-      if (inputElm.validity.valid) {
-        inputElm.classList.remove("m-textfield-error");
-      } else {
-        inputElm.classList.add("m-textfield-error");
-      }
+        if (inputElm.validity.valid) {
+          inputElm.classList.remove("m-textfield-error");
+        } else {
+          inputElm.classList.add("m-textfield-error");
+        }
       });
     });
+
+    const notiDiv = formElm.querySelector("#invalid-noti");
 
     // Add event listener to the form submission
     formElm.addEventListener("submit", async (event) => {
       event.preventDefault();
       // Validate each input element
       inputArr.forEach((inputElm) => {
-      if (inputElm.validity.valid) {
-        inputElm.classList.remove("m-textfield-error");
-      } else {
-        inputElm.classList.add("m-textfield-error");
-      }
+        if (inputElm.validity.valid) {
+          inputElm.classList.remove("m-textfield-error");
+        } else {
+          inputElm.classList.add("m-textfield-error");
+        }
       });
-      
+
       try {
         const email = schoolEmailInput.value;
         const password = passwordInput.value;
         // const user = loginUser(email, password);
         if (email && password) {
-          formElm.querySelector("#password-forgot-noti").style.display = "none";
+          notiDiv.style.display = "none";
           inputArr.forEach((inputElm) => {
-          inputElm.classList.remove("m-textfield-error");
-        });
+            inputElm.classList.remove("m-textfield-error");
+          });
 
-        const response = await loginUser(email, password);
+          const response = await loginUser(email, password);
 
-        if (response.status === "success") {
-          await createSession(response.data);
-          this.#events.publish("rerenderNav");
-          this.#events.publish("navigateTo", "/home");
+          if (response.status === "success") {
+            await createSession(response.data);
+            this.#events.publish("rerenderNav");
+            this.#events.publish("navigateTo", "/home");
+          } else {
+            throw new Error(response.message || "Uh oh you forgot your identity 🤣");
+          }
         } else {
-          alert(response.message || "Failed to login");
+          notiDiv.style.display = "block";
+          inputArr.forEach((inputElm) => {
+            inputElm.classList.add("m-textfield-error");
+          });
         }
-      } else {
-        formElm.querySelector("#password-forgot-noti").style.display =
-        "block";
+      } catch (error) {
+        notiDiv.style.display = "block";
+        notiDiv.innerText = error.message;
         inputArr.forEach((inputElm) => {
-        inputElm.classList.add("m-textfield-error");
+          inputElm.classList.add("m-textfield-error");
         });
-      }
-      } catch {
-      formElm.querySelector("#password-forgot-noti").style.display = "block";
-      inputArr.forEach((inputElm) => {
-        inputElm.classList.add("m-textfield-error");
-      });
       }
     });
 
     // Hide the password forgot notification initially
-    formElm.querySelector("#password-forgot-noti").style.display = "none";
+    notiDiv.style.display = "none";
 
     container.appendChild(loginElm);
     headerElm.appendChild(titleElm);

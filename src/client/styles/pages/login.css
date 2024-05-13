@@ -96,7 +96,7 @@ body {
     margin-bottom: 8px;
 }
 
-#password-forgot-noti {
+#invalid-noti {
     margin-top: 5px;
     color: var(--error)
 }

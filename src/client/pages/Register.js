@@ -1,5 +1,5 @@
 import { Events } from "../Events.js";
-import { createSession } from '../modules/session.js';
+import { createSession } from "../modules/session.js";
 import { registerUser } from "../services/auth.js";
 
 export class RegisterPage {
@@ -70,7 +70,7 @@ export class RegisterPage {
       <div class="m-textfield-group auth-input">
         <input type="password" id="confirm-password" name="confirmPassword" class="m-textfield" placeholder="Confirm Password" required autocomplete="new-password">
         <label for="confirm-password" class="m-textfield-label">Confirm Password</label>
-        <p id="password-match-message"></p>
+        <p id="invalid-noti"></p>
       </div>
       <button type="submit" id="register-button" class="auth-submit-button">Register</button>
     `;
@@ -84,7 +84,7 @@ export class RegisterPage {
     const confirmPasswordInput = formElm.querySelector("#confirm-password");
     const registerButton = formElm.querySelector("#register-button");
 
-    const passwordMatchMessage = formElm.querySelector("#password-match-message");
+    const notiDiv = formElm.querySelector("#invalid-noti");
 
     const inputArr = [
       firstNameInput,
@@ -100,11 +100,11 @@ export class RegisterPage {
     registerButton.addEventListener("click", (event) => {
       // Validate input fields
       inputArr.forEach((inputElm) => {
-      if (inputElm.validity.valid) {
-        inputElm.classList.remove("m-textfield-error");
-      } else {
-        inputElm.classList.add("m-textfield-error");
-      }
+        if (inputElm.validity.valid) {
+          inputElm.classList.remove("m-textfield-error");
+        } else {
+          inputElm.classList.add("m-textfield-error");
+        }
       });
     });
 
@@ -122,39 +122,43 @@ export class RegisterPage {
 
       // Check if passwords match
       if (password === confirmPassword) {
-        passwordMatchMessage.innerText = "";
+        notiDiv.innerText = "";
         confirmPasswordInput.classList.remove("m-textfield-error");
       } else {
         confirmPasswordInput.classList.add("m-textfield-error");
-        passwordMatchMessage.innerText = "Passwords do not match";
+        notiDiv.innerText = "Passwords do not match";
+        return;
       }
 
-    try {
-      // Assume registerUser is a function that handles the API request for registration
-      const registerResult = await registerUser({
-        firstName,
-        lastName,
-        major,
-        role,
-        email,
-        password
-      });
+      try {
+        // Assume registerUser is a function that handles the API request for registration
+        const registerResult = await registerUser({
+          firstName,
+          lastName,
+          major,
+          role,
+          email,
+          password,
+        });
 
-      console.log(registerResult)
-      
-      if (registerResult.status === "success") {
-        // Create session and navigate to home page
-        await createSession({ firstName, lastName, major, role, email });
-        this.#events.publish("rerenderNav");
-        this.#events.publish("navigateTo", "/home");
-        alert("Registered successfully! You are now logged in")
-      } else {
+        // console.log(registerResult)
+
+        if (registerResult.status === "success") {
+          // Create session and navigate to home page
+          await createSession({ firstName, lastName, major, role, email });
+          this.#events.publish("rerenderNav");
+          this.#events.publish("navigateTo", "/home");
+        } else {
+          // Handle registration error (display message or log error)
+          throw new Error(registerResult.message || "Failed to register");
+        }
+      } catch (error) {
         // Handle registration error (display message or log error)
-        alert(registerResult.message);
+        notiDiv.innerText = error.message;
+        inputArr.forEach((inputElm) => {
+          inputElm.classList.add("m-textfield-error");
+        });
       }
-    } catch (error) {
-      console.error("Registration failed:", error.message);
-    }
     });
 
     container.appendChild(registerElm);
