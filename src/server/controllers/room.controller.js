@@ -9,7 +9,7 @@ import { roomIdToName } from "../lib/idDict.js";
  */
 export const getRoom = async (req, res) => {
   try {
-    const { id } = req.query;
+    const { id, date } = req.query;
     if (!id) {
       res.status(400).json({
         status: "error",
@@ -26,7 +26,7 @@ export const getRoom = async (req, res) => {
       });
     }
 
-    const room = await libcal.getRoom(id);
+    const room = await libcal.getRoom(id, date);
     res.status(200).json(room);
   } catch (error) {
     res.status(500).json({

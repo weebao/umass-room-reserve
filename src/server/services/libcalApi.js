@@ -44,14 +44,15 @@ import { objectToFormData } from "../utils/dataFormat.js";
 const URL = "https://libcal.library.umass.edu";
 
 /**
- * Retrieves room availability information for today.
+ * Retrieves room availability information for the specified date.
  * @param {string} id - The ID of the room.
+ * @param {string | undefined} date - Current date (if undefined then return today) (Format: YYYY-MM-DD)
  * @returns {Promise<Object>} - A Promise that resolves to an object representing the room.
  */
-export const getRoom = async (id) => {
+export const getRoom = async (id, date) => {
   // Initialize vars
   const path = "/spaces/availability/grid";
-  const { todayDate, tomorrowDate } = getDateRange(new Date());
+  const { todayDate, tomorrowDate } = getDateRange(date ? new Date(date) : new Date());
   const room = {
     id,
     name: roomIdToName[id],
