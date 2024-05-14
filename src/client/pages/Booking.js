@@ -126,10 +126,28 @@ export class BookingPage {
         labelNumberPeople.for = 'number-people';
         labelNumberPeople.innerText = 'Number of people';
 
-        const inputNumberPeople = document.createElement('input');
-        inputNumberPeople.type = 'number';
+        const inputNumberPeople = document.createElement('select');
+        // inputNumberPeople.type = 'number';
         inputNumberPeople.id = 'number-people';
         inputNumberPeople.name = 'numberPeople';
+
+        const optionDefaultNumberPeople = document.createElement('option');
+        optionDefaultNumberPeople.value = '';
+        optionDefaultNumberPeople.innerText = 'Select an option';
+        optionDefaultNumberPeople.disabled = true; // Disable the placeholder
+        optionDefaultNumberPeople.selected = true; // Mark as selected
+
+        const optionOneNumberPeople = document.createElement('option');
+        optionOneNumberPeople.value = '3-5';
+        optionOneNumberPeople.innerText = '3-5';
+
+        const optionTwoNumberPeople = document.createElement('option');
+        optionTwoNumberPeople.value = 'More than 5';
+        optionTwoNumberPeople.innerText = 'More than 5';
+
+        inputNumberPeople.appendChild(optionDefaultNumberPeople);
+        inputNumberPeople.appendChild(optionOneNumberPeople);
+        inputNumberPeople.appendChild(optionTwoNumberPeople);
 
         // Appending number of people input to its wrapper
         numberPeopleWrapper.appendChild(labelNumberPeople);
@@ -150,6 +168,8 @@ export class BookingPage {
         const optionDefault = document.createElement('option');
         optionDefault.value = '';
         optionDefault.innerText = 'Select an option';
+        optionDefault.disabled = true; // Disable the placeholder
+        optionDefault.selected = true; // Mark as selected
 
         const optionYes = document.createElement('option');
         optionYes.value = 'yes';
