@@ -33,66 +33,26 @@ import {
   shortToFullName,
 } from "../lib/idDict.js";
 import { Headers } from "../lib/apiData.js";
+import {
+  checkDateFormat,
+  checkTimeFormat,
+  getDateRange,
+  canBookInTimeRange,
+} from "../utils/datetime.js";
+import { objectToFormData } from "../utils/dataFormat.js";
 
 const URL = "https://libcal.library.umass.edu";
 
 /**
- * Checks if the given date is in the format "YYYY-MM-DD".
- *
- * @param {string} date - The date to be checked.
- * @returns {boolean} Returns true if the date is in the correct format, otherwise false.
- */
-const checkDateFormat = (date) => {
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  return dateRegex.test(date);
-};
-
-/**
- * Checks if the given time string is in the format HH:MM:SS.
- *
- * @param {string} time - The time string to be checked.
- * @returns {boolean} - Returns true if the time string is in the correct format, otherwise returns false.
- */
-const checkTimeFormat = (time) => {
-  const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
-  return timeRegex.test(time);
-};
-
-/**
- * Get the date range for a given date.
- *
- * @param {Date} date - The input date.
- * @returns {Object} - An object containing the today's date and tomorrow's date in ISO format.
- */
-const getDateRange = (date) => {
-  const todayDate = new Date(date).toISOString().split("T")[0];
-  let tomorrowDate = new Date(date);
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  tomorrowDate = tomorrowDate.toISOString().split("T")[0];
-  return { todayDate, tomorrowDate };
-};
-
-const objectToFormData = (obj) => {
-  const formData = new FormData();
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      formData.append(key, obj[key]);
-    }
-  }
-  // console.log(formData)
-  return formData;
-};
-
-/**
- * Retrieves room availability information for today.
+ * Retrieves room availability information for the specified date.
  * @param {string} id - The ID of the room.
+ * @param {string | undefined} date - Current date (if undefined then return today) (Format: YYYY-MM-DD)
  * @returns {Promise<Object>} - A Promise that resolves to an object representing the room.
  */
-export const getRoom = async (id) => {
+export const getRoom = async (id, date) => {
   // Initialize vars
   const path = "/spaces/availability/grid";
-  const { todayDate, tomorrowDate } = getDateRange(new Date());
-  const buildings = Object.keys(buildingNameToId);
+  const { todayDate, tomorrowDate } = getDateRange(date ? new Date(date) : new Date());
   const room = {
     id,
     name: roomIdToName[id],
@@ -197,7 +157,7 @@ export const getAvailableRooms = async (date, startTime, endTime) => {
       throw new Error(`${await result.text()} (${result.status})`);
     }
 
-    // Process returnin data
+    // Process returning data
     const data = await result.json();
     const slots = data["slots"];
 
@@ -214,14 +174,6 @@ export const getAvailableRooms = async (date, startTime, endTime) => {
         "https://s3.amazonaws.com/libapps/accounts/77786/images/groupstudyroomsmall.jpg";
       const checksum = slot["checksum"];
 
-      if (
-        startTime &&
-        endTime &&
-        roomStartTime !== startTime &&
-        roomEndTime !== endTime
-      )
-        continue;
-
       if (!rooms[roomId]) {
         rooms[roomId] = {
           id: roomId,
@@ -236,24 +188,83 @@ export const getAvailableRooms = async (date, startTime, endTime) => {
 
       rooms[roomId].availableTimes.push(availableTimes);
       rooms[roomId].checksums.push(checksum);
-
-      // console.log(rooms[name])
     }
   }
+
+  // Filter out rooms that are not available for the specified time range
+  if (startTime && endTime) {
+    const canBook = canBookInTimeRange(startTime, endTime);
+    for (const roomId in rooms) {
+      const room = rooms[roomId];
+      room.checksums = room.checksums.filter((_, i) =>
+        canBook(room.availableTimes[i])
+      );
+      room.availableTimes = room.availableTimes.filter(canBook);
+    }
+  }
+
   return Object.values(rooms);
 };
 
 /**
  * Checks if a room is available for a given date and time range.
+ * @param {string} id - The ID of the room to check availability for.
  * @param {string} date - The date for which to check room availability. (Format: YYYY-MM-DD)
  * @param {string} startTime - The start time of the range. (Format: HH:MM:SS in 24-hour format)
  * @param {string} endTime - The end time of the range. (Format: HH:MM:SS in 24-hour format)
- * @param {string} roomId - The ID of the room to check availability for.
  * @returns {Promise<boolean>} True if the room is available, false otherwise.
  */
-export const isAvailable = async (date, startTime, endTime, roomId) => {
-  // TODO
-  throw new Error("Not implemented");
+export const isAvailable = async (id, date, startTime, endTime) => {
+  // Check format
+  if (!checkDateFormat(date)) throw new Error("Invalid date format");
+  if (!checkTimeFormat(startTime)) throw new Error("Invalid start time format");
+  if (!checkTimeFormat(endTime)) throw new Error("Invalid end time format");
+
+  // Initialize vars
+  const path = "/spaces/availability/grid";
+  const { todayDate, tomorrowDate } = getDateRange(date);
+
+  // Fetch from the external API
+  const result = await fetch(URL + path, {
+    method: "POST",
+    headers: {
+      ...Headers,
+      Referer: `https://libcal.library.umass.edu/space/${id}`,
+    },
+    body: objectToFormData({
+      lid: roomIdToBuilding[id],
+      gid: roomIdToType[id],
+      eid: id,
+      seat: 0,
+      seatId: 0,
+      zone: 0,
+      start: todayDate,
+      end: tomorrowDate,
+      pageIndex: 0,
+      pageSize: 18,
+    }),
+  });
+
+  if (!result.ok) {
+    throw new Error(`${await result.text()} (${result.status})`);
+  }
+
+  const data = await result.json();
+  const slots = data["slots"];
+
+  for (let i = 0; i < slots.length; i++) {
+    const slot = slots[i];
+    if (slot.className?.includes("checkout")) continue;
+
+    const roomStartTime = slot["start"].split(" ")[1];
+    const roomEndTime = slot["end"].split(" ")[1];
+
+    if (roomStartTime === startTime && roomEndTime === endTime) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 /**
