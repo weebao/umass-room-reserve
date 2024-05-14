@@ -97,17 +97,21 @@ const rooms = [
 const users = [
   {
     user_id: 1,
-    email: "lionelmessi@gmail.com",
+    email: "messi@umass.edu",
     password: "737b776e727f7d757b6e", // real password: iamthegoat
-    first_name: "Lionel",
-    last_name: "Messi",
+    firstName: "Lionel",
+    lastName: "Messi",
+    role: "Graduate",
+    major: "soccer"
   },
   {
     user_id: 2,
-    email: "cristianoronaldo@gmail.com",
+    email: "ronaldo@umass.edu",
     password: "777f6969737369787f6e6e7f686e727b74777f", // real password: messiisbetterthanme
-    first_name: "Cristiano",
-    last_name: "Ronaldo",
+    firstName: "Cristiano",
+    lastName: "Ronaldo",
+    role: "Graduate",
+    major: "soccer"
   },
 ];
 
