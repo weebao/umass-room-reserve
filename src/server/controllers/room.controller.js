@@ -135,6 +135,7 @@ export const book = async (req, res) => {
         endTime,
         formData
       );
+      console.log(result)
       res.status(200).json(result);
     } else {
       res.status(409).json({

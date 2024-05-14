@@ -1,5 +1,7 @@
 import { Events } from '../Events.js';
 import { URL } from "../services/url.js";
+import { getSession } from '../modules/session.js';
+import { reserveRoom } from '../services/reserve.js';
 
 export class BookingPage {
     #events = null;
@@ -306,7 +308,7 @@ export class BookingPage {
          * Fetch data from card to this site (maybe from backend instead!)
          */
         // Event listener for form submission
-        bookingElm.addEventListener('submit', event => {
+        bookingElm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const numberPeople = bookingElm.querySelector('#number-people').value;
             const desktopComputer = bookingElm.querySelector('#desktop-computer').value;
@@ -314,6 +316,26 @@ export class BookingPage {
             const timeTo = bookingElm.querySelector('#time-to').value;
 
             // this.#events.publish('book-room', { numberPeople, desktopComputer, timeFrom, timeTo });
+            // console.log(this.#data.id, inputDate.value,  timeFrom, timeTo)
+
+            const room_id = this.#data.id;
+            const date = inputDate.value;
+            const userData = await getSession();
+            const formData = {
+                numPeople: parseInt(numberPeople) > 5 ? "More than 5" : "3-5",
+                useComputer: desktopComputer === 'yes' ? true : false,
+                firstName: userData.firstName ?? "",
+                lastName: userData.lastName ?? "",
+                major : userData.major ?? "",
+                studentRole : userData.role ?? "",
+                email : userData.email ?? "",
+            };
+            
+            const response = reserveRoom(room_id, date, timeFrom, timeTo, formData);
+            if (response.ok) {
+                alert('Room booked successfully!');            
+            } else {
+                alert(`Failed to book room: ${response.error}`);            }
         });
 
         return bookingElm;
