@@ -22,8 +22,8 @@ export class HomePage {
     `;
 
     const search = new Search();
-    const searchElm = await search.render();
-    elm.appendChild(searchElm);
+    (search.render()).then((searchElm) => elm.appendChild(searchElm));
+    // elm.appendChild(searchElm);
 
     // const dataCard = new DataCard();
 

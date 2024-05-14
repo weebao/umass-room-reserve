@@ -7,7 +7,7 @@ export class RoomCard {
     this.#events = Events.events();
   }
 
-  async render(data) {
+  render(data) {
     const cardElm = document.createElement("div");
     cardElm.classList.add("card-element");
     cardElm.id = `card-${data.id}`;
@@ -35,7 +35,7 @@ export class RoomCard {
     const locaion_icon = document.createElement("img");
     locaion_icon.src = "/assets/location-solid-icon.svg";
     locaion_icon.alt = "Location Icon";
-    locaion_icon.classList.add("icon-svg")
+    locaion_icon.classList.add("icon-svg");
 
     const descLocationContainer = document.createElement("div");
     descLocationContainer.classList.add("desc-container");
@@ -45,13 +45,14 @@ export class RoomCard {
     const availability_icon = document.createElement("img");
     availability_icon.src = "/assets/tick-icon.svg";
     availability_icon.alt = "Availability Icon";
-    availability_icon.classList.add("icon-svg")
+    availability_icon.classList.add("icon-svg");
     availability_icon.id = "availability-icon";
-
 
     const descAvailability = document.createElement("span");
     descAvailability.classList.add("desc-availability");
-    descAvailability.textContent = data.availableTimes.length ? `${data.availableTimes.length} available time spots` : `No rooms available`;
+    descAvailability.textContent = data.availableTimes.length
+      ? `${data.availableTimes.length} available time spots`
+      : `No rooms available`;
 
     const descAvailabilityContainer = document.createElement("div");
     descAvailabilityContainer.classList.add("desc-container");
@@ -65,8 +66,11 @@ export class RoomCard {
     descBody.appendChild(descLocationContainer);
     descBody.appendChild(descAvailabilityContainer);
 
-    cardElm.addEventListener("click", async () => {
-      this.#events.publish("navigateTo", `/booking?name=${encodeURIComponent(data.name)}&buildingName=${encodeURIComponent(data.buildingName)}&availability=${encodeURIComponent(data.availableTimes)}&id=${encodeURIComponent(data.id)}&img=${encodeURIComponent(data.img)}`)
+    cardElm.addEventListener("click", () => {
+      this.#events.publish(
+        "navigateTo",
+        `/booking?name=${encodeURIComponent(data.name)}&buildingName=${encodeURIComponent(data.buildingName)}&availability=${encodeURIComponent(data.availableTimes)}&id=${encodeURIComponent(data.id)}&img=${encodeURIComponent(data.img)}`
+      );
     });
 
     return cardElm;

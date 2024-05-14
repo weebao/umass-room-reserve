@@ -48,11 +48,13 @@ export class Search {
     inputElm.addEventListener("input", (event) => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(async () => {
+        resultContainer.innerHTML = "<img src='/assets/loading.svg' alt='Loading' />";
         await this.#searchAndRender(event.target.value, resultContainer);
       }, 1000);
     });
     
     sortBtn.addEventListener("click", async () => {
+      resultContainer.innerHTML = "<img src='/assets/loading.svg' alt='Loading' />";
       await this.#searchAndRender(inputElm.value, resultContainer); // @weebao please fix this
     });
 
@@ -62,15 +64,14 @@ export class Search {
     elm.appendChild(searchBarContainer);
     elm.appendChild(resultContainer);
 
-    // await this.#searchAndRender("", resultContainer);
+    resultContainer.innerHTML = "<img src='/assets/loading.svg' alt='Loading' />";
+    this.#searchAndRender("", resultContainer);
 
     return elm;
   }
 
   async #searchAndRender(query, container) {
     console.log("rebder")
-
-    container.innerHTML = "<img src='/assets/loading.svg' alt='Loading' />";
 
       // const { buildings, rooms } = await getRoomsByQueryWithMock(query);
     // const buildingHash = buildings.reduce((acc, building) => {
@@ -95,8 +96,8 @@ export class Search {
 
       container.innerHTML = "";
       const roomCard = new RoomCard();
-      rooms.forEach(async (room) => {
-        const cardElem = await roomCard.render(room);
+      rooms.forEach((room) => {
+        const cardElem = roomCard.render(room);
         container.appendChild(cardElem);
       })
     } else {
@@ -106,8 +107,8 @@ export class Search {
 
       container.innerHTML = "";
       const roomCard = new RoomCard();
-      rooms.forEach(async (room) => {
-        const cardElem = await roomCard.render(room);
+      rooms.forEach((room) => {
+        const cardElem = roomCard.render(room);
         container.appendChild(cardElem);
       })
     }
