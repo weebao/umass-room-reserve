@@ -1,14 +1,17 @@
 import { Events } from '../Events.js';
+import { URL } from "../services/url.js";
 
 export class BookingPage {
     #events = null;
     #today = null;
     #data = null;
+    #roomProps = null;
 
     constructor(data) {
         this.#events = Events.events();
         this.#today = new Date().toISOString().split('T')[0];
         this.#data = data;
+        this.#roomProps = null;
     }
 
     async render() {
@@ -72,7 +75,7 @@ export class BookingPage {
 
         const availabilityInfoElm = document.createElement('div');
         availabilityInfoElm.classList.add('description-metadata');
-        availabilityInfoElm.innerText = 'Available' // TODO: Must be dynamic and retrieved from user card
+        availabilityInfoElm.innerText = `Available` // TODO: Must be dynamic and retrieved from user card
 
         // Container for availability icon and availability info
         const availabilityContainer = document.createElement('div');
@@ -184,47 +187,32 @@ export class BookingPage {
         timeSlotWrapper.classList.add('input-wrapper');
 
         const labelTimeSlot = document.createElement('label');
-        labelTimeSlot.for = 'time-slot';
+        labelTimeSlot.htmlFor = 'time-slot';
         labelTimeSlot.innerText = 'Time slot';
 
-        const selectTimeFrom = document.createElement('input');
-        selectTimeFrom.type = 'text'
+        const selectTimeFrom = document.createElement("select");
         selectTimeFrom.id = 'time-from';
-        selectTimeFrom.name = 'timeFrom';
-        selectTimeFrom.classList.add('time-slot');
-        selectTimeFrom.placeholder = 'From';
         selectTimeFrom.disabled = true;
-        selectTimeFrom.onfocus = (event) => {
-            event.target.type = 'time';
-        }
-        selectTimeFrom.addEventListener('blur', (event) => {
-            if (event.target.value === '') {
-                event.target.type = 'text';
-                event.target.placeholder = 'From';
-            }
-        });
-        selectTimeFrom.min = this.#today;
 
-        // Options should be dynamically generated based on availability
-        const selectTimeTo = document.createElement('input');
-        selectTimeTo.type = 'text'
+        const optionTimeFromDefault = document.createElement('option');
+        optionTimeFromDefault.value = '';
+        optionTimeFromDefault.innerText = 'From';
+        optionTimeFromDefault.disabled = true; // Disable the placeholder
+        optionTimeFromDefault.selected = true; // Mark as selected
+
+        selectTimeFrom.appendChild(optionTimeFromDefault);
+
+        const selectTimeTo = document.createElement('select');
         selectTimeTo.id = 'time-to';
-        selectTimeTo.name = 'timeTo';
-        selectTimeTo.classList.add('time-slot');
-        selectTimeTo.min = this.#today;
-        selectTimeTo.placeholder = 'To';
         selectTimeTo.disabled = true;
-        selectTimeTo.onfocus = (event) => {
-            if (event.target.type == 'text') {
-                event.target.type = 'time';
-            }
-        }
-        selectTimeTo.addEventListener('blur', (event) => {
-            if (event.target.value === '') {
-                event.target.type = 'text';
-                event.target.placeholder = 'To';
-            }
-        });
+
+        const optionTimeToDefault = document.createElement('option');
+        optionTimeToDefault.value = '';
+        optionTimeToDefault.innerText = 'To';
+        optionTimeToDefault.disabled = true; // Disable the placeholder
+        optionTimeToDefault.selected = true; // Mark as selected
+
+        selectTimeTo.appendChild(optionTimeToDefault);
 
         const timeInputWrapper = document.createElement('div');
         timeInputWrapper.classList.add('time-slot-grid');
@@ -237,35 +225,51 @@ export class BookingPage {
         timeSlotWrapper.appendChild(timeInputWrapper);
 
         // Add event listener to update 'time to' minimum date
-        selectTimeFrom.addEventListener('change', function () {
+        selectTimeFrom.addEventListener('change', () => {
             selectTimeTo.min = selectTimeFrom.value;
         });
 
         // Add event listener to update 'time from' maximum date
-        selectTimeTo.addEventListener('change', function () {
+        selectTimeTo.addEventListener('change', () => {
             selectTimeFrom.max = selectTimeTo.value;
         });
 
-        inputDate.addEventListener('change', function () {
+        inputDate.addEventListener('change', async () => {
             if (inputDate.value) {
+                this.#roomProps = await (await fetch(`${URL}/room?id=${this.#data.id}&date=${inputDate.value}`)).json();
+                this.#roomProps["availableTimes"].forEach((roomProp) => {
+                    const optionTimeFrom = document.createElement('option');
+                    optionTimeFrom.value = roomProp.slice(0, 8);
+                    optionTimeFrom.innerText = roomProp.slice(0, 8);
+                    selectTimeFrom.appendChild(optionTimeFrom);
+                });
                 selectTimeFrom.disabled = false;
             } else {
                 selectTimeFrom.disabled = true;
                 selectTimeTo.disabled = true;
                 selectTimeFrom.value = '';
                 selectTimeTo.value = '';
-                selectTimeFrom.type = 'text';
-                selectTimeTo.type = 'text';
-                selectTimeFrom.placeholder = 'From';
-                selectTimeTo.placeholder = 'To';
+                this.#roomProps = null;
             }
         });
 
-        selectTimeFrom.addEventListener('change', function () {
+        selectTimeFrom.addEventListener('change', () => {
             if (selectTimeFrom.value) {
                 selectTimeTo.disabled = false;
+                selectTimeTo.innerHTML = '';
+                selectTimeTo.appendChild(optionTimeToDefault);
+
+                this.#roomProps["availableTimes"].forEach((e) => {
+                    if (Number(e.slice(9, 11)) > Number(selectTimeFrom.value.slice(0, 2))) {
+                        const optionTimeTo = document.createElement('option');
+                        optionTimeTo.value = e.slice(9, 17);
+                        optionTimeTo.innerText = e.slice(9, 17);
+                        selectTimeTo.appendChild(optionTimeTo);
+                    }
+                })
             } else {
                 selectTimeTo.disabled = true;
+                selectTimeTo.value = '';
             }
         });
 
