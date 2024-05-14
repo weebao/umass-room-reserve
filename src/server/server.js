@@ -1,12 +1,12 @@
 import express from "express";
 import logger from "morgan";
-import Database from "./db.js";
+import { database } from "./db.js";
 import cors from "cors";
 import path from "path";
 import open from "open";
+import encrypt from './utils/crypt.js'
 
-//Create new database instance
-const database = Database("umass_reserve_rooms");
+
 
 const app = express();
 app.use(logger("dev"));
@@ -43,6 +43,24 @@ app
 // Serve index.html for all other routes to support SPA routing
 app.get("*", (req, res) => {
   res.sendFile(path.resolve("src/client/index.html"));
+});
+
+app.post("/api/register", async (req, res) => {
+  const { email, password, ...rest } = req.body;
+  const { user, status, message } = await database.getUser(email);
+
+  if (status === "success" && user) {
+    return res.status(409).json({ message: "User already exists" });
+  }
+
+  const encryptedPassword = encrypt(password);
+  const result = await database.addUser({ email, password: encryptedPassword, ...rest });
+
+  if (result.status === "success") {
+    res.status(201).json({ message: "User registered successfully" });
+  } else {
+    res.status(500).json({ message: result.message });
+  }
 });
 
 const PORT = 3260;
