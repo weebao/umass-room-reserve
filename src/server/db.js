@@ -71,10 +71,43 @@ const Database = (dbname) => {
           error: e.message,
         };
       }
+    },
+
+    getUser: async (email) => {
+      const db = getDB();
+      try {
+        const data = await db.get("users");
+        const user = data.users.find(user => user.email === email);
+        db.close();
+        return user ? { status: "success", user } : { status: "error", message: "User not found" };
+      } catch (e) {
+        db.close();
+        return { status: "error", message: "Failed to get user", error: e.message };
+      }
+    },
+    
+    addUser: async (userData) => {
+      const db = getDB();
+      try {
+        const data = await db.get("users");
+        data.users.push(userData);
+        await db.put({ _id: "users", _rev: data._rev, users: data.users });
+        db.close();
+        return { status: "success", message: "User added" };
+      } catch (e) {
+        db.close();
+        return { status: "error", message: "Failed to add user", error: e.message };
+      }
     }
+
   };
 
   return obj;
 };
 
-export default Database;
+//Create new database instance
+const database = Database("umass_reserve_rooms");
+
+export {
+  database
+};
