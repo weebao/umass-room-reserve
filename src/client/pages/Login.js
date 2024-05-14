@@ -43,7 +43,7 @@ export class LoginPage {
     formElm.id = "login-form";
     formElm.innerHTML = `
       <div class="m-textfield-group auth-input">
-        <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" title="email@umass.edu" pattern="[^@\s]+@umass\.edu" required>
+        <input type="text" id="school-email" name="schoolEmail" class="m-textfield" placeholder="School Email (@umass.edu)" title="email@umass.edu" pattern=".+@umass\.edu" required>
         <label for="school-email" class="m-textfield-label">School Email (@umass.edu)</label>
       </div>
       <div class="auth-input">
@@ -112,6 +112,9 @@ export class LoginPage {
             await createSession(response.data);
             this.#events.publish("rerenderNav");
             this.#events.publish("navigateTo", "/home");
+
+            schoolEmailInput.value = "";
+            passwordInput.value = "";
           } else {
             throw new Error(response.message || "Uh oh you forgot your identity 🤣");
           }
