@@ -220,10 +220,11 @@ export const isAvailable = async (id, date, startTime, endTime) => {
   if (!checkTimeFormat(startTime)) throw new Error("Invalid start time format");
   if (!checkTimeFormat(endTime)) throw new Error("Invalid end time format");
 
+  
   // Initialize vars
   const path = "/spaces/availability/grid";
   const { todayDate, tomorrowDate } = getDateRange(date);
-
+  
   // Fetch from the external API
   const result = await fetch(URL + path, {
     method: "POST",
@@ -245,21 +246,23 @@ export const isAvailable = async (id, date, startTime, endTime) => {
     }),
   });
 
+  
   if (!result.ok) {
     throw new Error(`${await result.text()} (${result.status})`);
   }
-
+  
   const data = await result.json();
   const slots = data["slots"];
-
+  const canBook = canBookInTimeRange(startTime, endTime);
+  
   for (let i = 0; i < slots.length; i++) {
     const slot = slots[i];
     if (slot.className?.includes("checkout")) continue;
-
+    
     const roomStartTime = slot["start"].split(" ")[1];
     const roomEndTime = slot["end"].split(" ")[1];
 
-    if (roomStartTime === startTime && roomEndTime === endTime) {
+    if (canBook(`${roomStartTime}-${roomEndTime}`)) {
       return true;
     }
   }
@@ -273,8 +276,8 @@ export const isAvailable = async (id, date, startTime, endTime) => {
  * @param {string} date - The date of the booking.
  * @param {string} startTime - The start time of the booking. (Format: HH:MM:SS in 24-hour format)
  * @param {string} endTime - The end time of the booking. (Format: HH:MM:SS in 24-hour format)
- * @param {Room} roomData - The data of the room to be booked.
- * @param {Object} formData - Additional form data for the booking. Require format: (fname, lname, email, role, comp, major)
+ * @param {number} roomId - The ID of the room to be booked.
+ * @param {Object} formData - Additional form data for the booking. Format: { firstName, lastName, email, studentRole, numPeople, useComputer, major }
  * @returns {Promise<BookingResult>} A promise that resolves when the room is successfully booked.
  * Use path: "spaces/availability/booking/add" - POST
    * FormData: {
@@ -305,11 +308,13 @@ export const isAvailable = async (id, date, startTime, endTime) => {
     }
    * And then you save the book_id for cancelling later
  */
-export const bookRoom = async (date, startTime, endTime, roomData, formData) => {
+export const bookRoom = async (roomId, date, startTime, endTime, formData) => {
   // Check format
   if (!checkDateFormat(date)) throw new Error("Invalid date format");
   if (!checkTimeFormat(startTime)) throw new Error("Invalid start time format");
   if (!checkTimeFormat(endTime)) throw new Error("Invalid end time format");
+
+  const roomData = await getRoom(roomId, date);
 
   const getChecksumURL = "/spaces/availability/booking/add";
   const bookingURL = "/ajax/space/book";
@@ -353,10 +358,11 @@ export const bookRoom = async (date, startTime, endTime, roomData, formData) => 
   }
 
   const bookingList = [];
-  for (const [i, checksum] in Object.entries(newChecksums)) {
-    const [start, end] = availableTimes[i].split("-");
+  let id = 0;
+  for (const [idx, checksum] of Object.entries(newChecksums)) {
+    const [start, end] = availableTimes[idx].split("-");
     bookingList.push({
-      id: i,
+      id: id++,
       eid: roomData.id,
       seat_id: 0,
       gid: roomIdToType[roomData.id],
@@ -367,9 +373,17 @@ export const bookRoom = async (date, startTime, endTime, roomData, formData) => 
     });
   }
 
-  formData.append("bookings", JSON.stringify(bookingList));
-  formData.append("returnUrl", `/space/${roomData.id}`);
-  formData.append("method", 12);
+  const bookingBody = new FormData();
+  bookingBody.append("fname", formData.firstName);
+  bookingBody.append("lname", formData.lastName);
+  bookingBody.append("email", formData.email);
+  bookingBody.append("q12479", formData.studentRole);
+  bookingBody.append("q12481", formData.numPeople);
+  bookingBody.append("q12482", formData.useComputer);
+  bookingBody.append("q12477", formData.major);
+  bookingBody.append("bookings", JSON.stringify(bookingList));
+  bookingBody.append("returnUrl", `/space/${roomData.id}`);
+  bookingBody.append("method", 11);
 
   const bookingResult = await fetch(URL + bookingURL, {
     method: "POST",
@@ -377,7 +391,7 @@ export const bookRoom = async (date, startTime, endTime, roomData, formData) => 
       ...Headers,
       Referer: `https://libcal.library.umass.edu/space/${roomData.id}`,
     },
-    body: formData,
+    body: bookingBody
   });
 
   if (!bookingResult.ok) {
