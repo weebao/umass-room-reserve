@@ -21,7 +21,7 @@ export class BookingPage {
 
         const imageBackground = document.createElement('img');
         imageBackground.id = 'background-image';
-        imageBackground.src = `/assets/building_images/${this.#data.img_name}`;
+        imageBackground.src = `${this.#data.img}`;
         imageBackground.alt = 'Building image';
         imageBackground.classList.add('background-image');
         headerContainer.addEventListener('mouseenter', () => {
@@ -41,7 +41,7 @@ export class BookingPage {
 
         const headerElm = document.createElement('div');
         headerElm.id = 'header';
-        headerElm.innerText = `${this.#data.room_type} - ${this.#data.room_label}`; // TODO: Must be dynamic and retrieved from user card
+        headerElm.innerText = `${this.#data.name}`; // TODO: Must be dynamic and retrieved from user card
 
         const metadataContainer = document.createElement('div');
         metadataContainer.id = 'metadata-container';
@@ -54,7 +54,7 @@ export class BookingPage {
 
         const locationInfoElm = document.createElement('div');
         locationInfoElm.classList.add('description-metadata');
-        locationInfoElm.innerText = `${this.#data.building_name}` // TODO: Must be dynamic and retrieved from user card
+        locationInfoElm.innerText = `${this.#data.buildingName}` // TODO: Must be dynamic and retrieved from user card
 
         // Container for location icon and location info
         const locationContainer = document.createElement('div');

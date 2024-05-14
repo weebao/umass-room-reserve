@@ -14,7 +14,7 @@ export const getRoom = async (req, res) => {
       res.status(400).json({
         status: "error",
         message: "Room ID is required",
-        error: "Bad Request"
+        error: "Bad Request",
       });
       return;
     }
@@ -22,7 +22,7 @@ export const getRoom = async (req, res) => {
       res.status(404).json({
         status: "error",
         message: "Room not found",
-        error: "Not Found"
+        error: "Not Found",
       });
     }
 
@@ -35,7 +35,7 @@ export const getRoom = async (req, res) => {
       error: error.message,
     });
   }
-}
+};
 
 /**
  * Retrieves all available rooms based on the specified date, start time, and end time.
@@ -47,6 +47,13 @@ export const getRoom = async (req, res) => {
 export const getAllRooms = async (req, res) => {
   try {
     const { date, startTime, endTime } = req.query;
+    if (!date || !startTime || !endTime) {
+      const date = new Date().toISOString().split("T")[0];
+      const rooms = await libcal.getAvailableRooms(date);
+      res.status(200).json(rooms);
+      return;
+    }
+
     if (!date) {
       res.status(400).json({
         status: "error",
@@ -55,6 +62,7 @@ export const getAllRooms = async (req, res) => {
       });
       return;
     }
+
     const rooms = await libcal.getAvailableRooms(date, startTime, endTime);
     res.status(200).json(rooms);
   } catch (error) {
@@ -75,15 +83,64 @@ export const getAllRooms = async (req, res) => {
  */
 export const book = async (req, res) => {
   try {
-    const { date, startTime, endTime, roomId } = req.body;
+    const { id, date, startTime, endTime } = req.query;
     const formData = req.body;
-    if (await isAvailable(date, startTime, endTime, roomId)) {
-      const result = await libcal.bookRoom(date, startTime, endTime, roomId, formData);
-      res.status(200).json(result);
-    } else {
+    if (!id || !date || !startTime || !endTime) {
       res.status(400).json({
         status: "error",
-        message: "Room is not available",
+        message: "Room ID, date, start time, and end time are required",
+        error: "Bad Request",
+      });
+      return;
+    }
+    if (!roomIdToName[id]) {
+      res.status(404).json({
+        status: "error",
+        message: "Room not found",
+        error: "Not Found",
+      });
+      return;
+    }
+    const {
+      firstName,
+      lastName,
+      email,
+      studentRole,
+      numPeople,
+      useComputer,
+      major,
+    } = formData;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !studentRole ||
+      !numPeople ||
+      !useComputer ||
+      !major
+    ) {
+      res.status(400).json({
+        status: "error",
+        message: "Invalid body (Missing some fields)",
+        error: "Bad Request",
+      });
+      return;
+    }
+    if (await libcal.isAvailable(id, date, startTime, endTime)) {
+      console.log("wut")
+      const result = await libcal.bookRoom(
+        id,
+        date,
+        startTime,
+        endTime,
+        formData
+      );
+      res.status(200).json(result);
+    } else {
+      res.status(409).json({
+        status: "error",
+        message: "Room is not available for booking at this time",
+        error: "Conflict",
       });
     }
   } catch (error) {

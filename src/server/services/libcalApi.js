@@ -7,7 +7,7 @@
  * @property {string} buildingName - The name of the building.
  * @property {string[]} availableTimes - The available times for the room. (HH:MM:SS-HH:MM:SS)
  * @property {string} img - The URL of the room's image.
- * @property {string[]} checksumS - Special code for booking the room at each time slot (only for the libcal API)
+ * @property {string[]} checksums - Special code for booking the room at each time slot (only for the libcal API)
  */
 
 /**
@@ -220,10 +220,11 @@ export const isAvailable = async (id, date, startTime, endTime) => {
   if (!checkTimeFormat(startTime)) throw new Error("Invalid start time format");
   if (!checkTimeFormat(endTime)) throw new Error("Invalid end time format");
 
+  
   // Initialize vars
   const path = "/spaces/availability/grid";
   const { todayDate, tomorrowDate } = getDateRange(date);
-
+  
   // Fetch from the external API
   const result = await fetch(URL + path, {
     method: "POST",
@@ -245,21 +246,23 @@ export const isAvailable = async (id, date, startTime, endTime) => {
     }),
   });
 
+  
   if (!result.ok) {
     throw new Error(`${await result.text()} (${result.status})`);
   }
-
+  
   const data = await result.json();
   const slots = data["slots"];
-
+  const canBook = canBookInTimeRange(startTime, endTime);
+  
   for (let i = 0; i < slots.length; i++) {
     const slot = slots[i];
     if (slot.className?.includes("checkout")) continue;
-
+    
     const roomStartTime = slot["start"].split(" ")[1];
     const roomEndTime = slot["end"].split(" ")[1];
 
-    if (roomStartTime === startTime && roomEndTime === endTime) {
+    if (canBook(`${roomStartTime}-${roomEndTime}`)) {
       return true;
     }
   }
@@ -273,8 +276,8 @@ export const isAvailable = async (id, date, startTime, endTime) => {
  * @param {string} date - The date of the booking.
  * @param {string} startTime - The start time of the booking. (Format: HH:MM:SS in 24-hour format)
  * @param {string} endTime - The end time of the booking. (Format: HH:MM:SS in 24-hour format)
- * @param {string} roomId - The ID of the room to be booked.
- * @param {Object} formData - Additional form data for the booking.
+ * @param {number} roomId - The ID of the room to be booked.
+ * @param {Object} formData - Additional form data for the booking. Format: { firstName, lastName, email, studentRole, numPeople, useComputer, major }
  * @returns {Promise<BookingResult>} A promise that resolves when the room is successfully booked.
  * Use path: "spaces/availability/booking/add" - POST
    * FormData: {
@@ -299,13 +302,102 @@ export const isAvailable = async (id, date, startTime, endTime) => {
       q12481: "3-5" | "More than 5" -> how many people
       q12482: "Yes" | "No" | "Maybe" -> will use computer?
       q12477: CS -> major
-      bookings: [{"id":1,"eid":<ROOM ID>,"seat_id":0,"gid":<ROOM TYPE ID>,"lid":<BUILDING ID>,"start":"2024-05-12 11:00","end":"2024-05-12 12:00","checksum":"<THE NEW CHECKSUM JUST GOT FROM ABOVE"}]
+      bookings: [{"id":1,"eid":<ROOM ID>,"seat_id":0,"gid":<ROOM TYPE ID>,"lid":<BUILDING ID>,"start":"2024-05-12 11:00","end":"2024-05-12 12:00","checksum":"<THE NEW CHECKSUM JUST GOT FROM ABOVE>"}]
       returnUrl: /space/<ROOM ID>
       method: 12
     }
    * And then you save the book_id for cancelling later
  */
-export const bookRoom = async (date, startTime, endTime, roomId, formData) => {
-  // TODO
-  throw new Error("Not implemented");
+export const bookRoom = async (roomId, date, startTime, endTime, formData) => {
+  // Check format
+  if (!checkDateFormat(date)) throw new Error("Invalid date format");
+  if (!checkTimeFormat(startTime)) throw new Error("Invalid start time format");
+  if (!checkTimeFormat(endTime)) throw new Error("Invalid end time format");
+
+  const roomData = await getRoom(roomId, date);
+
+  const getChecksumURL = "/spaces/availability/booking/add";
+  const bookingURL = "/ajax/space/book";
+  
+  const { todayDate, tomorrowDate } = getDateRange(date);
+  const canBook = canBookInTimeRange(startTime, endTime);
+  const { availableTimes, checksums } = roomData;
+  const newChecksums = {}
+
+  for (let i = 0; i < availableTimes.length; i++) {
+    const bookingTime = availableTimes[i];
+    if (!canBook(bookingTime)) continue;
+
+    const startBookingTime = bookingTime.split("-")[0].slice(0, 5);
+    const checksum = checksums[i];
+    const result = await fetch(URL + getChecksumURL, {
+      method: "POST",
+      headers: {
+        ...Headers,
+        Referer: `https://libcal.library.umass.edu/space/${roomData.id}`,
+      },
+      body: objectToFormData({
+        "add[eid]": roomData.id,
+        "add[gid]": roomIdToType[roomData.id],
+        "add[lid]": roomIdToBuilding[roomData.id],
+        "add[start]": `${todayDate} ${startBookingTime}`,
+        "add[checksum]": checksum,
+        lid: roomIdToBuilding[roomData.id],
+        gid: roomIdToType[roomData.id],
+        start: todayDate,
+        end: tomorrowDate,
+      }),
+    });
+
+    if (!result.ok) {
+      throw new Error(`${await result.text()} (${result.status})`);
+    }
+
+    const data = await result.json();
+    newChecksums[i] = data["bookings"][0]["checksum"];
+  }
+
+  const bookingList = [];
+  let id = 0;
+  for (const [idx, checksum] of Object.entries(newChecksums)) {
+    const [start, end] = availableTimes[idx].split("-");
+    bookingList.push({
+      id: id++,
+      eid: roomData.id,
+      seat_id: 0,
+      gid: roomIdToType[roomData.id],
+      lid: roomIdToBuilding[roomData.id],
+      start: `${todayDate} ${start.slice(0, 5)}`,
+      end: `${todayDate} ${end.slice(0, 5)}`,
+      checksum,
+    });
+  }
+
+  const bookingBody = new FormData();
+  bookingBody.append("fname", formData.firstName);
+  bookingBody.append("lname", formData.lastName);
+  bookingBody.append("email", formData.email);
+  bookingBody.append("q12479", formData.studentRole);
+  bookingBody.append("q12481", formData.numPeople);
+  bookingBody.append("q12482", formData.useComputer);
+  bookingBody.append("q12477", formData.major);
+  bookingBody.append("bookings", JSON.stringify(bookingList));
+  bookingBody.append("returnUrl", `/space/${roomData.id}`);
+  bookingBody.append("method", 11);
+
+  const bookingResult = await fetch(URL + bookingURL, {
+    method: "POST",
+    headers: {
+      ...Headers,
+      Referer: `https://libcal.library.umass.edu/space/${roomData.id}`,
+    },
+    body: bookingBody
+  });
+
+  if (!bookingResult.ok) {
+    throw new Error(`${await bookingResult.text()} (${bookingResult.status})`);
+  }
+
+  const bookingData = await bookingResult.json();
+  return { roomId: roomData.id, roomName: roomData.name, date, startTime, endTime, bookId: bookingData["bookId"] };
 };
