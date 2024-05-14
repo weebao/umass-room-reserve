@@ -85,6 +85,7 @@ export const book = async (req, res) => {
   try {
     const { id, date, startTime, endTime } = req.query;
     const formData = req.body;
+    console.log(formData)
     if (!id || !date || !startTime || !endTime) {
       res.status(400).json({
         status: "error",

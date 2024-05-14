@@ -172,15 +172,15 @@ export class BookingPage {
         optionDefault.selected = true; // Mark as selected
 
         const optionYes = document.createElement('option');
-        optionYes.value = 'yes';
+        optionYes.value = 'Yes';
         optionYes.innerText = 'Yes';
 
         const optionNo = document.createElement('option');
-        optionNo.value = 'no';
+        optionNo.value = 'No';
         optionNo.innerText = 'No';
 
         const optionMaybe = document.createElement('option');
-        optionMaybe.value = 'maybe';
+        optionMaybe.value = 'Maybe';
         optionMaybe.innerText = 'Maybe';
 
         // Appending options to select element
@@ -347,17 +347,22 @@ export class BookingPage {
             const room_id = this.#data.id;
             const date = inputDate.value;
             const userData = await getSession();
+
             const formData = {
-                numPeople: parseInt(numberPeople) > 5 ? "More than 5" : "3-5",
-                useComputer: desktopComputer === 'yes' ? true : false,
+                numPeople: numberPeople ?? "3-5",
+                useComputer: desktopComputer ?? "Maybe",
                 firstName: userData.firstName ?? "",
                 lastName: userData.lastName ?? "",
                 major : userData.major ?? "",
-                studentRole : userData.role ?? "",
+                studentRole : userData.role ? 
+                    (userData.role.toLowerCase() === "undergraduate" ? "Undergraduate" :
+                    userData.role.toLowerCase() === "graduate" ? "Graduate" : "Other") 
+                    : "Other",
                 email : userData.email ?? "",
             };
             
             const response = reserveRoom(room_id, date, timeFrom, timeTo, formData);
+            console.log(response)
             if (response.ok) {
                 alert('Room booked successfully!');            
             } else {
