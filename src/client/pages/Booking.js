@@ -125,10 +125,29 @@ export class BookingPage {
         labelNumberPeople.for = 'number-people';
         labelNumberPeople.innerText = 'Number of people';
 
-        const inputNumberPeople = document.createElement('input');
-        inputNumberPeople.type = 'number';
+        const inputNumberPeople = document.createElement('select');
+        // inputNumberPeople.type = 'number';
         inputNumberPeople.id = 'number-people';
         inputNumberPeople.name = 'numberPeople';
+
+        const optionDefaultPeople = document.createElement('option');
+        optionDefaultPeople.value = '';
+        optionDefaultPeople.innerText = 'Select number of people';
+        optionDefaultPeople.disabled = true; // Disable the placeholder
+        optionDefaultPeople.selected = true; // Mark as selected
+
+        const optionOnePeople = document.createElement('option');
+        optionOnePeople.value = '3-5';
+        optionOnePeople.innerText = '3-5';
+
+        const optionTwoPeople = document.createElement('option');
+        optionTwoPeople.value = 'More than 5';
+        optionTwoPeople.innerText = 'More than 5';
+
+        // Appending options to select element
+        inputNumberPeople.appendChild(optionDefaultPeople);
+        inputNumberPeople.appendChild(optionOnePeople);
+        inputNumberPeople.appendChild(optionTwoPeople);
 
         // Appending number of people input to its wrapper
         numberPeopleWrapper.appendChild(labelNumberPeople);
@@ -149,6 +168,8 @@ export class BookingPage {
         const optionDefault = document.createElement('option');
         optionDefault.value = '';
         optionDefault.innerText = 'Select an option';
+        optionDefault.disabled = true; // Disable the placeholder
+        optionDefault.selected = true; // Mark as selected
 
         const optionYes = document.createElement('option');
         optionYes.value = 'yes';
@@ -158,10 +179,15 @@ export class BookingPage {
         optionNo.value = 'no';
         optionNo.innerText = 'No';
 
+        const optionMaybe = document.createElement('option');
+        optionMaybe.value = 'maybe';
+        optionMaybe.innerText = 'Maybe';
+
         // Appending options to select element
         selectDesktopComputer.appendChild(optionDefault);
         selectDesktopComputer.appendChild(optionYes);
         selectDesktopComputer.appendChild(optionNo);
+        selectDesktopComputer.appendChild(optionMaybe);
 
         // Appending label and select element to its wrapper
         optionalQuestionWrapper.appendChild(labelDesktopComputer);
