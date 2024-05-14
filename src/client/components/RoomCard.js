@@ -10,33 +10,33 @@ export class RoomCard {
   async render(data) {
     const cardElm = document.createElement("div");
     cardElm.classList.add("card-element");
-    cardElm.id = `card-${data.room_id}`;
+    cardElm.id = `card-${data.id}`;
 
     const descImg = document.createElement("img");
     descImg.classList.add("desc-img");
-    descImg.src = `/assets/building_images/${data.img_name}`; // TODO: PLEASE FIX THIS FOR DESIRE LOCAL FILE
-    descImg.alt = `W.E.B.DuboisLibrary`;
+    // descImg.src = `/assets/building_images/${data.img_name}`; // TODO: PLEASE FIX THIS FOR DESIRE LOCAL FILE
+    descImg.src = `${data.img}`; // TODO: PLEASE FIX THIS FOR DESIRE LOCAL FILE
+    descImg.alt = `buildings image of ${data.buildingId}`;
 
     const descriptionContainer = document.createElement("div");
     descriptionContainer.classList.add("description-container");
 
     const descHeader = document.createElement("h2");
     descHeader.classList.add("desc-header");
-    descHeader.textContent = `${data.room_type}`;
+    descHeader.textContent = `${data.name}`;
 
     const descBody = document.createElement("div");
     descBody.classList.add("desc-body");
 
-    
     const descLocation = document.createElement("span");
     descLocation.classList.add("desc-location");
-    descLocation.textContent = `${data.building_name}`;
+    descLocation.textContent = `${data.buildingName}`;
 
     const locaion_icon = document.createElement("img");
     locaion_icon.src = "/assets/location-solid-icon.svg";
     locaion_icon.alt = "Location Icon";
     locaion_icon.classList.add("icon-svg")
-    
+
     const descLocationContainer = document.createElement("div");
     descLocationContainer.classList.add("desc-container");
     descLocationContainer.appendChild(locaion_icon);
@@ -51,8 +51,8 @@ export class RoomCard {
 
     const descAvailability = document.createElement("span");
     descAvailability.classList.add("desc-availability");
-    descAvailability.textContent = Math.random() > 0.5 ? "Available" : "2 rooms available from 2PM";
-    
+    descAvailability.textContent = data.availableTimes.length ? `${data.availableTimes.length} available time spots` : `No rooms available`;
+
     const descAvailabilityContainer = document.createElement("div");
     descAvailabilityContainer.classList.add("desc-container");
     descAvailabilityContainer.appendChild(availability_icon);
@@ -66,21 +66,8 @@ export class RoomCard {
     descBody.appendChild(descAvailabilityContainer);
 
     cardElm.addEventListener("click", async () => {
-      this.#events.publish("navigateTo", `/booking?room_id=${encodeURIComponent(data.room_id)}&building_id=${encodeURIComponent(data.building_id)}&room_type=${encodeURIComponent(data.room_type)}&building_name=${encodeURIComponent(data.building_name)}&img_name=${encodeURIComponent(data.img_name)}&availability=${encodeURIComponent(descAvailability.textContent)}&room_label=${encodeURIComponent(data.room_label)}`);
+      this.#events.publish("navigateTo", `/booking?name=${encodeURIComponent(data.name)}&buildingName=${encodeURIComponent(data.buildingName)}&availability=${encodeURIComponent(data.availableTimes)}&id=${encodeURIComponent(data.id)}&img=${encodeURIComponent(data.img)}`)
     });
-    // const gridContainer = document.createElement("div");
-    // gridContainer.id = "grid-container";
-    // gridContainer.classList.add("grid-container");
-
-    // // Card element dynamic definition  
-    // const building = data["buildings"].find(building => {
-    //   return building.building_id === room.building_id;
-    // }); // TODO: Run time is a little bit high, need to optimize this
-
-    
-    // gridContainer.appendChild(cardElm);
-    // data["rooms"].forEach((room, idx) => {
-    // })
 
     return cardElm;
   }

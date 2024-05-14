@@ -47,6 +47,13 @@ export const getRoom = async (req, res) => {
 export const getAllRooms = async (req, res) => {
   try {
     const { date, startTime, endTime } = req.query;
+    if (!date || !startTime || !endTime) {
+      const date = new Date().toISOString().split("T")[0];
+      const rooms = await libcal.getAvailableRooms(date)
+      res.status(200).json(rooms);
+      return;
+    }
+
     if (!date) {
       res.status(400).json({
         status: "error",
@@ -55,6 +62,7 @@ export const getAllRooms = async (req, res) => {
       });
       return;
     }
+
     const rooms = await libcal.getAvailableRooms(date, startTime, endTime);
     res.status(200).json(rooms);
   } catch (error) {
