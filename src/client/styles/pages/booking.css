@@ -187,3 +187,8 @@ input[type="number"] {
 	font-style: italic;
 	font-size: 16px;
 }
+
+#reserve-button-wrapper {
+	display: flex;
+	gap: 12px;
+}

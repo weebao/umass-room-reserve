@@ -323,11 +323,11 @@ export const bookRoom = async (roomId, date, startTime, endTime, formData) => {
   const canBook = canBookInTimeRange(startTime, endTime);
   const { availableTimes, checksums } = roomData;
   const newChecksums = {}
-
+  
   for (let i = 0; i < availableTimes.length; i++) {
     const bookingTime = availableTimes[i];
     if (!canBook(bookingTime)) continue;
-
+    
     const startBookingTime = bookingTime.split("-")[0].slice(0, 5);
     const checksum = checksums[i];
     const result = await fetch(URL + getChecksumURL, {
@@ -348,19 +348,28 @@ export const bookRoom = async (roomId, date, startTime, endTime, formData) => {
         end: tomorrowDate,
       }),
     });
-
+    
     if (!result.ok) {
       throw new Error(`${await result.text()} (${result.status})`);
     }
-
+    
     const data = await result.json();
     newChecksums[i] = data["bookings"][0]["checksum"];
+    
+    const endBookingTime = data["bookings"][0]["end"].split(" ")[1];
+    if (endTime !== endBookingTime) {
+      endTime = endBookingTime;
+    }
   }
 
   const bookingList = [];
   let id = 0;
   for (const [idx, checksum] of Object.entries(newChecksums)) {
-    const [start, end] = availableTimes[idx].split("-");
+    let [start, end] = availableTimes[idx].split("-");
+    if (end !== endTime && buildingIdToName[roomIdToBuilding[roomData.id]] === "sel") {
+      const eHour = parseInt(end.slice(0, 2));
+      end = (eHour + 1) + ":00";
+    }
     bookingList.push({
       id: id++,
       eid: roomData.id,

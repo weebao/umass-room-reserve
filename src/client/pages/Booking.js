@@ -306,12 +306,18 @@ export class BookingPage {
         saveInfoElm.innerText = '*We will save the inputs above so you do not have to re-enter them each time you book';
 
         const reserveButtonWrapperEnd = document.createElement('div');
+        reserveButtonWrapperEnd.id = 'reserve-button-wrapper';
+
         const reserveButtonElmEnd = document.createElement('button');
         reserveButtonElmEnd.id = 'reserve-button-end';
         reserveButtonElmEnd.innerText = 'Reserve';
         reserveButtonElmEnd.type = 'submit';
         reserveButtonElmEnd.classList.add('custom-button');
         reserveButtonWrapperEnd.appendChild(reserveButtonElmEnd);
+
+        const notiDiv = document.createElement('div');
+        notiDiv.id = 'reserve-noti';
+        reserveButtonWrapperEnd.appendChild(notiDiv);
         // Appending all form inputs to form inputs container
 
         formInputsContainer.appendChild(numberPeopleWrapper);
@@ -361,12 +367,14 @@ export class BookingPage {
                 email : userData.email ?? "",
             };
             
-            const response = reserveRoom(room_id, date, timeFrom, timeTo, formData);
-            console.log(response)
-            if (response.ok) {
-                alert('Room booked successfully!');            
-            } else {
-                alert(`Failed to book room: ${response.error}`);            }
+            notiDiv.innerHTML = "";
+            try {
+                const data = await reserveRoom(room_id, date, timeFrom, timeTo, formData);
+                notiDiv.textContent = "*Reserved successfully";
+            } catch {
+                notiDiv.textContent = "*Reservation error";
+                console.log(data)
+            }
         });
 
         return bookingElm;

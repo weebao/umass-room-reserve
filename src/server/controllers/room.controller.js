@@ -85,7 +85,6 @@ export const book = async (req, res) => {
   try {
     const { id, date, startTime, endTime } = req.query;
     const formData = req.body;
-    console.log(formData)
     if (!id || !date || !startTime || !endTime) {
       res.status(400).json({
         status: "error",
@@ -128,7 +127,6 @@ export const book = async (req, res) => {
       return;
     }
     if (await libcal.isAvailable(id, date, startTime, endTime)) {
-      console.log("wut")
       const result = await libcal.bookRoom(
         id,
         date,
@@ -136,7 +134,6 @@ export const book = async (req, res) => {
         endTime,
         formData
       );
-      console.log(result)
       res.status(200).json(result);
     } else {
       res.status(409).json({

@@ -98,7 +98,7 @@ const users = [
   {
     user_id: 1,
     email: "messi@umass.edu",
-    password: "737b776e727f7d757b6e", // real password: iamthegoat
+    password: "07307b07706e07207f07d07507b06e", // real password: iamthegoat
     firstName: "Lionel",
     lastName: "Messi",
     role: "Graduate",
@@ -107,7 +107,7 @@ const users = [
   {
     user_id: 2,
     email: "ronaldo@umass.edu",
-    password: "777f6969737369787f6e6e7f686e727b74777f", // real password: messiisbetterthanme
+    password: "07707f06906907307306907807f06e06e07f06806e07207b07407707f", // real password: messiisbetterthanme
     firstName: "Cristiano",
     lastName: "Ronaldo",
     role: "Graduate",
