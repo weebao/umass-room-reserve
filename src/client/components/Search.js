@@ -38,11 +38,11 @@ export class Search {
       <img src="/assets/location-icon.svg" id="location-icon" alt="Location Icon" />
       <span>Sort by distance</span>
     `;
-    
+
     const resultContainer = document.createElement("div");
     resultContainer.id = "result-container";
     resultContainer.classList.add("grid-container");
-    
+
     // Only fetch results when the user stops inputting for 1 second
     let timeoutId;
     inputElm.addEventListener("input", (event) => {
@@ -52,7 +52,7 @@ export class Search {
         await this.#searchAndRender(event.target.value, resultContainer);
       }, 1000);
     });
-    
+
     sortBtn.addEventListener("click", async () => {
       resultContainer.innerHTML = "<img src='/assets/loading.svg' alt='Loading' />";
       await this.#searchAndRender(inputElm.value, resultContainer); // @weebao please fix this
@@ -73,26 +73,8 @@ export class Search {
   async #searchAndRender(query, container) {
     console.log("rebder")
 
-      // const { buildings, rooms } = await getRoomsByQueryWithMock(query);
-    // const buildingHash = buildings.reduce((acc, building) => {
-    //   acc[building.building_id] = { name: building.name, img_name: building.img_name };
-    //   return acc;
-    // }, {});
-    // console.log(buildings, rooms)
-
-    // container.innerHTML = "";
-    // const roomCard = new RoomCard();
-    // rooms.forEach(async (room) => {
-    //   const building = buildingHash[room.building_id];
-    //   room.building_name = building.name;
-    //   room.img_name = building.img_name;
-    //   const cardElm = await roomCard.render(room);
-    //   container.appendChild(cardElm);
-    // });
-
     if (query === "") {
       const rooms = await (await fetch(`${URL}/room/all`)).json()
-      console.log(rooms)
 
       container.innerHTML = "";
       const roomCard = new RoomCard();
@@ -103,24 +85,27 @@ export class Search {
     } else {
       // TODO: Implement search by query (makes professor Montazeralghaem proud!)
       const rooms = await (await fetch(`${URL}/room/all`)).json()
-      console.log(rooms)
+      query = query.trim();
+      const newRooms = rooms.filter((props) => { // a simple 
+        return props.name.toLowerCase().includes(query.toLowerCase()) || props.buildingName.toLowerCase().includes(query.toLowerCase());
+      })
 
       container.innerHTML = "";
+
+      if (newRooms.length === 0) {
+        const noResults = document.createElement("h2");
+        noResults.textContent = "No results found";
+        noResults.style.textAlign = "center";
+        container.appendChild(noResults);
+        return;
+      }
+
       const roomCard = new RoomCard();
-      rooms.forEach((room) => {
+      newRooms.forEach((room) => {
         const cardElem = roomCard.render(room);
         container.appendChild(cardElem);
       })
     }
-
-    // const rooms = await libcal.getAvailableRooms(new Date().toISOString().split("T")[0]).json();
-    // console.log("minhdz", rooms);
-    // container.innerHTML = "";
-    // const roomCard = new RoomCard();
-    // rooms.forEach(async (room) => {
-    //   const cardElem = await roomCard.render(room);
-    //   container.appendChild(cardElem);
-    // })
 
     return container;
   }
