@@ -69,7 +69,7 @@ export class RoomCard {
     cardElm.addEventListener("click", () => {
       this.#events.publish(
         "navigateTo",
-        `/booking?name=${encodeURIComponent(data.name)}&buildingName=${encodeURIComponent(data.buildingName)}&availability=${encodeURIComponent(data.availableTimes)}&id=${encodeURIComponent(data.id)}&img=${encodeURIComponent(data.img)}`
+        `/booking?id=${data.id}`
       );
     });
 

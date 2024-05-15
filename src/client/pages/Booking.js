@@ -10,11 +10,14 @@ export class BookingPage {
     constructor(data) {
         this.#events = Events.events();
         this.#today = new Date().toISOString().split('T')[0];
-        this.#data = data;
+        this.#data = data
         this.#roomProps = null;
     }
 
     async render() {
+        // we need to fetch to get neccessary data from backend first
+        const metaData = await (await fetch(`${URL}/room?id=${this.#data.id}`)).json();
+
         const bookingElm = document.createElement('form');
         // bookingElm.id = 'booking-form'; // can make it to be more unique by adding user id
         bookingElm.classList.add('booking-form');
@@ -24,7 +27,7 @@ export class BookingPage {
 
         const imageBackground = document.createElement('img');
         imageBackground.id = 'background-image';
-        imageBackground.src = `${this.#data.img}`;
+        imageBackground.src = `${metaData.img}`;
         imageBackground.alt = 'Building image';
         imageBackground.classList.add('background-image');
         headerContainer.addEventListener('mouseenter', () => {
@@ -44,7 +47,7 @@ export class BookingPage {
 
         const headerElm = document.createElement('div');
         headerElm.id = 'header';
-        headerElm.innerText = `${this.#data.name}`; // TODO: Must be dynamic and retrieved from user card
+        headerElm.innerText = `${metaData.name}`; // TODO: Must be dynamic and retrieved from user card
 
         const metadataContainer = document.createElement('div');
         metadataContainer.id = 'metadata-container';
@@ -57,7 +60,7 @@ export class BookingPage {
 
         const locationInfoElm = document.createElement('div');
         locationInfoElm.classList.add('description-metadata');
-        locationInfoElm.innerText = `${this.#data.buildingName}` // TODO: Must be dynamic and retrieved from user card
+        locationInfoElm.innerText = `${metaData.buildingName}` // TODO: Must be dynamic and retrieved from user card
 
         // Container for location icon and location info
         const locationContainer = document.createElement('div');
@@ -75,7 +78,7 @@ export class BookingPage {
 
         const availabilityInfoElm = document.createElement('div');
         availabilityInfoElm.classList.add('description-metadata');
-        availabilityInfoElm.innerText = `Available` // TODO: Must be dynamic and retrieved from user card
+        availabilityInfoElm.innerText = `Available ${metaData.availableTimes.length} spots for today` // TODO: Must be dynamic and retrieved from user card
 
         // Container for availability icon and availability info
         const availabilityContainer = document.createElement('div');
@@ -123,10 +126,28 @@ export class BookingPage {
         labelNumberPeople.for = 'number-people';
         labelNumberPeople.innerText = 'Number of people';
 
-        const inputNumberPeople = document.createElement('input');
-        inputNumberPeople.type = 'number';
+        const inputNumberPeople = document.createElement('select');
+        // inputNumberPeople.type = 'number';
         inputNumberPeople.id = 'number-people';
         inputNumberPeople.name = 'numberPeople';
+
+        const optionDefaultNumberPeople = document.createElement('option');
+        optionDefaultNumberPeople.value = '';
+        optionDefaultNumberPeople.innerText = 'Select an option';
+        optionDefaultNumberPeople.disabled = true; // Disable the placeholder
+        optionDefaultNumberPeople.selected = true; // Mark as selected
+
+        const optionOneNumberPeople = document.createElement('option');
+        optionOneNumberPeople.value = '3-5';
+        optionOneNumberPeople.innerText = '3-5';
+
+        const optionTwoNumberPeople = document.createElement('option');
+        optionTwoNumberPeople.value = 'More than 5';
+        optionTwoNumberPeople.innerText = 'More than 5';
+
+        inputNumberPeople.appendChild(optionDefaultNumberPeople);
+        inputNumberPeople.appendChild(optionOneNumberPeople);
+        inputNumberPeople.appendChild(optionTwoNumberPeople);
 
         // Appending number of people input to its wrapper
         numberPeopleWrapper.appendChild(labelNumberPeople);
@@ -147,6 +168,8 @@ export class BookingPage {
         const optionDefault = document.createElement('option');
         optionDefault.value = '';
         optionDefault.innerText = 'Select an option';
+        optionDefault.disabled = true; // Disable the placeholder
+        optionDefault.selected = true; // Mark as selected
 
         const optionYes = document.createElement('option');
         optionYes.value = 'yes';
