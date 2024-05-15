@@ -127,7 +127,6 @@ export const book = async (req, res) => {
       return;
     }
     if (await libcal.isAvailable(id, date, startTime, endTime)) {
-      console.log("wut")
       const result = await libcal.bookRoom(
         id,
         date,

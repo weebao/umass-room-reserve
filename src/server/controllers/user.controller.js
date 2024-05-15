@@ -9,7 +9,7 @@ import { encrypt } from "../utils/crypt.js";
  * @returns {Promise<void>} - A promise that resolves when the login process is complete.
  */
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body;  
   try {
     const userData = await database.getUser(email);
     if (userData.status === "success") {
@@ -23,7 +23,7 @@ export const login = async (req, res) => {
       } else {
         res
           .status(401)
-          .json({ status: "error", message: "Invalid credentials" });
+          .json({ status: "error", message: "Incorrect email or password" });
       }
     } else {
       res.status(404).json(userData);
@@ -57,7 +57,6 @@ export const register = async (req, res) => {
       const encryptedPassword = encrypt(password);
       const userData = { ...req.body, password: encryptedPassword };
       const result = await database.createUser(userData);
-      console.log(result)
       if (result.status === "error") {
         res.status(500).json(result);
         return;

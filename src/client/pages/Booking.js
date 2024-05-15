@@ -1,5 +1,7 @@
 import { Events } from '../Events.js';
 import { URL } from "../services/url.js";
+import { getSession } from '../modules/session.js';
+import { reserveRoom } from '../services/reserve.js';
 
 export class BookingPage {
     #events = null;
@@ -130,24 +132,25 @@ export class BookingPage {
         // inputNumberPeople.type = 'number';
         inputNumberPeople.id = 'number-people';
         inputNumberPeople.name = 'numberPeople';
+      
+        const optionDefaultPeople = document.createElement('option');
+        optionDefaultPeople.value = '';
+        optionDefaultPeople.innerText = 'Select number of people';
+        optionDefaultPeople.disabled = true; // Disable the placeholder
+        optionDefaultPeople.selected = true; // Mark as selected
 
-        const optionDefaultNumberPeople = document.createElement('option');
-        optionDefaultNumberPeople.value = '';
-        optionDefaultNumberPeople.innerText = 'Select an option';
-        optionDefaultNumberPeople.disabled = true; // Disable the placeholder
-        optionDefaultNumberPeople.selected = true; // Mark as selected
+        const optionOnePeople = document.createElement('option');
+        optionOnePeople.value = '3-5';
+        optionOnePeople.innerText = '3-5';
 
-        const optionOneNumberPeople = document.createElement('option');
-        optionOneNumberPeople.value = '3-5';
-        optionOneNumberPeople.innerText = '3-5';
+        const optionTwoPeople = document.createElement('option');
+        optionTwoPeople.value = 'More than 5';
+        optionTwoPeople.innerText = 'More than 5';
 
-        const optionTwoNumberPeople = document.createElement('option');
-        optionTwoNumberPeople.value = 'More than 5';
-        optionTwoNumberPeople.innerText = 'More than 5';
-
-        inputNumberPeople.appendChild(optionDefaultNumberPeople);
-        inputNumberPeople.appendChild(optionOneNumberPeople);
-        inputNumberPeople.appendChild(optionTwoNumberPeople);
+        // Appending options to select element
+        inputNumberPeople.appendChild(optionDefaultPeople);
+        inputNumberPeople.appendChild(optionOnePeople);
+        inputNumberPeople.appendChild(optionTwoPeople);
 
         // Appending number of people input to its wrapper
         numberPeopleWrapper.appendChild(labelNumberPeople);
@@ -172,17 +175,22 @@ export class BookingPage {
         optionDefault.selected = true; // Mark as selected
 
         const optionYes = document.createElement('option');
-        optionYes.value = 'yes';
+        optionYes.value = 'Yes';
         optionYes.innerText = 'Yes';
 
         const optionNo = document.createElement('option');
-        optionNo.value = 'no';
+        optionNo.value = 'No';
         optionNo.innerText = 'No';
+
+        const optionMaybe = document.createElement('option');
+        optionMaybe.value = 'Maybe';
+        optionMaybe.innerText = 'Maybe';
 
         // Appending options to select element
         selectDesktopComputer.appendChild(optionDefault);
         selectDesktopComputer.appendChild(optionYes);
         selectDesktopComputer.appendChild(optionNo);
+        selectDesktopComputer.appendChild(optionMaybe);
 
         // Appending label and select element to its wrapper
         optionalQuestionWrapper.appendChild(labelDesktopComputer);
@@ -301,12 +309,18 @@ export class BookingPage {
         saveInfoElm.innerText = '*We will save the inputs above so you do not have to re-enter them each time you book';
 
         const reserveButtonWrapperEnd = document.createElement('div');
+        reserveButtonWrapperEnd.id = 'reserve-button-wrapper';
+
         const reserveButtonElmEnd = document.createElement('button');
         reserveButtonElmEnd.id = 'reserve-button-end';
         reserveButtonElmEnd.innerText = 'Reserve';
         reserveButtonElmEnd.type = 'submit';
         reserveButtonElmEnd.classList.add('custom-button');
         reserveButtonWrapperEnd.appendChild(reserveButtonElmEnd);
+
+        const notiDiv = document.createElement('div');
+        notiDiv.id = 'reserve-noti';
+        reserveButtonWrapperEnd.appendChild(notiDiv);
         // Appending all form inputs to form inputs container
 
         formInputsContainer.appendChild(numberPeopleWrapper);
@@ -329,7 +343,7 @@ export class BookingPage {
          * Fetch data from card to this site (maybe from backend instead!)
          */
         // Event listener for form submission
-        bookingElm.addEventListener('submit', event => {
+        bookingElm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const numberPeople = bookingElm.querySelector('#number-people').value;
             const desktopComputer = bookingElm.querySelector('#desktop-computer').value;
@@ -337,6 +351,33 @@ export class BookingPage {
             const timeTo = bookingElm.querySelector('#time-to').value;
 
             // this.#events.publish('book-room', { numberPeople, desktopComputer, timeFrom, timeTo });
+            // console.log(this.#data.id, inputDate.value,  timeFrom, timeTo)
+
+            const room_id = this.#data.id;
+            const date = inputDate.value;
+            const userData = await getSession();
+
+            const formData = {
+                numPeople: numberPeople ?? "3-5",
+                useComputer: desktopComputer ?? "Maybe",
+                firstName: userData.firstName ?? "",
+                lastName: userData.lastName ?? "",
+                major : userData.major ?? "",
+                studentRole : userData.role ? 
+                    (userData.role.toLowerCase() === "undergraduate" ? "Undergraduate" :
+                    userData.role.toLowerCase() === "graduate" ? "Graduate" : "Other") 
+                    : "Other",
+                email : userData.email ?? "",
+            };
+            
+            notiDiv.innerHTML = "";
+            try {
+                const data = await reserveRoom(room_id, date, timeFrom, timeTo, formData);
+                notiDiv.textContent = "*Reserved successfully";
+            } catch {
+                notiDiv.textContent = "*Reservation error";
+                console.log(data)
+            }
         });
 
         return bookingElm;

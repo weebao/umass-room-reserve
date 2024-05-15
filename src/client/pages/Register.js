@@ -2,6 +2,8 @@ import { Events } from "../Events.js";
 import { createSession } from "../modules/session.js";
 import { registerUser } from "../services/auth.js";
 
+//TODO: Fix regex for email
+
 export class RegisterPage {
   #events = null;
 
@@ -60,7 +62,7 @@ export class RegisterPage {
         <label for="role" class="m-textfield-label">Role</label>
       </div>
       <div class="m-textfield-group auth-input">
-        <input type="text" id="school-email" name="schoolEmail" title="email@umass.edu" class="m-textfield" placeholder="School Email (@umass.edu)" required pattern="[^@\s]+@umass\.edu" autocomplete="username">
+        <input type="text" id="school-email" name="schoolEmail" title="email@umass.edu" class="m-textfield" placeholder="School Email (@umass.edu)" required pattern=".+@umass\.edu" autocomplete="username">
         <label for="school-email" class="m-textfield-label">School Email</label>
       </div>
       <div class="m-textfield-group auth-input">
@@ -148,6 +150,14 @@ export class RegisterPage {
           await createSession({ firstName, lastName, major, role, email });
           this.#events.publish("rerenderNav");
           this.#events.publish("navigateTo", "/home");
+
+          firstNameInput.value = "";
+          lastNameInput.value = "";
+          majorInput.value = "";
+          roleInput.value = "";
+          schoolEmailInput.value = "";
+          passwordInput.value = "";
+          confirmPasswordInput.value = "";
         } else {
           // Handle registration error (display message or log error)
           throw new Error(registerResult.message || "Failed to register");
