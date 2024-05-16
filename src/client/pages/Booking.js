@@ -374,9 +374,9 @@ export class BookingPage {
             try {
                 const data = await reserveRoom(room_id, date, timeFrom, timeTo, formData);
                 notiDiv.textContent = "*Reserved successfully";
-            } catch {
+            } catch (error) {
                 notiDiv.textContent = "*Reservation error";
-                console.log(data)
+                console.log(error)
             }
         });
 

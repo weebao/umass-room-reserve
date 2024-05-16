@@ -1,6 +1,61 @@
 import database from "../db.js";
 import { encrypt } from "../utils/crypt.js";
 
+export const getUser = async (req, res) => {
+  const { email } = req.query;
+  try {
+    const userData = await database.getUser(email);
+    if (userData.status === "success") {
+      res.status(200).json(userData);
+    } else {
+      res.status(404).json(userData);
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const { email } = req.query;
+  const userData = req.body;
+  try {
+    const result = await database.updateUser(email, userData);
+    if (result.status === "success") {
+      res.status(200).json(result);
+    } else {
+      res.status(404).json(result);
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+}
+
+export const deleteUser = async (req, res) => {
+  const { email } = req.query;
+  try {
+    const result = await database.deleteUser(email);
+    if (result.status === "success") {
+      res.status(200).json(result);
+    } else {
+      res.status(404).json(result);
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+}
+
 /**
  * Handles user login.
  *

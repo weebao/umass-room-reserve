@@ -82,11 +82,11 @@ export class Database {
             message: "User not found",
           };
     } catch (e) {
-      return {
+      throw new Error(JSON.stringify({
         status: "error",
         message: "Failed to get user",
         error: e.message,
-      };
+      }));
     }
   }
 
@@ -100,11 +100,65 @@ export class Database {
         data: userData,
       };
     } catch (e) {
-      return {
+      throw new Error(JSON.stringify({
         status: "error",
-        message: "Failed to get user",
+        message: "Failed to create user",
         error: e.message,
+      }));
+    }
+  }
+
+  async updateUser(email, userData) {
+    try {
+      const data = await this.db.get("users");
+      const userIndex = data.users.findIndex(
+        (user) => user.email.toLowerCase() === email.toLowerCase()
+      );
+      if (userIndex === -1) {
+        return {
+          status: "error",
+          message: "User not found",
+        };
+      }
+      data.users[userIndex] = { ...data.users[userIndex], ...userData };
+      await this.db.put(data);
+      return {
+        status: "success",
+        data: data.users[userIndex],
       };
+    } catch (e) {
+      throw new Error(JSON.stringify({
+        status: "error",
+        message: "Failed to update user",
+        error: e.message,
+      }));
+    }
+  }
+
+  async deleteUser(email) {
+    try {
+      const data = await this.db.get("users");
+      const userIndex = data.users.findIndex(
+        (user) => user.email.toLowerCase() === email.toLowerCase()
+      );
+      if (userIndex === -1) {
+        return {
+          status: "error",
+          message: "User not found",
+        };
+      }
+      data.users.splice(userIndex, 1);
+      await this.db.put(data);
+      return {
+        status: "success",
+        message: "User deleted",
+      };
+    } catch (e) {
+      throw new Error(JSON.stringify({
+        status: "error",
+        message: "Failed to delete user",
+        error: e.message,
+      }));
     }
   }
 }
