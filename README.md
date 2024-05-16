@@ -1,6 +1,6 @@
 # UMass Room Reserve
 
-Ever notice how repetitive it is to reserve a study room at UMass? You would have to go on a different website for different buildings and fill out the same form all over again. We got so frustrated by it that we built UMass Room Reserve, a platform where you only needs to fill out the form once and we will fill it out for you so that you can book the room with ease!
+Ever notice how repetitive it is to reserve a study room at UMass? You have to go on a different website for each building and fill out the same form over and over again. Is there a way we can automate it somehow? Yes there is! Here comes UMass Room Reserve, a platform where you only needs to fill out the form once and we will fill it out for you so that you can book the room with ease!
 
 ## Members:
 
